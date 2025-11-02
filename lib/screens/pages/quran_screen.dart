@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran_al_kareem/screens/detail/surah_detail_page.dart';
+import 'package:quran_al_kareem/screens/widget/my_drawer.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/surah_names_utils.dart';
 
@@ -55,6 +56,7 @@ class _QuranScreenState extends State<QuranScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
@@ -78,6 +80,7 @@ class _QuranScreenState extends State<QuranScreen> {
         ),
         backgroundColor: Colors.transparent,
       ),
+      drawer: DrawerWidget(),
       backgroundColor: mainColor,
       body: SafeArea(
         child: Stack(
