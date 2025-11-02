@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quran_al_kareem/screens/pages/azkar_screen.dart';
+import 'package:quran_al_kareem/screens/pages/audio_screen.dart';
 import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
@@ -23,7 +23,7 @@ class _MainDashboardState extends State<MainDashboard> {
 
   final List<Widget> _screens = const [
     QuranScreen(),
-    AzkarScreen(),
+    AudioQuranScreen(),
     PrayerScreen(),
     QiblaScreen(),
     SettingScreen(),
@@ -67,9 +67,9 @@ class _MainDashboardState extends State<MainDashboard> {
               label: "Quran",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Ionicons.hand_left_outline),
+              icon: Icon(Ionicons.book),
               activeIcon: Icon(Ionicons.hand_left),
-              label: "Azkar",
+              label: "Audio Quran",
             ),
             BottomNavigationBarItem(
               icon: Icon(Ionicons.time_outline),
