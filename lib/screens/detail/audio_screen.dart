@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/model/surrah_model.dart';
-import 'package:quran_al_kareem/utils/constatnns.dart';
+import 'package:quran_al_kareem/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

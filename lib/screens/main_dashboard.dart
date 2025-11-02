@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quran_al_kareem/screens/pages/audio_screen.dart';
@@ -21,12 +20,12 @@ class MainDashboard extends StatefulWidget {
 class _MainDashboardState extends State<MainDashboard> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = const [
-    QuranScreen(),
-    AudioQuranScreen(),
+  final List<Widget> _screens = [
+    const QuranScreen(),
+    const AudioQuranScreen(),
     PrayerScreen(),
-    QiblaScreen(),
-    SettingScreen(),
+    const QiblaScreen(),
+    const SettingScreen(),
   ];
 
   @override

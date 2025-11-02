@@ -3,7 +3,7 @@ import 'package:quran_al_kareem/api/api_calls.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/model/surrah_model.dart' as surah;
 import 'package:quran_al_kareem/screens/detail/audio_screen.dart';
-import 'package:quran_al_kareem/utils/constatnns.dart';
+import 'package:quran_al_kareem/utils/constant.dart';
 
 class AudioSurahScreen extends StatefulWidget {
   const AudioSurahScreen({Key? key, required this.qari}) : super(key: key);
