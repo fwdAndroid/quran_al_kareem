@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
+import 'package:quran_al_kareem/screens/main_dashboard.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -53,10 +56,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
                 textAlign: TextAlign.left,
               ),
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => AllahNames()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AllahNames()),
+                );
               },
             ),
           ),
@@ -75,10 +78,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
               textAlign: TextAlign.left,
             ),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => TashbeehCounter()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TasbeehCounterScreen()),
+              );
             },
           ),
           Divider(),
@@ -95,10 +98,12 @@ class _DrawerWidgetState extends State<DrawerWidget>
               textAlign: TextAlign.left,
             ),
             onTap: () {
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const AudioQuran()),
-              // );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MainDashboard(initialPageIndex: 2),
+                ),
+              );
             },
           ),
           Divider(),

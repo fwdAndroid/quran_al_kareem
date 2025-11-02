@@ -42,6 +42,7 @@ dependencies:
   quran: ^1.4.1
   rxdart: ^0.28.0
   share_plus: ^10.1.4
+  vibration: ^3.1.4
 
 dev_dependencies:
   flutter_lints: ^6.0.0
