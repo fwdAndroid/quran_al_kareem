@@ -94,14 +94,12 @@ class _QuranScreenState extends State<QuranScreen> {
               ), // optional overlay for better contrast
             ),
             // Modern search bar
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredSurah.length,
-                itemBuilder: (context, index) {
-                  final surahNumber = filteredSurah[index];
-                  return buildSurahCard(context, surahNumber);
-                },
-              ),
+            ListView.builder(
+              itemCount: filteredSurah.length,
+              itemBuilder: (context, index) {
+                final surahNumber = filteredSurah[index];
+                return buildSurahCard(context, surahNumber);
+              },
             ),
           ],
         ),
