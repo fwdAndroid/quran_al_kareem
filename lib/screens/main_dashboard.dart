@@ -48,51 +48,45 @@ class _MainDashboardState extends State<MainDashboard> {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            currentIndex: _selectedIndex,
-            selectedItemColor: mainColor,
-            unselectedItemColor: Colors.grey.shade500,
-            showUnselectedLabels: true,
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
-            onTap: (index) {
-              setState(() => _selectedIndex = index);
-            },
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Ionicons.book_outline),
-                activeIcon: Icon(Ionicons.book),
-                label: "Quran",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Ionicons.hand_left_outline),
-                activeIcon: Icon(Ionicons.hand_left),
-                label: "Azkar",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Ionicons.time_outline),
-                activeIcon: Icon(Ionicons.time),
-                label: "Prayer",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Ionicons.compass_outline),
-                activeIcon: Icon(Ionicons.compass),
-                label: "Qibla",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Ionicons.settings_outline),
-                activeIcon: Icon(Ionicons.settings),
-                label: "Settings",
-              ),
-            ],
-          ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.brown,
+          currentIndex: _selectedIndex,
+          selectedItemColor: mainColor,
+          unselectedItemColor: Colors.grey.shade500,
+          showUnselectedLabels: true,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          onTap: (index) {
+            setState(() => _selectedIndex = index);
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Ionicons.book_outline),
+              activeIcon: Icon(Ionicons.book),
+              label: "Quran",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Ionicons.hand_left_outline),
+              activeIcon: Icon(Ionicons.hand_left),
+              label: "Azkar",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Ionicons.time_outline),
+              activeIcon: Icon(Ionicons.time),
+              label: "Prayer",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Ionicons.compass_outline),
+              activeIcon: Icon(Ionicons.compass),
+              label: "Qibla",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Ionicons.settings_outline),
+              activeIcon: Icon(Ionicons.settings),
+              label: "Settings",
+            ),
+          ],
         ),
       ),
     );
