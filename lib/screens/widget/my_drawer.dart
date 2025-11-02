@@ -80,7 +80,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TasbeehCounterScreen()),
+                MaterialPageRoute(builder: (context) => TashbeehCounter()),
               );
             },
           ),

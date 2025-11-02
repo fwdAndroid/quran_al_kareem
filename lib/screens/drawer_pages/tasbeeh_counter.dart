@@ -1,162 +1,203 @@
-import 'package:flutter/material.dart';
-import 'package:vibration/vibration.dart';
+import 'dart:async';
 
-class TasbeehCounterScreen extends StatefulWidget {
-  const TasbeehCounterScreen({super.key});
+import 'package:flutter/material.dart';
+
+class TashbeehCounter extends StatefulWidget {
+  const TashbeehCounter({super.key});
 
   @override
-  State<TasbeehCounterScreen> createState() => _TasbeehCounterScreenState();
+  State<TashbeehCounter> createState() => _TashbeehCounterState();
 }
 
-class _TasbeehCounterScreenState extends State<TasbeehCounterScreen>
-    with SingleTickerProviderStateMixin {
-  int count = 0;
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+class _TashbeehCounterState extends State<TashbeehCounter> {
+  int counter = 0;
+  bool timerRunning = false;
+  DateTime? startTime;
+  Duration elapsed = Duration.zero;
+  Timer? timer;
+
+  void startTimer() {
+    setState(() {
+      counter = 0;
+      elapsed = Duration.zero;
+      timerRunning = true;
+      startTime = DateTime.now();
+    });
+
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        elapsed = DateTime.now().difference(startTime!);
+      });
+    });
+  }
+
+  void stopTimer() {
+    if (!timerRunning) return;
+
+    timer?.cancel();
+    setState(() {
+      timerRunning = false;
+    });
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Session Summary"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Total Taps: $counter"),
+            const SizedBox(height: 8),
+            Text("Total Time: ${elapsed.inSeconds} seconds"),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void incrementCounter() {
+    if (!timerRunning) return;
+    setState(() {
+      counter++;
+    });
+  }
+
+  void reset() {
+    timer?.cancel();
+    setState(() {
+      counter = 0;
+      elapsed = Duration.zero;
+      timerRunning = false;
+    });
+  }
+
+  String formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    return "${twoDigits(d.inMinutes)}:${twoDigits(d.inSeconds.remainder(60))}";
+  }
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: 0.9,
-      upperBound: 1.1,
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void incrementCounter() async {
-    if (await Vibration.hasVibrator()) Vibration.vibrate(duration: 30);
-    _controller.forward().then((_) => _controller.reverse());
-    setState(() => count++);
-  }
-
-  void resetCounter() {
-    setState(() => count = 0);
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    final counterFontSize = screenWidth * 0.2;
+    final buttonFontSize = screenWidth * 0.05;
+    final timerFontSize = screenWidth * 0.07;
+    // final languageProvider = Provider.of<LanguageProvider>(context); // Access
+
     return Scaffold(
-      body: Stack(
-        children: [
-          // 🌌 Glowing Gradient Background
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF0F2027),
-                  Color(0xFF203A43),
-                  Color(0xFF2C5364),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-
-          // ✨ Animated Particles (Optional shimmer)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      Colors.white.withOpacity(0.05),
-                      Colors.transparent,
-                    ],
-                    radius: 1.2,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // 🌙 Main Counter
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "تَسْبِيح",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.tealAccent.shade100,
-                    fontFamily: 'Amiri',
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10,
-                        color: Colors.tealAccent.withOpacity(0.6),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 50),
-                GestureDetector(
-                  onTap: incrementCounter,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF00C9FF), Color(0xFF92FE9D)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.tealAccent.withOpacity(0.6),
-                            blurRadius: 30,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "$count",
-                        style: const TextStyle(
-                          fontSize: 60,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // 🕊 Reset Button
-                ElevatedButton.icon(
-                  onPressed: resetCounter,
-                  icon: const Icon(Icons.refresh_rounded, color: Colors.white),
-                  label: const Text(
-                    "Reset",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.tealAccent.withOpacity(0.2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 12,
-                    ),
-                    shadowColor: Colors.tealAccent,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+        centerTitle: true,
+        title: Text("Tasbeeh", style: TextStyle(color: Colors.white)),
       ),
+      body: Container(
+        width: screenWidth,
+        height: screenHeight,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/bg.png"),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (timerRunning)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  formatDuration(elapsed),
+                  style: TextStyle(
+                    fontSize: timerFontSize,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            Text(
+              "$counter",
+              style: TextStyle(
+                fontSize: counterFontSize,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Tap Button
+            ElevatedButton(
+              onPressed: incrementCounter,
+              style: _buttonStyle(screenWidth, screenHeight),
+              child: Text("Tap", style: TextStyle(fontSize: buttonFontSize)),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Start Button
+            ElevatedButton(
+              onPressed: timerRunning ? null : startTimer,
+              style: _buttonStyle(screenWidth, screenHeight),
+              child: Text("Start", style: TextStyle(fontSize: buttonFontSize)),
+            ),
+
+            const SizedBox(height: 10),
+
+            // Stop Button
+            ElevatedButton(
+              onPressed: timerRunning ? stopTimer : null,
+              style: _buttonStyle(screenWidth, screenHeight),
+              child: Text("Stop", style: TextStyle(fontSize: buttonFontSize)),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Reset
+            TextButton(
+              onPressed: reset,
+              child: Text(
+                "Reset",
+                style: TextStyle(
+                  fontSize: buttonFontSize,
+                  color: Colors.white70,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ButtonStyle _buttonStyle(double width, double height) {
+    return ElevatedButton.styleFrom(
+      backgroundColor: Colors.white.withOpacity(0.9),
+      foregroundColor: Colors.black,
+      padding: EdgeInsets.symmetric(
+        horizontal: width * 0.2,
+        vertical: height * 0.02,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
     );
   }
 }
