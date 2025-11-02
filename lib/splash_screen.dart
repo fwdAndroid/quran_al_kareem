@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:azkar/screens/main/main_dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/main_dashboard.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mainColor,
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
