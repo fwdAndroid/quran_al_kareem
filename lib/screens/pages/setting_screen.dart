@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -31,35 +32,35 @@ class _SettingScreenState extends State<SettingScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset("assets/logo.png", height: 150),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (builder) => NotificationSetting(),
-                    //   ),
-                    // );
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: Text(
-                    // languageProvider.localizedStrings["Notifications"] ??
-                    "Notifications",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(Icons.notifications, color: Colors.white),
-                ),
-              ),
 
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: ListTile(
+              //     onTap: () {
+              //       // Navigator.push(
+              //       //   context,
+              //       //   MaterialPageRoute(
+              //       //     builder: (builder) => NotificationSetting(),
+              //       //   ),
+              //       // );
+              //     },
+              //     trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+              //     title: Text(
+              //       // languageProvider.localizedStrings["Notifications"] ??
+              //       "Notifications",
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //     leading: Icon(Icons.notifications, color: Colors.white),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: ListTile(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (builder) => ChangeLangage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (builder) => ChangeLangage()),
+                    );
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                   title: Text(
@@ -70,24 +71,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   leading: Icon(Icons.language, color: Colors.white),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (builder) => FontSettingsScreen()),
-                    // );
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: Text(
-                    // languageProvider.localizedStrings["Font Setting"] ??
-                    "Font Setting",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(Icons.font_download, color: Colors.white),
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: ListTile(

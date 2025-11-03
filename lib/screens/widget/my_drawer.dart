@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -121,10 +122,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
               textAlign: TextAlign.left,
             ),
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (builder) => ChangeLangage()),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => ChangeLangage()),
+              );
             },
           ),
         ],
