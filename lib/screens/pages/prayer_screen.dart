@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
+import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
@@ -369,16 +371,36 @@ class _PrayerScreenState extends State<PrayerScreen>
                                     ),
                                   ),
                                   //Dua
-                                  Image.asset(
-                                    "assets/item 2-1.png",
-                                    height: 90,
-                                    width: 90,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (builder) => DuaScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Image.asset(
+                                      "assets/item 2-1.png",
+                                      height: 90,
+                                      width: 90,
+                                    ),
                                   ),
                                   //Allah Names
-                                  Image.asset(
-                                    "assets/item 3.png",
-                                    height: 90,
-                                    width: 90,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (builder) => AllahNames(),
+                                        ),
+                                      );
+                                    },
+                                    child: Image.asset(
+                                      "assets/item 3.png",
+                                      height: 90,
+                                      width: 90,
+                                    ),
                                   ),
                                 ],
                               ),
