@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
@@ -144,7 +142,7 @@ class _PrayerScreenState extends State<PrayerScreen>
     } else if (now.isAfter(maghrib.subtract(const Duration(hours: 1))) &&
         now.isBefore(maghrib.add(const Duration(hours: 1)))) {
       // Sunset
-      _gradientColors = [Colors.deepOrange.shade300, Colors.purple.shade700];
+      _gradientColors = [Colors.deepOrange.shade300, Colors.purple.shade100];
     } else {
       // Night
       _gradientColors = [Colors.indigo.shade900, Colors.black];
@@ -338,6 +336,68 @@ class _PrayerScreenState extends State<PrayerScreen>
                           },
                         ),
                       ),
+                      Container(
+                        width: 400,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Color(0xffFFFFFF).withOpacity(.2),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  //Hadith
+                                  Image.asset(
+                                    "assets/item 1.png",
+                                    height: 90,
+                                    width: 90,
+                                  ),
+                                  //Dua
+                                  Image.asset(
+                                    "assets/item 2-1.png",
+                                    height: 90,
+                                    width: 90,
+                                  ),
+                                  //Allah Names
+                                  Image.asset(
+                                    "assets/item 3.png",
+                                    height: 90,
+                                    width: 90,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //Namaz
+                                Image.asset(
+                                  "assets/item 2.png",
+                                  height: 90,
+                                  width: 90,
+                                ),
+                                //Qibla
+                                Image.asset(
+                                  "assets/item 1-1.png",
+                                  height: 90,
+                                  width: 90,
+                                ),
+                                //Allah Names
+                                Image.asset(
+                                  "assets/item 3.png",
+                                  height: 90,
+                                  width: 90,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -348,22 +408,4 @@ class _PrayerScreenState extends State<PrayerScreen>
       ),
     );
   }
-}
-
-// 🌠 Floating Stars Painter
-class StarFieldPainter extends CustomPainter {
-  final Random random = Random();
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.8);
-    for (int i = 0; i < 50; i++) {
-      final dx = random.nextDouble() * size.width;
-      final dy = random.nextDouble() * size.height * 0.6;
-      final radius = random.nextDouble() * 1.5;
-      canvas.drawCircle(Offset(dx, dy), radius, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
