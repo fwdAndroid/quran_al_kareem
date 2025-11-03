@@ -24,7 +24,7 @@ class _MainDashboardState extends State<MainDashboard> {
     const QuranScreen(),
     const AudioQuranScreen(),
     PrayerScreen(),
-    const QiblaScreen(),
+    QiblaScreen(),
     const SettingScreen(),
   ];
 
