@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
@@ -31,7 +33,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   @override
   Widget build(BuildContext context) {
-    //final languageProvider = Provider.of<LanguageProvider>(context); // Access
+    final languageProvider = Provider.of<LanguageProvider>(context); // Access
 
     return Drawer(
       backgroundColor: mainColor,
@@ -48,7 +50,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
             child: ListTile(
               leading: Icon(Ionicons.book, color: Colors.brown),
               title: Text(
-                'Allah Names',
+                languageProvider.localizedStrings["Allah Names"] ??
+                    'Allah Names',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w300,
@@ -69,8 +72,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
             leading: Icon(Icons.countertops, color: Colors.brown),
 
             title: Text(
-              // languageProvider.localizedStrings["Tasbeeh Counter"] ??
-              'Tasbeeh Counter',
+              languageProvider.localizedStrings["Tasbeeh Counter"] ??
+                  'Tasbeeh Counter',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w300,
@@ -90,7 +93,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             leading: Icon(Icons.audio_file, color: Colors.brown),
 
             title: Text(
-              'Audio Quran',
+              languageProvider.localizedStrings["Audio Quran"] ?? 'Audio Quran',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w300,
@@ -112,8 +115,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
             leading: Icon(Icons.language, color: Colors.brown),
 
             title: Text(
-              // languageProvider.localizedStrings["Language Setting"] ??
-              'Language Setting',
+              languageProvider.localizedStrings["Language Setting"] ??
+                  'Language Setting',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w300,

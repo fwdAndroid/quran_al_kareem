@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 
 class TashbeehCounter extends StatefulWidget {
   const TashbeehCounter({super.key});
@@ -103,7 +104,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: mainColor,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,

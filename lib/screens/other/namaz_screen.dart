@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class NamazStep {
@@ -86,11 +88,14 @@ class NamazGuideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: const Text(
-          'How to Pray Namaz',
+        title: Text(
+          languageProvider.localizedStrings["How to Pray Namaz"] ??
+              'How to Pray Namaz',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: mainColor,

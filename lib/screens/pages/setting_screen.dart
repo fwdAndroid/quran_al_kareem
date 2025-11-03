@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,6 +15,8 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+
     return Scaffold(
       backgroundColor: mainColor,
       body: Stack(
@@ -64,8 +68,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                   title: Text(
-                    // languageProvider.localizedStrings["Change Language"] ??
-                    "Change Language",
+                    languageProvider.localizedStrings["Change Language"] ??
+                        "Change Language",
                     style: TextStyle(color: Colors.white),
                   ),
                   leading: Icon(Icons.language, color: Colors.white),
@@ -80,7 +84,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
                   title: Text(
-                    "Invite Friends",
+                    languageProvider.localizedStrings["Invite Friends"] ??
+                        "Invite Friends",
                     style: TextStyle(color: Colors.white),
                   ),
                   leading: Icon(Icons.share, color: Colors.white),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/model/dua_model.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/service/read_json.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:rxdart/rxdart.dart'; // for combining position streams
@@ -61,9 +63,14 @@ class _DuaScreenState extends State<DuaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dua's", style: TextStyle(color: Colors.white)),
+        title: Text(
+          languageProvider.localizedStrings["Dua's"] ?? "Dua's",
+          style: TextStyle(color: Colors.white),
+        ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
         elevation: 0,

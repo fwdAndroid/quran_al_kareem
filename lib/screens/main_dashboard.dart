@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/pages/audio_screen.dart';
 import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
@@ -30,63 +34,99 @@ class _MainDashboardState extends State<MainDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await _showExitDialog(context);
+        return shouldPop ?? false;
+      },
+      child: Scaffold(
+        body: _screens[_selectedIndex],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -3),
+              ),
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -3),
-            ),
-          ],
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.brown,
+            currentIndex: _selectedIndex,
+            selectedItemColor: mainColor,
+            unselectedItemColor: Colors.grey.shade500,
+            showUnselectedLabels: true,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            onTap: (index) {
+              setState(() => _selectedIndex = index);
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.book_outline),
+                activeIcon: Icon(Ionicons.book),
+                label: languageProvider.localizedStrings["Quran"] ?? "Quran",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.book),
+                activeIcon: Icon(Ionicons.hand_left),
+                label:
+                    languageProvider.localizedStrings["Audio Quran"] ??
+                    "Audio Quran",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.time_outline),
+                activeIcon: Icon(Ionicons.time),
+                label: languageProvider.localizedStrings["Prayer"] ?? "Prayer",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.compass_outline),
+                activeIcon: Icon(Ionicons.compass),
+                label: languageProvider.localizedStrings["Qibla"] ?? "Qibla",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.settings_outline),
+                activeIcon: Icon(Ionicons.settings),
+                label:
+                    languageProvider.localizedStrings["Settings"] ?? "Settings",
+              ),
+            ],
+          ),
         ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.brown,
-          currentIndex: _selectedIndex,
-          selectedItemColor: mainColor,
-          unselectedItemColor: Colors.grey.shade500,
-          showUnselectedLabels: true,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
-          onTap: (index) {
-            setState(() => _selectedIndex = index);
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Ionicons.book_outline),
-              activeIcon: Icon(Ionicons.book),
-              label: "Quran",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Ionicons.book),
-              activeIcon: Icon(Ionicons.hand_left),
-              label: "Audio Quran",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Ionicons.time_outline),
-              activeIcon: Icon(Ionicons.time),
-              label: "Prayer",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Ionicons.compass_outline),
-              activeIcon: Icon(Ionicons.compass),
-              label: "Qibla",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Ionicons.settings_outline),
-              activeIcon: Icon(Ionicons.settings),
-              label: "Settings",
-            ),
-          ],
-        ),
+      ),
+    );
+  }
+
+  Future<bool?> _showExitDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Exit App'),
+        content: Text('Do you want to exit the app?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (Platform.isAndroid) {
+                SystemNavigator.pop(); // For Android
+              } else if (Platform.isIOS) {
+                exit(0); // For iOS
+              }
+            },
+            child: Text('Yes'),
+          ),
+        ],
       ),
     );
   }

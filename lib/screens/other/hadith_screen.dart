@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/model/hadith_model.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/service/hadith_service.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -18,12 +20,15 @@ class _HadithScreenState extends State<HadithScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
-        title: const Text(
-          "Hadith Collection",
+        title: Text(
+          languageProvider.localizedStrings["Hadith Collection"] ??
+              "Hadith Collection",
           style: TextStyle(color: Colors.white),
         ),
         actions: [
@@ -31,9 +36,19 @@ class _HadithScreenState extends State<HadithScreen> {
             onSelected: (Language lang) {
               setState(() => selectedLanguage = lang);
             },
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: Language.english, child: Text("English")),
-              PopupMenuItem(value: Language.urdu, child: Text("Urdu")),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: Language.english,
+                child: Text(
+                  languageProvider.localizedStrings["English"] ?? "English",
+                ),
+              ),
+              PopupMenuItem(
+                value: Language.urdu,
+                child: Text(
+                  languageProvider.localizedStrings["Urdu"] ?? "Urdu",
+                ),
+              ),
             ],
             icon: const Icon(Icons.language),
           ),
