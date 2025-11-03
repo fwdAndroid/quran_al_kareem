@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
+import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
 import 'package:quran_al_kareem/utils/paint.dart';
@@ -409,10 +410,21 @@ class _PrayerScreenState extends State<PrayerScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 //Namaz
-                                Image.asset(
-                                  "assets/item 2.png",
-                                  height: 90,
-                                  width: 90,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (builder) =>
+                                            NamazGuideScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    "assets/item 2.png",
+                                    height: 90,
+                                    width: 90,
+                                  ),
                                 ),
                                 //Qibla
                                 Image.asset(
