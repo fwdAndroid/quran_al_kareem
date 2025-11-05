@@ -5,6 +5,9 @@ import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
+import 'package:quran_al_kareem/screens/other/dua_screen.dart';
+import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
+import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -59,6 +62,77 @@ class _SettingScreenState extends State<SettingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AllahNames()),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  leading: Icon(Ionicons.book_sharp, color: Colors.white),
+                  title: Text(
+                    languageProvider.localizedStrings["Dua"] ?? 'Dua',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DuaScreen()),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  leading: Icon(Ionicons.bag_handle, color: Colors.white),
+                  title: Text(
+                    languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HadithScreen()),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  leading: Icon(
+                    Ionicons.calendar_number_sharp,
+                    color: Colors.white,
+                  ),
+                  title: Text(
+                    languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NamazGuideScreen(),
+                      ),
                     );
                   },
                 ),
