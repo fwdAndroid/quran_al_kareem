@@ -92,38 +92,39 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // App Logo
-                Image.asset('assets/logo.png', height: 120),
-                const SizedBox(height: 40),
+                Image.asset('assets/logo.png', height: 300),
 
-                const Text(
-                  "Welcome to MyApp",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
                 const SizedBox(height: 12),
                 const Text(
                   "Sign in to continue",
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 const SizedBox(height: 40),
 
                 // Google Sign-In Button
                 _loading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(color: Colors.grey),
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: Colors.grey),
+                            ),
                           ),
+                          icon: Image.asset('assets/logo.png', height: 24),
+                          label: const Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                            ),
+                          ),
+                          onPressed: _signInWithGoogle,
                         ),
-                        icon: Image.asset('assets/google.png', height: 24),
-                        label: const Text(
-                          'Sign in with Google',
-                          style: TextStyle(color: Colors.black87, fontSize: 16),
-                        ),
-                        onPressed: _signInWithGoogle,
                       ),
                 const SizedBox(height: 20),
 
