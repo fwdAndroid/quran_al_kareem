@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:quran_al_kareem/screens/main_dashboard.dart';
+import 'package:quran_al_kareem/screens/auth/login_screen.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => MainDashboard()),
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 
