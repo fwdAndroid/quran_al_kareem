@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran_al_kareem/api/api_calls.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
-import 'package:quran_al_kareem/model/quran_audio_model.dart';
 import 'package:quran_al_kareem/screens/detail/audio_surah_screen.dart';
 import 'package:quran_al_kareem/screens/widget/qari_custom_tile_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -14,67 +13,122 @@ class AudioQuranScreen extends StatefulWidget {
 }
 
 class _AudioQuranScreenState extends State<AudioQuranScreen> {
-  late Future<QuranAudio> _quranAudio;
+  List<Qari> _allQaris = [];
+  List<Qari> _filteredQaris = [];
+  bool _isLoading = true;
+  String _searchText = "";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _quranAudio = ApiCalls().getQuranAudio();
+    _loadQaris();
+  }
+
+  Future<void> _loadQaris() async {
+    try {
+      final api = ApiCalls();
+      final qariList = await api.getQariList();
+      setState(() {
+        _allQaris = qariList;
+        _filteredQaris = qariList;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      debugPrint("Error loading Qaris: $e");
+    }
+  }
+
+  void _filterQaris(String query) {
+    setState(() {
+      _searchText = query;
+      _filteredQaris = _allQaris
+          .where(
+            (qari) =>
+                qari.name!.toLowerCase().contains(query.toLowerCase().trim()),
+          )
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    ApiCalls apiServices = ApiCalls();
-    return FutureBuilder(
-      future: apiServices.getQariList(),
-      builder: (BuildContext context, AsyncSnapshot<List<Qari>> snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text("Qari's data not found"));
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset("assets/bg.png", fit: BoxFit.cover),
-            ),
-            Container(
-              color: mainColor.withOpacity(
-                0.3,
-              ), // optional overlay for better contrast
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              height: MediaQuery.of(context).size.height,
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      QariCustomTile(
-                        index: index, // 👈 pass index here
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Audio Quran", style: TextStyle(color: Colors.white)),
+        backgroundColor: mainColor,
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset("assets/bg.png", fit: BoxFit.cover),
+          ),
+          Container(color: mainColor.withOpacity(0.3)),
+          Column(
+            children: [
+              // 🔍 Search Bar
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: _filterQaris,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Search Qari...",
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                    filled: true,
+                    fillColor: Colors.black26,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
 
-                        qari: snapshot.data![index],
-                        ontap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  AudioSurahScreen(qari: snapshot.data![index]),
-                            ),
+              // 📜 Qari List
+              Expanded(
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _filteredQaris.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "No Qari found",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: _filteredQaris.length,
+                        itemBuilder: (context, index) {
+                          final qari = _filteredQaris[index];
+                          return Column(
+                            children: [
+                              QariCustomTile(
+                                index: index,
+                                qari: qari,
+                                ontap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AudioSurahScreen(qari: qari),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(color: Colors.white30),
+                            ],
                           );
                         },
                       ),
-                      Divider(),
-                    ],
-                  );
-                },
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
