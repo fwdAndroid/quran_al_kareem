@@ -4,6 +4,7 @@ import 'package:quran_al_kareem/screens/detail/surah_detail_page.dart';
 import 'package:quran_al_kareem/screens/widget/my_drawer.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/surah_names_utils.dart';
+import 'package:quran_al_kareem/utils/urdu_json.dart';
 
 class QuranScreen extends StatefulWidget {
   const QuranScreen({super.key});
@@ -25,25 +26,35 @@ class _QuranScreenState extends State<QuranScreen> {
   }
 
   void _filterSurahs() {
-    final query = _searchController.text.toLowerCase();
+    final query = _searchController.text.trim().toLowerCase();
+
     if (query.isEmpty) {
       setState(() {
         filteredSurah = allSurah;
       });
-    } else {
-      setState(() {
-        filteredSurah = allSurah.where((surahNumber) {
-          final arabic = arabicSurahNames[surahNumber - 1].toLowerCase();
-          final english = quran.getSurahNameEnglish(surahNumber).toLowerCase();
-          final transliteration = transliterationSurahNames[surahNumber - 1]
-              .toLowerCase();
-
-          return arabic.contains(query) ||
-              english.contains(query) ||
-              transliteration.contains(query);
-        }).toList();
-      });
+      return;
     }
+
+    final results = allSurah.where((surahNumber) {
+      final arabic = arabicSurahNames[surahNumber - 1].toLowerCase();
+      final urdu = urduSurahNames[surahNumber - 1].toLowerCase();
+      final romanUrdu = romanUrduSurahNames[surahNumber - 1].toLowerCase();
+      final english = quran.getSurahNameEnglish(surahNumber).toLowerCase();
+
+      // Match even if only part of the word matches
+      return arabic.startsWith(query) ||
+          arabic.contains(query) ||
+          urdu.startsWith(query) ||
+          urdu.contains(query) ||
+          romanUrdu.startsWith(query) ||
+          romanUrdu.contains(query) ||
+          english.startsWith(query) ||
+          english.contains(query);
+    }).toList();
+
+    setState(() {
+      filteredSurah = results;
+    });
   }
 
   @override
@@ -94,6 +105,20 @@ class _QuranScreenState extends State<QuranScreen> {
               ), // optional overlay for better contrast
             ),
             // Modern search bar
+            filteredSurah.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No Surah found',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: filteredSurah.length,
+                    itemBuilder: (context, index) {
+                      final surahNumber = filteredSurah[index];
+                      return buildSurahCard(context, surahNumber);
+                    },
+                  ),
             ListView.builder(
               itemCount: filteredSurah.length,
               itemBuilder: (context, index) {
