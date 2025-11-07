@@ -6,48 +6,48 @@ class NamazGuideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final arabicStyle = GoogleFonts.notoNaskhArabic(fontSize: 18, height: 1.8);
-    final engStyle = GoogleFonts.poppins(fontSize: 16, height: 1.6);
+    final textStyle = GoogleFonts.notoNaskhArabic(fontSize: 18, height: 1.6);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("🕌 Complete Salah (Namaz) Guide"),
+        title: const Text('Complete Salah (Namaz) Guide'),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(12),
-        children: [
-          _buildIntro(context, engStyle),
-          const SizedBox(height: 12),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: SelectableText(
+          '''
+🕌 **Make Wudu (Ablution)** — be clean and in a state of purity.
 
-          _buildTile(
-            "STEP 1 — Takbeer al-Ihraam",
-            "Raise both hands up to ears and say:",
-            '''
-اللَّهُ أَكْبَرُ  
-Allāhu Akbar  
-Meaning: Allah is the Greatest.
-''',
-            arabicStyle,
-            engStyle,
-          ),
+**Face Qiblah (towards Ka’bah)**  
+Stand upright, feet slightly apart, and focus with khushu (humility).
 
-          _buildTile(
-            "STEP 2 — Qiyaam (Standing)",
-            "Place right hand over left and recite Dua al-Istiftah:",
-            '''
+**Make the Intention (Niyyah)**  
+Say silently in your heart:  
+“I intend to perform two/four Rak‘ah Salah for Allah, facing the Qiblah.”
+
+---
+
+## 🕋 STEP-BY-STEP PRAYER GUIDE
+
+### 🕐 STEP 1 — Takbeer al-Ihraam
+Raise both hands up to ears and say:  
+**اللَّهُ أَكْبَرُ**  
+*Allāhu Akbar* — Allah is the Greatest.
+
+---
+
+### 🕑 STEP 2 — Qiyaam (Standing)
+Place your right hand over your left hand — on the chest (for women) or above the navel (for men).
+
+**Dua al-Istiftah:**
 سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلٰهَ غَيْرُكَ  
-Subhānaka Allāhumma wa biḥamdika, wa tabāraka ismuka, wa ta‘ālā jadduka, wa lā ilāha ghayruk  
+*Subhānaka Allāhumma wa biḥamdika, wa tabāraka ismuka, wa ta‘ālā jadduka, wa lā ilāha ghayruk*  
 Meaning: Glory be to You, O Allah, and praise. Blessed is Your name, exalted is Your majesty, and there is no god besides You.
-''',
-            arabicStyle,
-            engStyle,
-          ),
 
-          _buildTile(
-            "STEP 3 — Surah Al-Fātiḥah",
-            "Recite the Opening Chapter of the Qur’an:",
-            '''
+---
+
+### 🕒 STEP 3 — Recite Surah Al-Fātiḥah
 بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ  
 ٱلْـحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ  
 ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ  
@@ -56,174 +56,93 @@ Meaning: Glory be to You, O Allah, and praise. Blessed is Your name, exalted is 
 ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ  
 صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ  
 غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ  
-آمِينَ
-''',
-            arabicStyle,
-            engStyle,
-          ),
+**آمِينَ**
 
-          _buildTile(
-            "STEP 4 — Another Surah (e.g. Al-Ikhlas)",
-            "Recite after Surah Al-Fātiḥah:",
-            '''
+Meaning: In the name of Allah, the Most Gracious, the Most Merciful... (etc.)
+
+---
+
+### 🕓 STEP 4 — Recite Another Surah (e.g. Al-Ikhlas)
 قُلْ هُوَ اللَّهُ أَحَدٌ  
 اللَّهُ الصَّمَدُ  
 لَمْ يَلِدْ وَلَمْ يُولَدْ  
 وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ  
-Meaning: Say, He is Allah, the One and Only...
-''',
-            arabicStyle,
-            engStyle,
-          ),
+Meaning: Say, He is Allah, the One and Only... (etc.)
 
-          _buildTile(
-            "STEP 5 — Rukoo‘ (Bowing)",
-            "Bend forward, hands on knees, and say three times:",
-            '''
+---
+
+### 🕔 STEP 5 — Rukoo‘ (Bowing)
+Bend forward, hands on knees, and say 3 times:  
 سُبْحَانَ رَبِّيَ الْعَظِيمِ  
-Subḥāna Rabbiyal-‘Aẓīm  
-Meaning: Glory be to my Lord, the Most Great.
+*Subḥāna Rabbiyal-‘Aẓīm* — Glory be to my Lord, the Most Great.
 
 Then rise saying:  
 سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ  
 رَبَّنَا وَلَكَ الْحَمْدُ
-''',
-            arabicStyle,
-            engStyle,
-          ),
 
-          _buildTile(
-            "STEP 6 — Sujood (Prostration)",
-            "Go down and say three times:",
-            '''
+---
+
+### 🕕 STEP 6 — Sujood (Prostration)
+Go down and say 3 times:  
 سُبْحَانَ رَبِّيَ الأَعْلَى  
-Subḥāna Rabbiyal-A‘lā  
-Meaning: Glory be to my Lord, the Most High.
-''',
-            arabicStyle,
-            engStyle,
-          ),
+*Subḥāna Rabbiyal-A‘lā* — Glory be to my Lord, the Most High.
 
-          _buildTile(
-            "STEP 7 — Sitting Between Two Sujoods",
-            "Sit upright and say:",
-            '''
+---
+
+### 🕖 STEP 7 — Sit Between Two Sujoods
 رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي  
-Rabbi ighfir lī, Rabbi ighfir lī  
-Meaning: My Lord, forgive me; my Lord, forgive me.
-''',
-            arabicStyle,
-            engStyle,
-          ),
+*Rabbi ighfir lī, Rabbi ighfir lī* — My Lord, forgive me; my Lord, forgive me.
 
-          _buildTile(
-            "STEP 8 — Second Sujood",
-            "Repeat Sujood and stand for next Rak‘ah:",
-            '''
+---
+
+### 🕗 STEP 8 — Second Sujood
+Repeat:  
 سُبْحَانَ رَبِّيَ الأَعْلَى ×3  
-Then rise saying: اللَّهُ أَكْبَرُ
-''',
-            arabicStyle,
-            engStyle,
-          ),
+Then stand up for the next Rak‘ah saying: **اللَّهُ أَكْبَرُ**
 
-          _buildTile(
-            "STEP 9 — At-Tahiyyat (Tashahhud)",
-            "Sit and recite:",
-            '''
+---
+
+### 🔁 2nd Rak‘ah
+Repeat Steps 2–8.  
+After second Sujood, sit for **Tashahhud**.
+
+---
+
+### 🕘 STEP 9 — At-Tahiyyat (Tashahhud)
 التَّحِيَّاتُ لِلَّهِ، وَالصَّلَوَاتُ وَالطَّيِّبَاتُ،  
 السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ،  
 السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّهِ الصَّالِحِينَ،  
 أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ،  
 وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ.
-''',
-            arabicStyle,
-            engStyle,
-          ),
 
-          _buildTile(
-            "STEP 10 — Darood Ibrahim",
-            "Recite after Tashahhud (in final Rak‘ah):",
-            '''
-اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ،  
-كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ،  
-إِنَّكَ حَمِيدٌ مَجِيدٌ.  
-اللَّهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ،  
-كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ،  
-إِنَّكَ حَمِيدٌ مَجِيدٌ.
-''',
-            arabicStyle,
-            engStyle,
-          ),
+---
 
-          _buildTile(
-            "STEP 11 — Final Dua (Before Ending Salah)",
-            "You may recite any dua from the Qur’an or Sunnah:",
-            '''
+### 🕙 STEP 10 — For 3 or 4 Rak‘ah Salah
+After Tashahhud in 2nd Rak‘ah, stand up and complete the remaining Rak‘ahs.  
+In the last Rak‘ah, sit and recite Darood Ibrahim.
+
+---
+
+### 🕚 STEP 11 — Darood Ibrahim
+اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ...  
+(O Allah, send Your mercy upon Muhammad and his family...)
+
+---
+
+### 🕛 STEP 12 — Final Dua
 رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ  
-Meaning: Our Lord! Give us good in this world and good in the Hereafter and save us from the torment of the Fire.
-''',
-            arabicStyle,
-            engStyle,
-          ),
+Meaning: Our Lord, give us good in this world and in the Hereafter...
 
-          _buildTile(
-            "STEP 12 — Tasleem (Ending Salah)",
-            "Turn your head to the right and left:",
-            '''
+---
+
+### 🕐 STEP 13 — Tasleem (Ending Salah)
 السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → right  
 السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → left  
 Meaning: Peace and mercy of Allah be upon you.
 ''',
-            arabicStyle,
-            engStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildIntro(BuildContext context, TextStyle engStyle) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text('''
-Make Wudu (Ablution) — be clean and in a state of purity.
-
-Face Qiblah (towards Ka’bah). Stand upright, feet slightly apart, and focus with khushu (humility).
-
-Make the Intention (Niyyah):  
-“I intend to perform two/four Rak‘ah Salah for Allah, facing the Qiblah.”
-''', style: engStyle),
-      ),
-    );
-  }
-
-  Widget _buildTile(
-    String title,
-    String subtitle,
-    String body,
-    TextStyle arabicStyle,
-    TextStyle engStyle,
-  ) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: ExpansionTile(
-        title: Text(
-          title,
-          style: engStyle.copyWith(fontWeight: FontWeight.bold),
+          style: textStyle,
+          textAlign: TextAlign.start,
         ),
-        subtitle: Text(
-          subtitle,
-          style: engStyle.copyWith(color: Colors.grey[700]),
-        ),
-        childrenPadding: const EdgeInsets.all(12),
-        children: [
-          SelectableText(body, style: arabicStyle, textAlign: TextAlign.start),
-        ],
       ),
     );
   }
