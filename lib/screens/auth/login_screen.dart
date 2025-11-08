@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
+          alignment: Alignment.center,
           children: [
             Positioned.fill(
               child: Image.asset("assets/bg.png", fit: BoxFit.cover),
@@ -88,56 +89,58 @@ class _LoginScreenState extends State<LoginScreen> {
                 0.3,
               ), // optional overlay for better contrast
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // App Logo
-                Image.asset('assets/logo.png', height: 300),
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // App Logo
+                  Image.asset('assets/logo.png', height: 300),
 
-                const SizedBox(height: 12),
-                const Text(
-                  "Sign in to continue",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-                const SizedBox(height: 40),
-
-                // Google Sign-In Button
-                _loading
-                    ? const CircularProgressIndicator()
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: const BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                          icon: Image.asset('assets/logo.png', height: 24),
-                          label: const Text(
-                            'Sign in with Google',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                            ),
-                          ),
-                          onPressed: _signInWithGoogle,
-                        ),
-                      ),
-                const SizedBox(height: 20),
-
-                // Continue as Guest Button
-                TextButton(
-                  onPressed: _continueAsGuest,
-                  child: const Text(
-                    "Continue as Guest",
-                    style: TextStyle(fontSize: 16, color: Colors.blueAccent),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "Sign in to continue",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 40),
+
+                  // Google Sign-In Button
+                  _loading
+                      ? const CircularProgressIndicator()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              minimumSize: const Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: const BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                            icon: Image.asset('assets/logo.png', height: 24),
+                            label: const Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 16,
+                              ),
+                            ),
+                            onPressed: _signInWithGoogle,
+                          ),
+                        ),
+                  const SizedBox(height: 20),
+
+                  // Continue as Guest Button
+                  TextButton(
+                    onPressed: _continueAsGuest,
+                    child: const Text(
+                      "Continue as Guest",
+                      style: TextStyle(fontSize: 16, color: Colors.blueAccent),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
