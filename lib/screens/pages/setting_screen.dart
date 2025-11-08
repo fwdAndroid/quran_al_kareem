@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
-import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
-import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
-import 'package:quran_al_kareem/screens/other/dua_screen.dart';
-import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
-import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
+import 'package:quran_al_kareem/screens/other/privacy_policy.dart';
+import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -61,6 +57,67 @@ class _SettingScreenState extends State<SettingScreen> {
                   leading: Icon(Icons.language, color: Colors.white),
                 ),
               ),
+              const Divider(),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.privacy_tip_outlined,
+                    color: Colors.white,
+                  ),
+                  title: const Text(
+                    "Privacy Policy",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PrivacyPolicyScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const Divider(),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.article_outlined,
+                    color: Colors.white,
+                  ),
+                  title: const Text(
+                    "Terms & Services",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const TermsAndServicesScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const Divider(),
 
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
