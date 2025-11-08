@@ -112,9 +112,17 @@ class _AudioScreenState extends State<AudioScreen> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(30),
+          padding: EdgeInsets.all(8),
           child: Column(
             children: [
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage(
+                  "assets/qari_images/${widget.qari.name}.jpg",
+                ),
+                backgroundColor: Colors.white,
+              ),
+              const SizedBox(height: 20),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.2,

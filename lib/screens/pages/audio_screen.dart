@@ -17,7 +17,6 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
   List<Qari> _allQaris = [];
   List<Qari> _filteredQaris = [];
   bool _isLoading = true;
-  String _searchText = "";
 
   @override
   void initState() {
@@ -30,47 +29,44 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
       final api = ApiCalls();
       final qariList = await api.getQariList();
 
-      // 🧾 Names to exclude
+      // Names to exclude
       final excludedQaris = [
         "Al-Hussayni Al-'Azazy (with Children)",
         "Hatem Farid - Taraweeh 1431",
         "Madinah Taraweeh 1435",
         "Mahmoud Khaleel",
         "Mostafa Ismaeel",
+        "Mahmoud Khaleel Al-Husary",
         "Sudais and Shuraym",
       ];
 
-      // 🧹 Filter out excluded Qaris
+      // Filter out excluded Qaris
       final filteredList = qariList
           .where((q) => !excludedQaris.contains(q.name?.trim()))
           .toList();
-
-      // 🖨️ Debug print (optional)
-      debugPrint("✅ Loaded Qaris (${filteredList.length}):");
-      for (var q in filteredList) {
-        debugPrint(" - ${q.name}");
-      }
 
       setState(() {
         _allQaris = filteredList;
         _filteredQaris = filteredList;
         _isLoading = false;
       });
+
+      // Optional debug print
+      debugPrint("✅ Loaded Qaris (${filteredList.length}):");
+      for (var q in filteredList) {
+        debugPrint(" - ${q.name}");
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
       debugPrint("Error loading Qaris: $e");
     }
   }
 
   void _filterQaris(String query) {
     setState(() {
-      _searchText = query;
       _filteredQaris = _allQaris
           .where(
-            (qari) =>
-                qari.name!.toLowerCase().contains(query.toLowerCase().trim()),
+            (q) => q.name!.toLowerCase().contains(query.toLowerCase().trim()),
           )
           .toList();
     });
@@ -95,7 +91,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
           Container(color: mainColor.withOpacity(0.3)),
           Column(
             children: [
-              // 🔍 Search Bar
+              // 🔍 Search bar
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(

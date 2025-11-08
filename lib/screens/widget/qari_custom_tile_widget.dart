@@ -21,6 +21,8 @@ class QariCustomTile extends StatefulWidget {
 class _QariCustomTileState extends State<QariCustomTile> {
   @override
   Widget build(BuildContext context) {
+    final imagePath = "assets/qari_images/${widget.qari.name}.jpg";
+
     return GestureDetector(
       onTap: widget.ontap,
       child: Row(
@@ -28,16 +30,12 @@ class _QariCustomTileState extends State<QariCustomTile> {
           Padding(
             padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white24,
-              child: ArabicText(
-                '${widget.index + 1}', // show 1,2,3,...
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+              radius: 30,
+              backgroundImage: AssetImage(imagePath),
+              onBackgroundImageError: (_, __) {
+                // Optional fallback image
+                print("Image not found: $imagePath");
+              },
             ),
           ),
           Padding(
