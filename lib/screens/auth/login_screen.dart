@@ -89,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ), // optional overlay for better contrast
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // App Logo

@@ -119,13 +119,13 @@ class _QuranScreenState extends State<QuranScreen> {
                       return buildSurahCard(context, surahNumber);
                     },
                   ),
-            ListView.builder(
-              itemCount: filteredSurah.length,
-              itemBuilder: (context, index) {
-                final surahNumber = filteredSurah[index];
-                return buildSurahCard(context, surahNumber);
-              },
-            ),
+            // ListView.builder(
+            //   itemCount: filteredSurah.length,
+            //   itemBuilder: (context, index) {
+            //     final surahNumber = filteredSurah[index];
+            //     return buildSurahCard(context, surahNumber);
+            //   },
+            // ),
           ],
         ),
       ),
