@@ -29,9 +29,31 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
     try {
       final api = ApiCalls();
       final qariList = await api.getQariList();
+
+      // 🧾 Names to exclude
+      final excludedQaris = [
+        "Al-Hussayni Al-'Azazy (with Children)",
+        "Hatem Farid - Taraweeh 1431",
+        "Madinah Taraweeh 1435",
+        "Mahmoud Khaleel",
+        "Mostafa Ismaeel",
+        "Sudais and Shuraym",
+      ];
+
+      // 🧹 Filter out excluded Qaris
+      final filteredList = qariList
+          .where((q) => !excludedQaris.contains(q.name?.trim()))
+          .toList();
+
+      // 🖨️ Debug print (optional)
+      debugPrint("✅ Loaded Qaris (${filteredList.length}):");
+      for (var q in filteredList) {
+        debugPrint(" - ${q.name}");
+      }
+
       setState(() {
-        _allQaris = qariList;
-        _filteredQaris = qariList;
+        _allQaris = filteredList;
+        _filteredQaris = filteredList;
         _isLoading = false;
       });
     } catch (e) {
