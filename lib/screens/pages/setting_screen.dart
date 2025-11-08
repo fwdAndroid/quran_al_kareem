@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
+import 'package:quran_al_kareem/screens/other/font_setting.dart';
 import 'package:quran_al_kareem/screens/other/privacy_policy.dart';
 import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -55,6 +56,27 @@ class _SettingScreenState extends State<SettingScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                   leading: Icon(Icons.language, color: Colors.white),
+                ),
+              ),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (builder) => FontSettingsScreen(),
+                      ),
+                    );
+                  },
+                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  title: Text(
+                    languageProvider.localizedStrings["Font Setting"] ??
+                        "Font Setting",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  leading: Icon(Icons.font_download_sharp, color: Colors.white),
                 ),
               ),
               const Divider(),
