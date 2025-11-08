@@ -8,6 +8,7 @@ import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/paint.dart';
 
 class PrayerScreen extends StatefulWidget {
@@ -17,8 +18,7 @@ class PrayerScreen extends StatefulWidget {
   State<PrayerScreen> createState() => _PrayerScreenState();
 }
 
-class _PrayerScreenState extends State<PrayerScreen>
-    with SingleTickerProviderStateMixin {
+class _PrayerScreenState extends State<PrayerScreen> {
   Map<String, dynamic>? timings;
   String? hijriDate;
   bool isLoading = true;
@@ -26,25 +26,17 @@ class _PrayerScreenState extends State<PrayerScreen>
   String? nextPrayerName;
   Duration? timeRemaining;
   Timer? countdownTimer;
-  Timer? backgroundTimer;
-  late List<Color> _gradientColors;
   final ScrollController _scrollController = ScrollController();
   double _scrollOffset = 0.0;
-  late AnimationController _fajrGlowController;
 
   @override
   void initState() {
     super.initState();
-    _gradientColors = [Colors.indigo.shade900, Colors.black];
     _scrollController.addListener(() {
       setState(() {
         _scrollOffset = _scrollController.offset;
       });
     });
-    _fajrGlowController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    )..repeat(reverse: true);
     loadPrayerTimes();
   }
 
@@ -67,7 +59,6 @@ class _PrayerScreenState extends State<PrayerScreen>
 
       hijriDate = data['date']['hijri']['date'];
       determineNextPrayer();
-      _setGradientFromPrayerTimes();
       setState(() => isLoading = false);
     } catch (e) {
       setState(() {
@@ -124,57 +115,10 @@ class _PrayerScreenState extends State<PrayerScreen>
     });
   }
 
-  void _setGradientFromPrayerTimes() {
-    if (timings == null) return;
-    final now = DateTime.now();
-
-    DateTime parsePrayer(String name) {
-      final t = DateFormat('HH:mm').parse(timings![name]);
-      return DateTime(now.year, now.month, now.day, t.hour, t.minute);
-    }
-
-    final fajr = parsePrayer('Fajr');
-    final maghrib = parsePrayer('Maghrib');
-
-    if (now.isAfter(fajr.subtract(const Duration(minutes: 30))) &&
-        now.isBefore(fajr.add(const Duration(hours: 1)))) {
-      // Fajr: sunrise colors
-      _gradientColors = [Colors.orange.shade200, Colors.blue.shade300];
-    } else if (now.isAfter(fajr.add(const Duration(hours: 1))) &&
-        now.isBefore(maghrib.subtract(const Duration(hours: 2)))) {
-      // Day
-      _gradientColors = [Colors.lightBlue.shade200, Colors.blueAccent.shade700];
-    } else if (now.isAfter(maghrib.subtract(const Duration(hours: 1))) &&
-        now.isBefore(maghrib.add(const Duration(hours: 1)))) {
-      // Sunset
-      _gradientColors = [Colors.deepOrange.shade300, Colors.purple.shade100];
-    } else {
-      // Night
-      _gradientColors = [Colors.indigo.shade900, Colors.black];
-    }
-  }
-
-  bool get isFajrTime {
-    if (timings == null) return false;
-    final now = DateTime.now();
-    final fajr = DateFormat('HH:mm').parse(timings!['Fajr']);
-    final fajrTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      fajr.hour,
-      fajr.minute,
-    );
-    return now.isAfter(fajrTime.subtract(const Duration(minutes: 30))) &&
-        now.isBefore(fajrTime.add(const Duration(hours: 1)));
-  }
-
   @override
   void dispose() {
     countdownTimer?.cancel();
-    backgroundTimer?.cancel();
     _scrollController.dispose();
-    _fajrGlowController.dispose();
     super.dispose();
   }
 
@@ -215,53 +159,19 @@ class _PrayerScreenState extends State<PrayerScreen>
     }
 
     return Scaffold(
+      backgroundColor: mainColor,
+
       body: Stack(
         children: [
-          // 🌌 Animated Gradient Background
-          AnimatedContainer(
-            duration: const Duration(seconds: 3),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: _gradientColors,
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
+          // Plain Background Color
+          Positioned.fill(
+            child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-
-          // 🌠 Floating Stars at Night
-          if (_gradientColors.first == Colors.indigo.shade900)
-            CustomPaint(painter: StarFieldPainter(), child: Container()),
-
-          // 🌅 Fajr Glowing Rays
-          if (isFajrTime)
-            AnimatedBuilder(
-              animation: _fajrGlowController,
-              builder: (context, _) {
-                final glow = Tween<double>(begin: 0.4, end: 1.0)
-                    .animate(
-                      CurvedAnimation(
-                        parent: _fajrGlowController,
-                        curve: Curves.easeInOut,
-                      ),
-                    )
-                    .value;
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: [
-                        Colors.yellowAccent.withOpacity(glow * 0.2),
-                        Colors.transparent,
-                      ],
-                      radius: 1.2,
-                      center: Alignment(0, -0.6),
-                    ),
-                  ),
-                );
-              },
-            ),
-
-          // 🌙 Main Content
+          Container(
+            color: mainColor.withOpacity(
+              0.3,
+            ), // optional overlay for better contrast
+          ),
           SafeArea(
             child: NotificationListener<ScrollNotification>(
               onNotification: (_) {
@@ -289,7 +199,7 @@ class _PrayerScreenState extends State<PrayerScreen>
                               "Next Prayer: $nextPrayerName",
                               style: const TextStyle(
                                 fontSize: 22,
-                                color: Colors.amber,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -315,7 +225,7 @@ class _PrayerScreenState extends State<PrayerScreen>
                             return Transform.translate(
                               offset: Offset(0, -_scrollOffset * 0.05 * index),
                               child: Card(
-                                color: Colors.black26.withOpacity(0.4),
+                                color: Colors.black26.withOpacity(0.9),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -341,12 +251,14 @@ class _PrayerScreenState extends State<PrayerScreen>
                           },
                         ),
                       ),
+
+                      // Bottom Buttons
                       Container(
                         width: 400,
                         height: 200,
                         decoration: BoxDecoration(
-                          color: Color(0xffFFFFFF).withOpacity(.2),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.white12,
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Column(
                           children: [
@@ -356,48 +268,39 @@ class _PrayerScreenState extends State<PrayerScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  //Hadith
                                   GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (builder) => HadithScreen(),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => HadithScreen(),
+                                      ),
+                                    ),
                                     child: Image.asset(
                                       "assets/item 1.png",
                                       height: 90,
                                       width: 90,
                                     ),
                                   ),
-                                  //Dua
                                   GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (builder) => DuaScreen(),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => DuaScreen(),
+                                      ),
+                                    ),
                                     child: Image.asset(
                                       "assets/item 2-1.png",
                                       height: 90,
                                       width: 90,
                                     ),
                                   ),
-                                  //Allah Names
                                   GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (builder) => AllahNames(),
-                                        ),
-                                      );
-                                    },
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => AllahNames(),
+                                      ),
+                                    ),
                                     child: Image.asset(
                                       "assets/item 3.png",
                                       height: 90,
@@ -410,33 +313,26 @@ class _PrayerScreenState extends State<PrayerScreen>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                //Namaz
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (builder) =>
-                                            NamazGuideScreen(),
-                                      ),
-                                    );
-                                  },
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => NamazGuideScreen(),
+                                    ),
+                                  ),
                                   child: Image.asset(
                                     "assets/item 2.png",
                                     height: 90,
                                     width: 90,
                                   ),
                                 ),
-                                //Qibla
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (builder) => QiblaScreen(),
-                                      ),
-                                    );
-                                  },
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => QiblaScreen(),
+                                    ),
+                                  ),
                                   child: Image.asset(
                                     "assets/item 1-1.png",
                                     height: 90,
