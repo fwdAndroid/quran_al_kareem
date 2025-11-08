@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
@@ -11,8 +12,8 @@ import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
-import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -24,22 +25,63 @@ class DrawerWidget extends StatefulWidget {
 class _DrawerWidgetState extends State<DrawerWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  InterstitialAd? _interstitialAd;
+  bool _isAdReady = false;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+    _loadInterstitialAd();
+  }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // ✅ Test Ad ID
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _isAdReady = true;
+          _interstitialAd!.setImmersiveMode(true);
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          _isAdReady = false;
+        },
+      ),
+    );
+  }
+
+  void _showInterstitialAndNavigate(Widget page) {
+    if (_isAdReady && _interstitialAd != null) {
+      _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (ad) {
+          ad.dispose();
+          _loadInterstitialAd(); // reload for next time
+          Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          ad.dispose();
+          Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+        },
+      );
+
+      _interstitialAd!.show();
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _interstitialAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Drawer(
       backgroundColor: mainColor,
@@ -48,205 +90,106 @@ class _DrawerWidgetState extends State<DrawerWidget>
           children: [
             const SizedBox(height: 30),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, top: 10),
+              padding: const EdgeInsets.only(top: 10),
               child: Image.asset("assets/logo.png", height: 150, width: 150),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Icons.audio_file, color: Colors.brown),
+            const Divider(),
 
-                title: ArabicText(
+            // ✅ Audio Quran
+            _drawerItem(
+              icon: Icons.audio_file,
+              text:
                   languageProvider.localizedStrings["Audio Quran"] ??
-                      'Audio Quran',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainDashboard(initialPageIndex: 2),
-                    ),
-                  );
-                },
+                  'Audio Quran',
+              onTap: () => _showInterstitialAndNavigate(
+                const MainDashboard(initialPageIndex: 2),
               ),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Ionicons.bag_handle, color: Colors.brown),
-                title: ArabicText(
-                  languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HadithScreen()),
-                  );
-                },
-              ),
+
+            // ✅ Hadith
+            _drawerItem(
+              icon: Ionicons.book,
+              text: languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
+              onTap: () => _showInterstitialAndNavigate(const HadithScreen()),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Icons.language, color: Colors.brown),
 
-                title: ArabicText(
-                  languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (builder) => QiblaScreen()),
-                  );
-                },
-              ),
+            // ✅ Qibla
+            _drawerItem(
+              icon: Icons.explore,
+              text: languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
+              onTap: () => _showInterstitialAndNavigate(QiblaScreen()),
             ),
-            Divider(),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Icons.party_mode_rounded, color: Colors.brown),
-
-                title: ArabicText(
+            // ✅ Prayer Times
+            _drawerItem(
+              icon: Icons.access_time,
+              text:
                   languageProvider.localizedStrings["Prayer Times"] ??
-                      'Prayer Times',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (builder) => PrayerScreen()),
-                  );
-                },
-              ),
+                  'Prayer Times',
+              onTap: () => _showInterstitialAndNavigate(const PrayerScreen()),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(
-                  Ionicons.calendar_number_sharp,
-                  color: Colors.brown,
-                ),
-                title: ArabicText(
-                  languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NamazGuideScreen()),
-                  );
-                },
-              ),
-            ),
-            Divider(),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Ionicons.book_sharp, color: Colors.brown),
-                title: ArabicText(
-                  languageProvider.localizedStrings["Dua"] ?? 'Dua',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DuaScreen()),
-                  );
-                },
-              ),
+            // ✅ Namaz Guide
+            _drawerItem(
+              icon: Ionicons.calendar_number_sharp,
+              text: languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
+              onTap: () =>
+                  _showInterstitialAndNavigate(const NamazGuideScreen()),
             ),
-            Divider(),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Ionicons.book, color: Colors.brown),
-                title: ArabicText(
+            // ✅ Dua
+            _drawerItem(
+              icon: Ionicons.book_sharp,
+              text: languageProvider.localizedStrings["Dua"] ?? 'Dua',
+              onTap: () => _showInterstitialAndNavigate(const DuaScreen()),
+            ),
+
+            // ✅ Allah Names
+            _drawerItem(
+              icon: Ionicons.book_outline,
+              text:
                   languageProvider.localizedStrings["Allah Names"] ??
-                      'Allah Names',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllahNames()),
-                  );
-                },
-              ),
+                  'Allah Names',
+              onTap: () => _showInterstitialAndNavigate(const AllahNames()),
             ),
-            Divider(),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-              child: ListTile(
-                leading: Icon(Icons.countertops, color: Colors.brown),
 
-                title: ArabicText(
+            // ✅ Tasbeeh Counter
+            _drawerItem(
+              icon: Icons.countertops,
+              text:
                   languageProvider.localizedStrings["Tasbeeh Counter"] ??
-                      'Tasbeeh Counter',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TashbeehCounter()),
-                  );
-                },
-              ),
+                  'Tasbeeh Counter',
+              onTap: () =>
+                  _showInterstitialAndNavigate(const TashbeehCounter()),
             ),
-            Divider(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _drawerItem({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      children: [
+        ListTile(
+          leading: Icon(icon, color: Colors.brown),
+          title: ArabicText(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.left,
+          ),
+          onTap: onTap,
+        ),
+        const Divider(color: Colors.white24),
+      ],
     );
   }
 }

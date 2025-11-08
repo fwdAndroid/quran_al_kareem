@@ -5,11 +5,12 @@ import 'package:quran_al_kareem/firebase_options.dart';
 import 'package:quran_al_kareem/provider/font_provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/splash_screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  MobileAds.instance.initialize();
   runApp(
     MultiProvider(
       providers: [
