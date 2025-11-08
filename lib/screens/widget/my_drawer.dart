@@ -6,6 +6,11 @@ import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
+import 'package:quran_al_kareem/screens/other/dua_screen.dart';
+import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
+import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
+import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
+import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -44,7 +49,29 @@ class _DrawerWidgetState extends State<DrawerWidget>
             padding: const EdgeInsets.only(left: 8.0, right: 8, top: 10),
             child: Image.asset("assets/logo.png", height: 150, width: 150),
           ),
+          Divider(),
 
+          ListTile(
+            leading: Icon(Icons.party_mode_rounded, color: Colors.brown),
+
+            title: Text(
+              languageProvider.localizedStrings["Prayer Times"] ??
+                  'Prayer Times',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w300,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (builder) => PrayerScreen()),
+              );
+            },
+          ),
+          Divider(),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: ListTile(
@@ -111,12 +138,83 @@ class _DrawerWidgetState extends State<DrawerWidget>
             },
           ),
           Divider(),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+            child: ListTile(
+              leading: Icon(Ionicons.book_sharp, color: Colors.brown),
+              title: Text(
+                languageProvider.localizedStrings["Dua"] ?? 'Dua',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DuaScreen()),
+                );
+              },
+            ),
+          ),
+          Divider(),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+            child: ListTile(
+              leading: Icon(Ionicons.bag_handle, color: Colors.brown),
+              title: Text(
+                languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HadithScreen()),
+                );
+              },
+            ),
+          ),
+          Divider(),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+            child: ListTile(
+              leading: Icon(
+                Ionicons.calendar_number_sharp,
+                color: Colors.brown,
+              ),
+              title: Text(
+                languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NamazGuideScreen()),
+                );
+              },
+            ),
+          ),
+          Divider(),
+
           ListTile(
             leading: Icon(Icons.language, color: Colors.brown),
 
             title: Text(
-              languageProvider.localizedStrings["Language Setting"] ??
-                  'Language Setting',
+              languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w300,
@@ -127,7 +225,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (builder) => ChangeLangage()),
+                MaterialPageRoute(builder: (builder) => QiblaScreen()),
               );
             },
           ),
