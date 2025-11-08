@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quran/quran.dart' as quran;
 import 'package:quran_al_kareem/screens/detail/surah_detail_page.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/screens/widget/my_drawer.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/surah_names_utils.dart';
@@ -107,7 +108,7 @@ class _QuranScreenState extends State<QuranScreen> {
             // Modern search bar
             filteredSurah.isEmpty
                 ? const Center(
-                    child: Text(
+                    child: ArabicText(
                       'No Surah found',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
@@ -146,19 +147,19 @@ class _QuranScreenState extends State<QuranScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,
-          child: Text(
+          child: ArabicText(
             surahNumber.toString(),
             style: TextStyle(fontWeight: FontWeight.bold, color: mainColor),
           ),
         ),
-        title: Text(
+        title: ArabicText(
           arabicSurahNames[surahNumber - 1],
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        subtitle: Text(
+        subtitle: ArabicText(
           '${quran.getVerseCount(surahNumber)} verses ',
           style: TextStyle(color: Colors.white, fontSize: 12),
         ),

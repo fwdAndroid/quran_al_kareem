@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/allah_names_utils.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -24,7 +25,7 @@ class _AllahNamesState extends State<AllahNames>
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
-        title: Text("Allah Names", style: TextStyle(color: Colors.white)),
+        title: ArabicText("Allah Names", style: TextStyle(color: Colors.white)),
       ),
       body: Stack(
         children: [
@@ -41,7 +42,7 @@ class _AllahNamesState extends State<AllahNames>
               children: [
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text(
+                  child: ArabicText(
                     'أسماء الله الحسنى',
                     style: TextStyle(
                       fontSize: 32,
@@ -90,7 +91,7 @@ class _AllahNamesState extends State<AllahNames>
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  ArabicText(
                                     name['arabic']!,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
@@ -106,7 +107,7 @@ class _AllahNamesState extends State<AllahNames>
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
+                                  ArabicText(
                                     name['transliteration']!,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -115,7 +116,7 @@ class _AllahNamesState extends State<AllahNames>
                                     ),
                                   ),
                                   const SizedBox(height: 5),
-                                  Text(
+                                  ArabicText(
                                     name['meaning']!,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(

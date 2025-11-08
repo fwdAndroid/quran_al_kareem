@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran/quran.dart' as quran;
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class SurahDetailScreen extends StatefulWidget {
@@ -24,7 +25,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
-        title: Text(surahName, style: const TextStyle(color: Colors.white)),
+        title: ArabicText(
+          surahName,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
       body: Stack(
         children: [
@@ -61,7 +65,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         // Arabic verse
-                        Text(
+                        ArabicText(
                           quran.getVerse(
                             widget.surahNumber,
                             verseNumber,
@@ -86,7 +90,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
-                            child: Text(
+                            child: ArabicText(
                               verseNumber.toString(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,

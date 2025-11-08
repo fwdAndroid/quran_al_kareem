@@ -3,6 +3,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/model/dua_model.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/read_json.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:rxdart/rxdart.dart'; // for combining position streams
@@ -55,9 +56,9 @@ class _DuaScreenState extends State<DuaScreen> {
       setState(() {});
     } catch (e) {
       debugPrint("Error playing audio: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Error playing audio")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: ArabicText("Error playing audio")),
+      );
     }
   }
 
@@ -67,7 +68,7 @@ class _DuaScreenState extends State<DuaScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: ArabicText(
           languageProvider.localizedStrings["Dua's"] ?? "Dua's",
           style: TextStyle(color: Colors.white),
         ),
@@ -85,7 +86,7 @@ class _DuaScreenState extends State<DuaScreen> {
             future: ReadJSON().ReadJsonDua(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return Center(child: Text("Error: ${snapshot.error}"));
+                return Center(child: ArabicText("Error: ${snapshot.error}"));
               } else if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -117,7 +118,7 @@ class _DuaScreenState extends State<DuaScreen> {
                         padding: const EdgeInsets.all(14.0),
                         child: Column(
                           children: [
-                            const Text(
+                            const ArabicText(
                               '﷽',
                               style: TextStyle(
                                 fontSize: 36,
@@ -125,7 +126,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            Text(
+                            ArabicText(
                               dua.dua ?? "",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
@@ -142,7 +143,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Text(
+                            ArabicText(
                               dua.translation ?? "",
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -152,7 +153,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Text(
+                            ArabicText(
                               dua.reference ?? "",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
@@ -177,7 +178,9 @@ class _DuaScreenState extends State<DuaScreen> {
                                     : Icons.play_circle,
                                 size: 24,
                               ),
-                              label: Text(isPlaying ? "Pause" : "Play Audio"),
+                              label: ArabicText(
+                                isPlaying ? "Pause" : "Play Audio",
+                              ),
                             ),
                           ],
                         ),
@@ -237,7 +240,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               setState(() {});
                             },
                           ),
-                          title: Text(
+                          title: ArabicText(
                             _currentDua?.dua?.substring(
                                   0,
                                   (_currentDua!.dua!.length > 20
@@ -262,7 +265,7 @@ class _DuaScreenState extends State<DuaScreen> {
                             activeColor: mainColor,
                             inactiveColor: Colors.grey[300],
                           ),
-                          trailing: Text(
+                          trailing: ArabicText(
                             _formatDuration(position),
                             style: const TextStyle(
                               fontSize: 12,
@@ -272,7 +275,7 @@ class _DuaScreenState extends State<DuaScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Text(
+                          child: ArabicText(
                             "Total: ${_formatDuration(duration)}",
                             style: const TextStyle(
                               fontSize: 11,

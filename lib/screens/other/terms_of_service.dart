@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class TermsAndServicesScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class TermsAndServicesScreen extends StatelessWidget {
       backgroundColor: mainColor,
 
       appBar: AppBar(
-        title: const Text(
+        title: const ArabicText(
           "Terms & Services",
           style: TextStyle(color: Colors.white),
         ),
@@ -22,7 +23,7 @@ class TermsAndServicesScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text(
+            ArabicText(
               "By using this application, you agree to the following terms and conditions:\n\n"
               "1. The app is intended for personal, non-commercial Islamic education and guidance.\n"
               "2. All Quran, Hadith, and Dua content is sourced from authentic references.\n"

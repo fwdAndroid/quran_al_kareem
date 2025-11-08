@@ -5,6 +5,7 @@ import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/other/font_setting.dart';
 import 'package:quran_al_kareem/screens/other/privacy_policy.dart';
 import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -50,7 +51,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     );
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: Text(
+                  title: ArabicText(
                     languageProvider.localizedStrings["Change Language"] ??
                         "Change Language",
                     style: TextStyle(color: Colors.white),
@@ -71,7 +72,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     );
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: Text(
+                  title: ArabicText(
                     languageProvider.localizedStrings["Font Setting"] ??
                         "Font Setting",
                     style: TextStyle(color: Colors.white),
@@ -88,7 +89,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Icons.privacy_tip_outlined,
                     color: Colors.white,
                   ),
-                  title: const Text(
+                  title: const ArabicText(
                     "Privacy Policy",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -118,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Icons.article_outlined,
                     color: Colors.white,
                   ),
-                  title: const Text(
+                  title: const ArabicText(
                     "Terms & Services",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -148,7 +149,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     shareApp();
                   },
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: Text(
+                  title: ArabicText(
                     languageProvider.localizedStrings["Invite Friends"] ??
                         "Invite Friends",
                     style: TextStyle(color: Colors.white),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class TashbeehCounter extends StatefulWidget {
@@ -43,13 +44,13 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Session Summary"),
+        title: const ArabicText("Session Summary"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Total Taps: $counter"),
+            ArabicText("Total Taps: $counter"),
             const SizedBox(height: 8),
-            Text("Total Time: ${elapsed.inSeconds} seconds"),
+            ArabicText("Total Time: ${elapsed.inSeconds} seconds"),
           ],
         ),
         actions: [
@@ -57,7 +58,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Close"),
+            child: const ArabicText("Close"),
           ),
         ],
       ),
@@ -108,7 +109,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
         centerTitle: true,
-        title: Text("Tasbeeh", style: TextStyle(color: Colors.white)),
+        title: ArabicText("Tasbeeh", style: TextStyle(color: Colors.white)),
       ),
       body: Container(
         width: screenWidth,
@@ -126,7 +127,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             if (timerRunning)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: Text(
+                child: ArabicText(
                   formatDuration(elapsed),
                   style: TextStyle(
                     fontSize: timerFontSize,
@@ -135,7 +136,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
                   ),
                 ),
               ),
-            Text(
+            ArabicText(
               "$counter",
               style: TextStyle(
                 fontSize: counterFontSize,
@@ -149,7 +150,10 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             ElevatedButton(
               onPressed: incrementCounter,
               style: _buttonStyle(screenWidth, screenHeight),
-              child: Text("Tap", style: TextStyle(fontSize: buttonFontSize)),
+              child: ArabicText(
+                "Tap",
+                style: TextStyle(fontSize: buttonFontSize),
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -158,7 +162,10 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             ElevatedButton(
               onPressed: timerRunning ? null : startTimer,
               style: _buttonStyle(screenWidth, screenHeight),
-              child: Text("Start", style: TextStyle(fontSize: buttonFontSize)),
+              child: ArabicText(
+                "Start",
+                style: TextStyle(fontSize: buttonFontSize),
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -167,7 +174,10 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             ElevatedButton(
               onPressed: timerRunning ? stopTimer : null,
               style: _buttonStyle(screenWidth, screenHeight),
-              child: Text("Stop", style: TextStyle(fontSize: buttonFontSize)),
+              child: ArabicText(
+                "Stop",
+                style: TextStyle(fontSize: buttonFontSize),
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -175,7 +185,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
             // Reset
             TextButton(
               onPressed: reset,
-              child: Text(
+              child: ArabicText(
                 "Reset",
                 style: TextStyle(
                   fontSize: buttonFontSize,

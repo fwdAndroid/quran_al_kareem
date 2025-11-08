@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -58,9 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Google Sign-In failed: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: ArabicText("Google Sign-In failed: $e")),
+      );
     } finally {
       setState(() => _loading = false);
     }
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Image.asset('assets/logo.png', height: 300),
 
                   const SizedBox(height: 12),
-                  const Text(
+                  const ArabicText(
                     "Sign in to continue",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
@@ -119,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             icon: Image.asset('assets/logo.png', height: 24),
-                            label: const Text(
+                            label: const ArabicText(
                               'Sign in with Google',
                               style: TextStyle(
                                 color: Colors.black87,
@@ -134,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Continue as Guest Button
                   TextButton(
                     onPressed: _continueAsGuest,
-                    child: const Text(
+                    child: const ArabicText(
                       "Continue as Guest",
                       style: TextStyle(fontSize: 16, color: Colors.blueAccent),
                     ),

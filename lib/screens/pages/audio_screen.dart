@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quran_al_kareem/api/api_calls.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/screens/detail/audio_surah_screen.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/screens/widget/qari_custom_tile_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -57,7 +58,10 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Audio Quran", style: TextStyle(color: Colors.white)),
+        title: const ArabicText(
+          "Audio Quran",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: mainColor,
         centerTitle: true,
       ),
@@ -95,7 +99,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : _filteredQaris.isEmpty
                     ? const Center(
-                        child: Text(
+                        child: ArabicText(
                           "No Qari found",
                           style: TextStyle(color: Colors.white),
                         ),

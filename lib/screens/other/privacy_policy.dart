@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -9,7 +10,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
-        title: const Text(
+        title: const ArabicText(
           "Privacy Policy",
           style: TextStyle(color: Colors.white),
         ),
@@ -21,7 +22,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
-            Text(
+            ArabicText(
               "We respect your privacy and are committed to protecting your personal data. "
               "This Privacy Policy explains how we handle your information when you use our app.\n\n"
               "1. We do not collect any unnecessary personal data.\n"

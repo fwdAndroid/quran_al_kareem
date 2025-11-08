@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 
 class LocationErrorWidget extends StatelessWidget {
   final String? error;
@@ -22,7 +23,7 @@ class LocationErrorWidget extends StatelessWidget {
         children: <Widget>[
           const Icon(Icons.location_off, size: 150, color: errorColor),
           box,
-          Text(
+          ArabicText(
             error!,
             style: const TextStyle(
               color: errorColor,
@@ -31,7 +32,9 @@ class LocationErrorWidget extends StatelessWidget {
           ),
           box,
           ElevatedButton(
-            child: Text(languageProvider.localizedStrings["Retry"] ?? "Retry"),
+            child: ArabicText(
+              languageProvider.localizedStrings["Retry"] ?? "Retry",
+            ),
             onPressed: () {
               if (callback != null) callback!();
             },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/hadith_service.dart';
 import 'package:quran_al_kareem/model/hadith_model.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -29,7 +30,10 @@ class _HadithListScreenState extends State<HadithListScreen> {
       backgroundColor: mainColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: Text(widget.bookName, style: TextStyle(color: Colors.white)),
+        title: ArabicText(
+          widget.bookName,
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: mainColor,
         actions: [
           PopupMenuButton<Language>(
@@ -39,11 +43,17 @@ class _HadithListScreenState extends State<HadithListScreen> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: Language.english,
-                child: Text("English", style: TextStyle(color: Colors.white)),
+                child: ArabicText(
+                  "English",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               const PopupMenuItem(
                 value: Language.urdu,
-                child: Text("Urdu", style: TextStyle(color: Colors.white)),
+                child: ArabicText(
+                  "Urdu",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
             icon: const Icon(Icons.language, color: Colors.white),
@@ -56,9 +66,9 @@ class _HadithListScreenState extends State<HadithListScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(child: ArabicText("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No Hadiths found"));
+            return const Center(child: ArabicText("No Hadiths found"));
           }
 
           final hadiths = snapshot.data!;
@@ -79,7 +89,7 @@ class _HadithListScreenState extends State<HadithListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Arabic Text
-                      Text(
+                      ArabicText(
                         h.arabic,
                         textAlign: TextAlign.right,
                         style: const TextStyle(
@@ -92,7 +102,7 @@ class _HadithListScreenState extends State<HadithListScreen> {
                       const SizedBox(height: 8),
 
                       // Translation
-                      Text(
+                      ArabicText(
                         selectedLanguage == Language.english
                             ? h.english
                             : h.urdu,
@@ -105,7 +115,7 @@ class _HadithListScreenState extends State<HadithListScreen> {
 
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: Text(
+                        child: ArabicText(
                           h.reference,
                           style: const TextStyle(
                             fontSize: 12,

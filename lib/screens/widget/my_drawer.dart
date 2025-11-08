@@ -11,6 +11,7 @@ import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -56,7 +57,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               child: ListTile(
                 leading: Icon(Icons.audio_file, color: Colors.brown),
 
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Audio Quran"] ??
                       'Audio Quran',
                   style: TextStyle(
@@ -81,7 +82,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
               child: ListTile(
                 leading: Icon(Ionicons.bag_handle, color: Colors.brown),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
                   style: TextStyle(
                     color: Colors.white,
@@ -104,7 +105,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               child: ListTile(
                 leading: Icon(Icons.language, color: Colors.brown),
 
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
                   style: TextStyle(
                     color: Colors.white,
@@ -128,7 +129,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               child: ListTile(
                 leading: Icon(Icons.party_mode_rounded, color: Colors.brown),
 
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Prayer Times"] ??
                       'Prayer Times',
                   style: TextStyle(
@@ -154,7 +155,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   Ionicons.calendar_number_sharp,
                   color: Colors.brown,
                 ),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
                   style: TextStyle(
                     color: Colors.white,
@@ -177,7 +178,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
               child: ListTile(
                 leading: Icon(Ionicons.book_sharp, color: Colors.brown),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Dua"] ?? 'Dua',
                   style: TextStyle(
                     color: Colors.white,
@@ -200,7 +201,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
               child: ListTile(
                 leading: Icon(Ionicons.book, color: Colors.brown),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Allah Names"] ??
                       'Allah Names',
                   style: TextStyle(
@@ -224,7 +225,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               child: ListTile(
                 leading: Icon(Icons.countertops, color: Colors.brown),
 
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings["Tasbeeh Counter"] ??
                       'Tasbeeh Counter',
                   style: TextStyle(

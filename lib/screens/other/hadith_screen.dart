@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/other/hadith_detail_screen.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class HadithScreen extends StatelessWidget {
@@ -24,7 +25,7 @@ class HadithScreen extends StatelessWidget {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
-        title: Text(
+        title: ArabicText(
           languageProvider.localizedStrings["Hadith Collection"] ??
               "Hadith Collection",
           style: const TextStyle(color: Colors.white),
@@ -70,7 +71,7 @@ class HadithScreen extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
+                      child: ArabicText(
                         book['name']!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(

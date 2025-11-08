@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class NamazGuideScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class NamazGuideScreen extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
-        title: const Text(
+        title: const ArabicText(
           'Complete Salah (Namaz) Guide',
           style: TextStyle(color: Colors.white),
         ),
@@ -32,7 +33,7 @@ class NamazGuideScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: SelectableText(
+            child: ArabicText(
               '''
           🕌 **Make Wudu (Ablution)** — be clean and in a state of purity.
           

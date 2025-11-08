@@ -6,6 +6,7 @@ import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -155,7 +156,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
     }
 
     if (error != null) {
-      return Scaffold(body: Center(child: Text('Error: $error')));
+      return Scaffold(body: Center(child: ArabicText('Error: $error')));
     }
 
     return Scaffold(
@@ -184,7 +185,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Text(
+                      ArabicText(
                         "🗓 Hijri Date: $hijriDate",
                         style: const TextStyle(
                           color: Colors.white70,
@@ -195,7 +196,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                       if (timeRemaining != null)
                         Column(
                           children: [
-                            Text(
+                            ArabicText(
                               "Next Prayer: $nextPrayerName",
                               style: const TextStyle(
                                 fontSize: 22,
@@ -204,7 +205,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Text(
+                            ArabicText(
                               formatDuration(timeRemaining!),
                               style: const TextStyle(
                                 fontSize: 30,
@@ -231,14 +232,14 @@ class _PrayerScreenState extends State<PrayerScreen> {
                                 ),
                                 child: ListTile(
                                   leading: Icon(icon, color: Colors.amber),
-                                  title: Text(
+                                  title: ArabicText(
                                     entry.key,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  trailing: Text(
+                                  trailing: ArabicText(
                                     entry.value,
                                     style: const TextStyle(
                                       color: Colors.white70,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 
 class ChangeLangage extends StatefulWidget {
   const ChangeLangage({super.key});
@@ -22,7 +23,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Text(
+        title: ArabicText(
           languageProvider.localizedStrings['Language'] ?? "Language",
           style: TextStyle(color: Colors.white),
         ),
@@ -43,7 +44,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                 padding: const EdgeInsets.only(top: 10.0, left: 16),
                 child: Align(
                   alignment: AlignmentDirectional.topStart,
-                  child: Text(
+                  child: ArabicText(
                     languageProvider.localizedStrings['Select Language'] ??
                         'Select Language',
                   ),
@@ -63,7 +64,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: Colors.white,
                   size: 20,
                 ),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings['English'] ?? "English",
                 ),
               ),
@@ -80,7 +81,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: Colors.white,
                   size: 20,
                 ),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings['Arabic'] ?? "Arabic",
                 ),
               ),
@@ -98,7 +99,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: Colors.white,
                   size: 20,
                 ),
-                title: Text(
+                title: ArabicText(
                   languageProvider.localizedStrings['Urdu'] ?? "Urdu",
                 ),
               ),

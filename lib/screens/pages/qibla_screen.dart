@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class QiblaScreen extends StatefulWidget {
@@ -172,7 +173,7 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
               bottom: 50,
               child: Column(
                 children: [
-                  Text(
+                  ArabicText(
                     "${qiblahDirection.offset.toStringAsFixed(2)}° to Qibla",
                     style: const TextStyle(
                       fontSize: 16,
@@ -185,7 +186,7 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
                   ),
                   const SizedBox(height: 8),
                   if (distanceToKaaba != null)
-                    Text(
+                    ArabicText(
                       "Distance to Kaaba: ${distanceToKaaba!.toStringAsFixed(1)} km",
                       style: const TextStyle(
                         fontSize: 16,
@@ -195,7 +196,7 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
                       ),
                     )
                   else
-                    const Text(
+                    const ArabicText(
                       "Calculating distance...",
                       style: TextStyle(color: Colors.white70),
                     ),
@@ -226,7 +227,7 @@ class LocationErrorWidget extends StatelessWidget {
         children: <Widget>[
           const Icon(Icons.location_off, size: 150, color: errorColor),
           const SizedBox(height: 32),
-          Text(
+          ArabicText(
             error ?? '',
             style: const TextStyle(
               color: errorColor,
@@ -235,7 +236,7 @@ class LocationErrorWidget extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            child: const Text("Retry"),
+            child: const ArabicText("Retry"),
             onPressed: () {
               if (callback != null) callback!();
             },

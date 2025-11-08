@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 
 class QariCustomTile extends StatefulWidget {
   const QariCustomTile({
@@ -29,7 +30,7 @@ class _QariCustomTileState extends State<QariCustomTile> {
             child: CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white24,
-              child: Text(
+              child: ArabicText(
                 '${widget.index + 1}', // show 1,2,3,...
                 style: TextStyle(
                   color: Colors.white,
@@ -41,7 +42,7 @@ class _QariCustomTileState extends State<QariCustomTile> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
+            child: ArabicText(
               widget.qari.name!,
               // 'Res',
               style: const TextStyle(color: Colors.white, fontSize: 14),

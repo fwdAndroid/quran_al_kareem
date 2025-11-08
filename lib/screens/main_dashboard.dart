@@ -10,6 +10,7 @@ import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
 import 'package:quran_al_kareem/screens/pages/setting_screen.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
 class MainDashboard extends StatefulWidget {
@@ -109,12 +110,12 @@ class _MainDashboardState extends State<MainDashboard> {
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Exit App'),
-        content: Text('Do you want to exit the app?'),
+        title: ArabicText('Exit App'),
+        content: ArabicText('Do you want to exit the app?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No'),
+            child: ArabicText('No'),
           ),
           TextButton(
             onPressed: () {
@@ -124,7 +125,7 @@ class _MainDashboardState extends State<MainDashboard> {
                 exit(0); // For iOS
               }
             },
-            child: Text('Yes'),
+            child: ArabicText('Yes'),
           ),
         ],
       ),
