@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
+import 'package:quran_al_kareem/screens/other/edit_profile.dart';
 import 'package:quran_al_kareem/screens/other/font_setting.dart';
 import 'package:quran_al_kareem/screens/other/privacy_policy.dart';
 import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
@@ -17,9 +20,45 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+
+  String? _username;
+  String? _profileImageUrl;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          _username = data['name'] ?? 'User';
+          _profileImageUrl = data['image'];
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _username = 'User';
+          _profileImageUrl = null;
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(context); // Access
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
       backgroundColor: mainColor,
@@ -28,139 +67,150 @@ class _SettingScreenState extends State<SettingScreen> {
           Positioned.fill(
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-          Container(
-            color: mainColor.withOpacity(
-              0.3,
-            ), // optional overlay for better contrast
-          ),
+          Container(color: mainColor.withOpacity(0.3)),
           Column(
             children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset("assets/logo.png", height: 250),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (builder) => ChangeLangage()),
-                    );
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: ArabicText(
-                    languageProvider.localizedStrings["Change Language"] ??
-                        "Change Language",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(Icons.language, color: Colors.white),
-                ),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (builder) => FontSettingsScreen(),
+              const SizedBox(height: 40),
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : GestureDetector(
+                      onTap: () {
+                        final user = _auth.currentUser;
+                        if (user != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const EditProfileScreen(),
+                            ),
+                          ).then((_) => _loadUserProfile());
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please log in first'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: _profileImageUrl != null
+                                ? NetworkImage(_profileImageUrl!)
+                                : const AssetImage('assets/logo.png')
+                                      as ImageProvider,
+                          ),
+                          const SizedBox(height: 10),
+                          ArabicText(
+                            _username ?? 'Guest',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
-                    );
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: ArabicText(
-                    languageProvider.localizedStrings["Font Setting"] ??
-                        "Font Setting",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(Icons.font_download_sharp, color: Colors.white),
-                ),
-              ),
-              const Divider(),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.privacy_tip_outlined,
-                    color: Colors.white,
-                  ),
-                  title: const ArabicText(
-                    "Privacy Policy",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
                     ),
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const PrivacyPolicyScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const Divider(),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.article_outlined,
-                    color: Colors.white,
-                  ),
-                  title: const ArabicText(
-                    "Terms & Services",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  children: [
+                    // Change Language
+                    _buildListTile(
+                      context,
+                      title:
+                          languageProvider
+                              .localizedStrings["Change Language"] ??
+                          "Change Language",
+                      icon: Icons.language,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ChangeLangage()),
+                      ),
                     ),
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const TermsAndServicesScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const Divider(),
+                    const Divider(color: Colors.white54),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: ListTile(
-                  onTap: () {
-                    shareApp();
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  title: ArabicText(
-                    languageProvider.localizedStrings["Invite Friends"] ??
-                        "Invite Friends",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(Icons.share, color: Colors.white),
+                    // Font Setting
+                    _buildListTile(
+                      context,
+                      title:
+                          languageProvider.localizedStrings["Font Setting"] ??
+                          "Font Setting",
+                      icon: Icons.font_download_sharp,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => FontSettingsScreen()),
+                      ),
+                    ),
+                    const Divider(color: Colors.white54),
+
+                    // Privacy Policy
+                    _buildListTile(
+                      context,
+                      title: "Privacy Policy",
+                      icon: Icons.privacy_tip_outlined,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PrivacyPolicyScreen(),
+                        ),
+                      ),
+                    ),
+                    const Divider(color: Colors.white54),
+
+                    // Terms & Services
+                    _buildListTile(
+                      context,
+                      title: "Terms & Services",
+                      icon: Icons.article_outlined,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TermsAndServicesScreen(),
+                        ),
+                      ),
+                    ),
+                    const Divider(color: Colors.white54),
+
+                    // Invite Friends
+                    _buildListTile(
+                      context,
+                      title:
+                          languageProvider.localizedStrings["Invite Friends"] ??
+                          "Invite Friends",
+                      icon: Icons.share,
+                      onTap: shareApp,
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  ListTile _buildListTile(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: ArabicText(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+      onTap: onTap,
     );
   }
 

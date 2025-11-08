@@ -34,6 +34,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_auth: ^6.1.2
   firebase_core: ^4.2.1
+  firebase_storage: ^13.0.4
   flutter:
     sdk: flutter
   flutter_qiblah: ^3.1.0+1
@@ -44,6 +45,7 @@ dependencies:
   google_fonts: ^6.3.2
   google_sign_in: ^6.2.1
   http: ^1.5.0
+  image_picker: ^1.2.0
   intl: ^0.20.2
   ionicons: ^0.2.2
   just_audio: ^0.10.5
@@ -104,6 +106,5 @@ flutter:
     - family: Tahoma
       fonts:
         - asset: assets/fonts/tahoma.ttf
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
