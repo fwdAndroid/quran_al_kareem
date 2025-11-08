@@ -103,7 +103,7 @@ class _DuaScreenState extends State<DuaScreen> {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.85),
+                        color: mainColor.withOpacity(0.85),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
