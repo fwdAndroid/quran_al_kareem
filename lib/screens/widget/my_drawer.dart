@@ -102,7 +102,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   languageProvider.localizedStrings["Audio Quran"] ??
                   'Audio Quran',
               onTap: () => _showInterstitialAndNavigate(
-                const MainDashboard(initialPageIndex: 2),
+                const MainDashboard(initialPageIndex: 1),
               ),
             ),
 

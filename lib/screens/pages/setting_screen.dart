@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
+import 'package:quran_al_kareem/screens/auth/login_screen.dart'; // 👈 Add your login screen import
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/other/edit_profile.dart';
 import 'package:quran_al_kareem/screens/other/font_setting.dart';
@@ -118,7 +119,6 @@ class _SettingScreenState extends State<SettingScreen> {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   children: [
-                    // Change Language
                     _buildListTile(
                       context,
                       title:
@@ -133,7 +133,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     const Divider(color: Colors.white54),
 
-                    // Font Setting
                     _buildListTile(
                       context,
                       title:
@@ -147,7 +146,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     const Divider(color: Colors.white54),
 
-                    // Privacy Policy
                     _buildListTile(
                       context,
                       title: "Privacy Policy",
@@ -161,7 +159,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     const Divider(color: Colors.white54),
 
-                    // Terms & Services
                     _buildListTile(
                       context,
                       title: "Terms & Services",
@@ -175,7 +172,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     const Divider(color: Colors.white54),
 
-                    // Invite Friends
                     _buildListTile(
                       context,
                       title:
@@ -184,6 +180,16 @@ class _SettingScreenState extends State<SettingScreen> {
                       icon: Icons.share,
                       onTap: shareApp,
                     ),
+                    const Divider(color: Colors.white54),
+
+                    // 👇 Logout Button
+                    _buildListTile(
+                      context,
+                      title: "Logout",
+                      icon: Icons.logout,
+                      onTap: _confirmLogout,
+                    ),
+                    const Divider(color: Colors.white54),
                   ],
                 ),
               ),
@@ -214,8 +220,45 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
+  // ✅ Confirm Logout Dialog
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text(
+          "Confirm Logout",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text("Are you sure you want to log out?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await _auth.signOut();
+
+              if (mounted) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+  }
+
   void shareApp() {
-    String appLink =
+    const appLink =
         "https://play.google.com/store/apps/details?id=com.example.yourapp";
     Share.share("Hey, check out this amazing app: $appLink");
   }
