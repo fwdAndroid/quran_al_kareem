@@ -2,9 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:rxdart/rxdart.dart';
 
-class NamazGuideScreen extends StatelessWidget {
+class NamazGuideScreen extends StatefulWidget {
   const NamazGuideScreen({super.key});
+
+  @override
+  State<NamazGuideScreen> createState() => _NamazGuideScreenState();
+}
+
+class _NamazGuideScreenState extends State<NamazGuideScreen> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.setAsset('assets/namaz.mp3');
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  // Combine streams for the seekbar
+  Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest2<Duration, Duration?, PositionData>(
+        _audioPlayer.positionStream,
+        _audioPlayer.durationStream,
+        (position, duration) =>
+            PositionData(position, duration ?? Duration.zero),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +43,7 @@ class NamazGuideScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
         title: const ArabicText(
           'Complete Salah (Namaz) Guide',
@@ -26,15 +56,136 @@ class NamazGuideScreen extends StatelessWidget {
           Positioned.fill(
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-          Container(
-            color: mainColor.withOpacity(
-              0.3,
-            ), // optional overlay for better contrast
-          ),
+          Container(color: mainColor.withOpacity(0.3)),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ArabicText(
-              '''
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+
+                // Top Play/Pause Button
+                Column(
+                  children: [
+                    StreamBuilder<bool>(
+                      stream: _audioPlayer.playingStream,
+                      builder: (context, snapshot) {
+                        final isPlaying = snapshot.data ?? false;
+                        return ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                          ),
+                          label: Text("Play Audio"),
+                          icon: Icon(
+                            isPlaying ? Icons.pause_circle : Icons.play_circle,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            if (isPlaying) {
+                              _audioPlayer.pause();
+                            } else {
+                              _audioPlayer.play();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    Container(
+                      color: Colors.black.withOpacity(0.7),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: StreamBuilder<PositionData>(
+                        stream: _positionDataStream,
+                        builder: (context, snapshot) {
+                          final positionData =
+                              snapshot.data ??
+                              PositionData(Duration.zero, Duration.zero);
+
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Slider(
+                                min: 0.0,
+                                max: positionData.duration.inMilliseconds
+                                    .toDouble(),
+                                value: positionData.position.inMilliseconds
+                                    .clamp(
+                                      0,
+                                      positionData.duration.inMilliseconds,
+                                    )
+                                    .toDouble(),
+                                onChanged: (value) {
+                                  _audioPlayer.seek(
+                                    Duration(milliseconds: value.toInt()),
+                                  );
+                                },
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.grey,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _formatDuration(positionData.position),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.stop,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          _audioPlayer.stop();
+                                        },
+                                      ),
+                                      StreamBuilder<bool>(
+                                        stream: _audioPlayer.playingStream,
+                                        builder: (context, snapshot) {
+                                          final isPlaying =
+                                              snapshot.data ?? false;
+                                          return IconButton(
+                                            icon: Icon(
+                                              isPlaying
+                                                  ? Icons.pause
+                                                  : Icons.play_arrow,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              if (isPlaying) {
+                                                _audioPlayer.pause();
+                                              } else {
+                                                _audioPlayer.play();
+                                              }
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    _formatDuration(positionData.duration),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16), // Gap between button & text
+                // Arabic Text Scrollable
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: ArabicText(
+                      '''
           🕌 **Make Wudu (Ablution)** — be clean and in a state of purity.
           
           **Face Qiblah (towards Ka’bah)**  
@@ -158,12 +309,31 @@ class NamazGuideScreen extends StatelessWidget {
           السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → left  
           Meaning: Peace and mercy of Allah be upon you.
           ''',
-              style: textStyle,
-              textAlign: TextAlign.start,
+                      style: textStyle,
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
+
+      // Bottom custom audio control panel
     );
   }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+}
+
+class PositionData {
+  final Duration position;
+  final Duration duration;
+
+  PositionData(this.position, this.duration);
 }

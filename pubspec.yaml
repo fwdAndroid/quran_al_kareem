@@ -77,6 +77,7 @@ flutter:
   assets:
     - assets/
     - assets/qari_images/
+    - assets/namaz.mp3
     - assets/json/
     - assets/lang/
     - assets/fonts/
