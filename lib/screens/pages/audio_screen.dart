@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/api/api_calls.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/screens/detail/audio_surah_screen.dart';
@@ -29,7 +30,6 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
       final api = ApiCalls();
       final qariList = await api.getQariList();
 
-      // Names to exclude
       final excludedQaris = [
         "Al-Hussayni Al-'Azazy (with Children)",
         "Hatem Farid - Taraweeh 1431",
@@ -40,7 +40,6 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
         "Sudais and Shuraym",
       ];
 
-      // Filter out excluded Qaris
       final filteredList = qariList
           .where((q) => !excludedQaris.contains(q.name?.trim()))
           .toList();
@@ -50,12 +49,6 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
         _filteredQaris = filteredList;
         _isLoading = false;
       });
-
-      // Optional debug print
-      debugPrint("✅ Loaded Qaris (${filteredList.length}):");
-      for (var q in filteredList) {
-        debugPrint(" - ${q.name}");
-      }
     } catch (e) {
       setState(() => _isLoading = false);
       debugPrint("Error loading Qaris: $e");
@@ -111,10 +104,10 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                 ),
               ),
 
-              // 📜 Qari List
+              // 📜 Qari List or Shimmer
               Expanded(
                 child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? _buildShimmerList()
                     : _filteredQaris.isEmpty
                     ? const Center(
                         child: ArabicText(
@@ -151,6 +144,30 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // 🔄 Shimmer Placeholder while loading
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      itemCount: 8,
+      padding: const EdgeInsets.all(8),
+      itemBuilder: (_, __) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey.shade800,
+          highlightColor: Colors.grey.shade500,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+            child: Container(
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

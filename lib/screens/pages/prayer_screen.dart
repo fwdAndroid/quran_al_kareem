@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
@@ -10,7 +11,6 @@ import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
-import 'package:quran_al_kareem/utils/paint.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
@@ -151,81 +151,112 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (error != null) {
-      return Scaffold(body: Center(child: ArabicText('Error: $error')));
-    }
-
     return Scaffold(
       backgroundColor: mainColor,
-
       body: Stack(
         children: [
-          // Plain Background Color
           Positioned.fill(
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-          Container(
-            color: mainColor.withOpacity(
-              0.3,
-            ), // optional overlay for better contrast
-          ),
+          Container(color: mainColor.withOpacity(0.3)),
           SafeArea(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (_) {
-                setState(() {});
-                return false;
-              },
-              child: Transform.translate(
-                offset: Offset(0, -_scrollOffset * 0.2),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      ArabicText(
-                        "🗓 Hijri Date: $hijriDate",
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      if (timeRemaining != null)
-                        Column(
-                          children: [
-                            ArabicText(
-                              "Next Prayer: $nextPrayerName",
-                              style: const TextStyle(
-                                fontSize: 22,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            ArabicText(
-                              formatDuration(timeRemaining!),
-                              style: const TextStyle(
-                                fontSize: 30,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  ArabicText(
+                    "🗓 Hijri Date: ${hijriDate ?? 'Loading...'}",
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // ⏳ Next prayer shimmer
+                  isLoading
+                      ? Shimmer.fromColors(
+                          baseColor: Colors.grey[400]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 180,
+                                height: 22,
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
+                              const SizedBox(height: 6),
+                              Container(
+                                width: 120,
+                                height: 28,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            if (nextPrayerName != null)
+                              ArabicText(
+                                "Next Prayer: $nextPrayerName",
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            const SizedBox(height: 6),
+                            if (timeRemaining != null)
+                              ArabicText(
+                                formatDuration(timeRemaining!),
+                                style: const TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: timings!.length,
-                          itemBuilder: (context, index) {
-                            final entry = timings!.entries.elementAt(index);
-                            final icon = getPrayerIcon(entry.key);
-                            return Transform.translate(
-                              offset: Offset(0, -_scrollOffset * 0.05 * index),
+
+                  const SizedBox(height: 20),
+
+                  // 📿 Prayer times shimmer or list
+                  Expanded(
+                    child: isLoading
+                        ? ListView.builder(
+                            itemCount: 5,
+                            itemBuilder: (_, __) => Shimmer.fromColors(
+                              baseColor: Colors.grey[400]!,
+                              highlightColor: Colors.grey[100]!,
                               child: Card(
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: ListTile(
+                                  leading: Container(
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.white,
+                                  ),
+                                  title: Container(
+                                    width: 100,
+                                    height: 18,
+                                    color: Colors.white,
+                                  ),
+                                  trailing: Container(
+                                    width: 60,
+                                    height: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: _scrollController,
+                            itemCount: timings!.length,
+                            itemBuilder: (context, index) {
+                              final entry = timings!.entries.elementAt(index);
+                              final icon = getPrayerIcon(entry.key);
+                              return Card(
                                 color: Colors.black26.withOpacity(0.9),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -247,112 +278,68 @@ class _PrayerScreenState extends State<PrayerScreen> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                              );
+                            },
+                          ),
+                  ),
 
-                      // Bottom Buttons
-                      Container(
-                        width: 400,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white12,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => HadithScreen(),
-                                      ),
-                                    ),
-                                    child: Image.asset(
-                                      "assets/item 1.png",
-                                      height: 90,
-                                      width: 90,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => DuaScreen(),
-                                      ),
-                                    ),
-                                    child: Image.asset(
-                                      "assets/item 2-1.png",
-                                      height: 90,
-                                      width: 90,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => AllahNames(),
-                                      ),
-                                    ),
-                                    child: Image.asset(
-                                      "assets/item 3.png",
-                                      height: 90,
-                                      width: 90,
-                                    ),
-                                  ),
-                                ],
+                  // 🔹 Bottom buttons (always visible)
+                  Container(
+                    width: 400,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white12,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _menuButton(
+                                "assets/item 1.png",
+                                const HadithScreen(),
                               ),
+                              _menuButton(
+                                "assets/item 2-1.png",
+                                const DuaScreen(),
+                              ),
+                              _menuButton(
+                                "assets/item 3.png",
+                                const AllahNames(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _menuButton(
+                              "assets/item 2.png",
+                              const NamazGuideScreen(),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => NamazGuideScreen(),
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/item 2.png",
-                                    height: 90,
-                                    width: 90,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => QiblaScreen(),
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/item 1-1.png",
-                                    height: 90,
-                                    width: 90,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            _menuButton("assets/item 1-1.png", QiblaScreen()),
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _menuButton(String asset, Widget page) {
+    return GestureDetector(
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
+      child: Image.asset(asset, height: 90, width: 90),
     );
   }
 }

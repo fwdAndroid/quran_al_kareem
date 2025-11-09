@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class QiblaScreen extends StatefulWidget {
   @override
@@ -15,7 +16,6 @@ class QiblaScreen extends StatefulWidget {
 class _QiblaScreenState extends State<QiblaScreen> {
   final _locationStreamController =
       StreamController<LocationStatus>.broadcast();
-
   get stream => _locationStreamController.stream;
 
   Future<void> _checkLocationStatus() async {
@@ -51,19 +51,14 @@ class _QiblaScreenState extends State<QiblaScreen> {
           Positioned.fill(
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-          Container(
-            color: mainColor.withOpacity(
-              0.15,
-            ), // optional overlay for better contrast
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(8.0),
+          Container(color: mainColor.withOpacity(0.15)),
+          Center(
             child: StreamBuilder(
               stream: stream,
               builder: (context, AsyncSnapshot<LocationStatus> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  // 🔹 Shimmer loading while location status is being checked
+                  return const _QiblaShimmerPlaceholder();
                 }
 
                 if (snapshot.data!.enabled == true) {
@@ -71,7 +66,6 @@ class _QiblaScreenState extends State<QiblaScreen> {
                     case LocationPermission.always:
                     case LocationPermission.whileInUse:
                       return QiblaScreenWidget();
-
                     case LocationPermission.denied:
                       return LocationErrorWidget(
                         error: "Location service permission denied",
@@ -152,7 +146,8 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
       stream: FlutterQiblah.qiblahStream,
       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          // 🔹 Shimmer for compass while loading Qiblah direction
+          return const _QiblaShimmerPlaceholder();
         }
 
         final qiblahDirection = snapshot.data!;
@@ -196,9 +191,15 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
                       ),
                     )
                   else
-                    const ArabicText(
-                      "Calculating distance...",
-                      style: TextStyle(color: Colors.white70),
+                    // 🔹 Shimmer for distance text while calculating
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[400]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 180,
+                        height: 20,
+                        color: Colors.white,
+                      ),
                     ),
                 ],
               ),
@@ -206,6 +207,36 @@ class _QiblaScreenWidgetState extends State<QiblaScreenWidget> {
           ],
         );
       },
+    );
+  }
+}
+
+/// 🔹 Simple shimmer placeholder for the whole screen while loading
+class _QiblaShimmerPlaceholder extends StatelessWidget {
+  const _QiblaShimmerPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[400]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 200,
+            height: 200,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(width: 150, height: 20, color: Colors.white),
+          const SizedBox(height: 10),
+          Container(width: 100, height: 20, color: Colors.white),
+        ],
+      ),
     );
   }
 }
