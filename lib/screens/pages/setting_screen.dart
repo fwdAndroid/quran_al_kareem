@@ -249,7 +249,7 @@ class _SettingScreenState extends State<SettingScreen> {
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text("Logout"),
+            child: const Text("Logout", style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
