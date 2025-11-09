@@ -131,7 +131,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         MaterialPageRoute(builder: (_) => ChangeLangage()),
                       ),
                     ),
-                    const Divider(color: Colors.white54),
+                    Divider(color: primaryText.withOpacity(.1)),
 
                     _buildListTile(
                       context,
@@ -144,7 +144,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         MaterialPageRoute(builder: (_) => FontSettingsScreen()),
                       ),
                     ),
-                    const Divider(color: Colors.white54),
+                    Divider(color: primaryText.withOpacity(.1)),
 
                     _buildListTile(
                       context,
@@ -157,7 +157,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
-                    const Divider(color: Colors.white54),
+                    Divider(color: primaryText.withOpacity(.1)),
 
                     _buildListTile(
                       context,
@@ -170,7 +170,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
-                    const Divider(color: Colors.white54),
+                    Divider(color: primaryText.withOpacity(.1)),
 
                     _buildListTile(
                       context,
@@ -180,7 +180,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       icon: Icons.share,
                       onTap: shareApp,
                     ),
-                    const Divider(color: Colors.white54),
+                    Divider(color: primaryText.withOpacity(.1)),
 
                     // 👇 Logout Button
                     _buildListTile(
@@ -189,7 +189,6 @@ class _SettingScreenState extends State<SettingScreen> {
                       icon: Icons.logout,
                       onTap: _confirmLogout,
                     ),
-                    const Divider(color: Colors.white54),
                   ],
                 ),
               ),
@@ -207,7 +206,7 @@ class _SettingScreenState extends State<SettingScreen> {
     required VoidCallback onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
+      leading: Icon(icon, color: iconColor),
       title: ArabicText(
         title,
         style: const TextStyle(
@@ -215,7 +214,7 @@ class _SettingScreenState extends State<SettingScreen> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+      trailing: Icon(Icons.arrow_forward_ios, color: iconColor),
       onTap: onTap,
     );
   }

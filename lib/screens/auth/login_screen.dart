@@ -98,13 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   // App Logo
                   Image.asset('assets/logo.png', height: 300),
 
-                  const SizedBox(height: 12),
-                  const ArabicText(
-                    "Sign in to continue",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  const SizedBox(height: 40),
-
                   // Google Sign-In Button
                   _loading
                       ? const CircularProgressIndicator()
@@ -112,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
+                              backgroundColor: buttonColor,
                               minimumSize: const Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -123,21 +116,37 @@ class _LoginScreenState extends State<LoginScreen> {
                             label: const ArabicText(
                               'Sign in with Google',
                               style: TextStyle(
-                                color: Colors.black87,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+
                                 fontSize: 16,
                               ),
                             ),
                             onPressed: _signInWithGoogle,
                           ),
                         ),
-                  const SizedBox(height: 20),
 
                   // Continue as Guest Button
-                  TextButton(
-                    onPressed: _continueAsGuest,
-                    child: const ArabicText(
-                      "Continue as Guest",
-                      style: TextStyle(fontSize: 16, color: Colors.blueAccent),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: buttonColor,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      onPressed: _continueAsGuest,
+                      child: const ArabicText(
+                        "Continue as Guest",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],

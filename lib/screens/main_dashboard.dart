@@ -96,10 +96,10 @@ class _MainDashboardState extends State<MainDashboard> {
             // Bottom Navigation Bar
             BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.brown,
+              backgroundColor: mainColor,
               currentIndex: _selectedIndex,
-              selectedItemColor: mainColor,
-              unselectedItemColor: Colors.grey.shade500,
+              selectedItemColor: iconColor,
+              unselectedItemColor: Colors.white,
               showUnselectedLabels: true,
               selectedFontSize: 12,
               unselectedFontSize: 12,
