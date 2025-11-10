@@ -149,12 +149,16 @@ class _MainDashboardState extends State<MainDashboard> {
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: ArabicText('Exit App'),
-        content: ArabicText('Do you want to exit the app?'),
+        backgroundColor: Colors.white,
+        title: ArabicText('Exit App', style: TextStyle(color: primaryText)),
+        content: ArabicText(
+          'Do you want to exit the app',
+          style: TextStyle(color: primaryText),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: ArabicText('No'),
+            child: ArabicText('No', style: TextStyle(color: primaryText)),
           ),
           TextButton(
             onPressed: () {
@@ -164,7 +168,7 @@ class _MainDashboardState extends State<MainDashboard> {
                 exit(0);
               }
             },
-            child: ArabicText('Yes'),
+            child: ArabicText('Yes', style: TextStyle(color: primaryText)),
           ),
         ],
       ),
