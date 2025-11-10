@@ -1,54 +1,145 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
 
-class NamazGuideScreen extends StatefulWidget {
+class NamazGuideScreen extends StatelessWidget {
   const NamazGuideScreen({super.key});
 
-  @override
-  State<NamazGuideScreen> createState() => _NamazGuideScreenState();
-}
-
-class _NamazGuideScreenState extends State<NamazGuideScreen> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  @override
-  void initState() {
-    super.initState();
-    _audioPlayer.setAsset('assets/namaz.mp3');
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    super.dispose();
-  }
-
-  // Combine streams for the seekbar
-  Stream<PositionData> get _positionDataStream =>
-      Rx.combineLatest2<Duration, Duration?, PositionData>(
-        _audioPlayer.positionStream,
-        _audioPlayer.durationStream,
-        (position, duration) =>
-            PositionData(position, duration ?? Duration.zero),
-      );
+  final List<Map<String, String>> namazSteps = const [
+    {
+      "title": "Make Wudu (Ablution)",
+      "content": "Be clean and in a state of purity.",
+    },
+    {
+      "title": "Face Qiblah",
+      "content":
+          "Stand upright, feet slightly apart, and focus with khushu (humility).",
+    },
+    {
+      "title": "Make the Intention (Niyyah)",
+      "content":
+          "Say silently in your heart: “I intend to perform two/four Rak‘ah Salah for Allah, facing the Qiblah.”",
+    },
+    {
+      "title": "Takbeer al-Ihraam",
+      "arabic": "اللَّهُ أَكْبَرُ",
+      "content":
+          "Raise both hands up to ears and say Allahu Akbar — Allah is the Greatest.",
+    },
+    {
+      "title": "Qiyaam (Standing)",
+      "content":
+          "Place your right hand over your left hand — on the chest (for women) or above the navel (for men).",
+    },
+    {
+      "title": "Dua al-Istiftah",
+      "arabic":
+          "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلٰهَ غَيْرُكَ",
+      "content":
+          "Glory be to You, O Allah, and praise. Blessed is Your name, exalted is Your majesty, and there is no god besides You.",
+    },
+    {
+      "title": "Recite Surah Al-Fātiḥah",
+      "arabic":
+          "بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ\n"
+          "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\n"
+          "الرَّحْمَـٰنِ الرَّحِيمِ\n"
+          "مَالِكِ يَوْمِ الدِّينِ\n"
+          "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\n"
+          "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\n"
+          "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ\n"
+          "غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ\n"
+          "آمِينَ",
+      "content":
+          "In the name of Allah, the Most Gracious, the Most Merciful. "
+          "All praise is due to Allah, Lord of the worlds. "
+          "The Most Gracious, the Most Merciful. "
+          "Master of the Day of Judgment. "
+          "You alone we worship, and You alone we ask for help. "
+          "Guide us on the Straight Path, "
+          "the path of those upon whom You have bestowed favor, "
+          "not of those who have evoked Your anger or of those who are astray. Ameen.",
+    },
+    {
+      "title": "Recite Another Surah (e.g. Al-Ikhlas)",
+      "arabic":
+          "قُلْ هُوَ اللَّهُ أَحَدٌ\n"
+          "اللَّهُ الصَّمَدُ\n"
+          "لَمْ يَلِدْ وَلَمْ يُولَدْ\n"
+          "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+      "content":
+          "Say, 'He is Allah, [who is] One, Allah, the Eternal Refuge. "
+          "He neither begets nor is born, "
+          "nor is there to Him any equivalent.'",
+    },
+    {
+      "title": "Rukoo‘ (Bowing)",
+      "arabic": "سُبْحَانَ رَبِّيَ الْعَظِيمِ",
+      "content":
+          "Glory be to my Lord, the Most Great. Then rise saying: سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ / رَبَّنَا وَلَكَ الْحَمْدُ",
+    },
+    {
+      "title": "Sujood (Prostration)",
+      "arabic": "سُبْحَانَ رَبِّيَ الأَعْلَى",
+      "content":
+          "Go down and say three times: Glory be to my Lord, the Most High.",
+    },
+    {
+      "title": "Sit Between Two Sujoods",
+      "arabic": "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي",
+      "content": "My Lord, forgive me; my Lord, forgive me.",
+    },
+    {
+      "title": "Second Sujood",
+      "arabic": "سُبْحَانَ رَبِّيَ الأَعْلَى",
+      "content": "Repeat the Sujood then stand for the next Rak‘ah.",
+    },
+    {
+      "title": "At-Tahiyyat (Tashahhud)",
+      "arabic":
+          "التَّحِيَّاتُ لِلَّهِ، وَالصَّلَوَاتُ وَالطَّيِّبَاتُ،\n"
+          "السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ،\n"
+          "السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّهِ الصَّالِحِينَ،\n"
+          "أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ،\n"
+          "وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
+      "content":
+          "Greetings, prayers, and goodness are for Allah. Peace be upon you, O Prophet, and the mercy of Allah and His blessings. "
+          "Peace be upon us and upon the righteous servants of Allah. I bear witness that there is no deity but Allah, and I bear witness that Muhammad is His servant and messenger.",
+    },
+    {
+      "title": "Darood Ibrahim",
+      "arabic":
+          "اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ فِي الْعَالَمِينَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
+      "content":
+          "O Allah, send Your mercy upon Muhammad and his family, as You sent mercy upon Ibrahim and his family. And bless Muhammad and his family, as You blessed Ibrahim and his family. You are indeed Praiseworthy, Glorious.",
+    },
+    {
+      "title": "Final Dua",
+      "arabic":
+          "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+      "content":
+          "Our Lord, give us good in this world and in the Hereafter, and save us from the punishment of the Fire.",
+    },
+    {
+      "title": "Tasleem (Ending Salah)",
+      "arabic":
+          "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → right\n"
+          "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → left",
+      "content":
+          "Peace and mercy of Allah be upon you — first to the right, then to the left.",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = GoogleFonts.notoNaskhArabic(fontSize: 18, height: 1.6);
-
     return Scaffold(
-      backgroundColor: mainColor,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: mainColor,
-        title: const ArabicText(
-          'Complete Salah (Namaz) Guide',
-          style: TextStyle(color: Colors.white),
+        title: ArabicText(
+          "Complete Salah (Namaz) Guide",
+          style: TextStyle(color: primaryText),
         ),
+        iconTheme: IconThemeData(color: primaryText),
+        backgroundColor: mainColor,
         centerTitle: true,
       ),
       body: Stack(
@@ -56,284 +147,65 @@ class _NamazGuideScreenState extends State<NamazGuideScreen> {
           Positioned.fill(
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-          Container(color: mainColor.withOpacity(0.3)),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-
-                // Top Play/Pause Button
-                Column(
-                  children: [
-                    StreamBuilder<bool>(
-                      stream: _audioPlayer.playingStream,
-                      builder: (context, snapshot) {
-                        final isPlaying = snapshot.data ?? false;
-                        return ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: mainColor,
-                          ),
-                          label: Text("Play Audio"),
-                          icon: Icon(
-                            isPlaying ? Icons.pause_circle : Icons.play_circle,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            if (isPlaying) {
-                              _audioPlayer.pause();
-                            } else {
-                              _audioPlayer.play();
-                            }
-                          },
-                        );
-                      },
-                    ),
-                    Container(
-                      color: Colors.black.withOpacity(0.7),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: StreamBuilder<PositionData>(
-                        stream: _positionDataStream,
-                        builder: (context, snapshot) {
-                          final positionData =
-                              snapshot.data ??
-                              PositionData(Duration.zero, Duration.zero);
-
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Slider(
-                                min: 0.0,
-                                max: positionData.duration.inMilliseconds
-                                    .toDouble(),
-                                value: positionData.position.inMilliseconds
-                                    .clamp(
-                                      0,
-                                      positionData.duration.inMilliseconds,
-                                    )
-                                    .toDouble(),
-                                onChanged: (value) {
-                                  _audioPlayer.seek(
-                                    Duration(milliseconds: value.toInt()),
-                                  );
-                                },
-                                activeColor: Colors.white,
-                                inactiveColor: Colors.grey,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    _formatDuration(positionData.position),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.stop,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {
-                                          _audioPlayer.stop();
-                                        },
-                                      ),
-                                      StreamBuilder<bool>(
-                                        stream: _audioPlayer.playingStream,
-                                        builder: (context, snapshot) {
-                                          final isPlaying =
-                                              snapshot.data ?? false;
-                                          return IconButton(
-                                            icon: Icon(
-                                              isPlaying
-                                                  ? Icons.pause
-                                                  : Icons.play_arrow,
-                                              color: Colors.white,
-                                            ),
-                                            onPressed: () {
-                                              if (isPlaying) {
-                                                _audioPlayer.pause();
-                                              } else {
-                                                _audioPlayer.play();
-                                              }
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    _formatDuration(positionData.duration),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+          Container(color: mainColor.withOpacity(0.25)),
+          ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: namazSteps.length,
+            itemBuilder: (context, index) {
+              final step = namazSteps[index];
+              return Card(
+                color: mainColor.withOpacity(0.85),
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-
-                const SizedBox(height: 16), // Gap between button & text
-                // Arabic Text Scrollable
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: ArabicText(
-                      '''
-          🕌 **Make Wudu (Ablution)** — be clean and in a state of purity.
-          
-          **Face Qiblah (towards Ka’bah)**  
-          Stand upright, feet slightly apart, and focus with khushu (humility).
-          
-          **Make the Intention (Niyyah)**  
-          Say silently in your heart:  
-          “I intend to perform two/four Rak‘ah Salah for Allah, facing the Qiblah.”
-          
-          ---
-          
-          ## 🕋 STEP-BY-STEP PRAYER GUIDE
-          
-          ### 🕐 STEP 1 — Takbeer al-Ihraam
-          Raise both hands up to ears and say:  
-          **اللَّهُ أَكْبَرُ**  
-          *Allāhu Akbar* — Allah is the Greatest.
-          
-          ---
-          
-          ### 🕑 STEP 2 — Qiyaam (Standing)
-          Place your right hand over your left hand — on the chest (for women) or above the navel (for men).
-          
-          **Dua al-Istiftah:**
-          سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلٰهَ غَيْرُكَ  
-          *Subhānaka Allāhumma wa biḥamdika, wa tabāraka ismuka, wa ta‘ālā jadduka, wa lā ilāha ghayruk*  
-          Meaning: Glory be to You, O Allah, and praise. Blessed is Your name, exalted is Your majesty, and there is no god besides You.
-          
-          ---
-          
-          ### 🕒 STEP 3 — Recite Surah Al-Fātiḥah
-          بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ  
-          ٱلْـحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ  
-          ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ  
-          مَـٰلِكِ يَوْمِ ٱلدِّينِ  
-          إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ  
-          ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ  
-          صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ  
-          غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ  
-          **آمِينَ**
-          
-          Meaning: In the name of Allah, the Most Gracious, the Most Merciful... (etc.)
-          
-          ---
-          
-          ### 🕓 STEP 4 — Recite Another Surah (e.g. Al-Ikhlas)
-          قُلْ هُوَ اللَّهُ أَحَدٌ  
-          اللَّهُ الصَّمَدُ  
-          لَمْ يَلِدْ وَلَمْ يُولَدْ  
-          وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ  
-          Meaning: Say, He is Allah, the One and Only... (etc.)
-          
-          ---
-          
-          ### 🕔 STEP 5 — Rukoo‘ (Bowing)
-          Bend forward, hands on knees, and say 3 times:  
-          سُبْحَانَ رَبِّيَ الْعَظِيمِ  
-          *Subḥāna Rabbiyal-‘Aẓīm* — Glory be to my Lord, the Most Great.
-          
-          Then rise saying:  
-          سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ  
-          رَبَّنَا وَلَكَ الْحَمْدُ
-          
-          ---
-          
-          ### 🕕 STEP 6 — Sujood (Prostration)
-          Go down and say 3 times:  
-          سُبْحَانَ رَبِّيَ الأَعْلَى  
-          *Subḥāna Rabbiyal-A‘lā* — Glory be to my Lord, the Most High.
-          
-          ---
-          
-          ### 🕖 STEP 7 — Sit Between Two Sujoods
-          رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي  
-          *Rabbi ighfir lī, Rabbi ighfir lī* — My Lord, forgive me; my Lord, forgive me.
-          
-          ---
-          
-          ### 🕗 STEP 8 — Second Sujood
-          Repeat:  
-          سُبْحَانَ رَبِّيَ الأَعْلَى ×3  
-          Then stand up for the next Rak‘ah saying: **اللَّهُ أَكْبَرُ**
-          
-          ---
-          
-          ### 🔁 2nd Rak‘ah
-          Repeat Steps 2–8.  
-          After second Sujood, sit for **Tashahhud**.
-          
-          ---
-          
-          ### 🕘 STEP 9 — At-Tahiyyat (Tashahhud)
-          التَّحِيَّاتُ لِلَّهِ، وَالصَّلَوَاتُ وَالطَّيِّبَاتُ،  
-          السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ،  
-          السَّلَامُ عَلَيْنَا وَعَلَىٰ عِبَادِ اللَّهِ الصَّالِحِينَ،  
-          أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ،  
-          وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ.
-          
-          ---
-          
-          ### 🕙 STEP 10 — For 3 or 4 Rak‘ah Salah
-          After Tashahhud in 2nd Rak‘ah, stand up and complete the remaining Rak‘ahs.  
-          In the last Rak‘ah, sit and recite Darood Ibrahim.
-          
-          ---
-          
-          ### 🕚 STEP 11 — Darood Ibrahim
-          اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ...  
-          (O Allah, send Your mercy upon Muhammad and his family...)
-          
-          ---
-          
-          ### 🕛 STEP 12 — Final Dua
-          رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ  
-          Meaning: Our Lord, give us good in this world and in the Hereafter...
-          
-          ---
-          
-          ### 🕐 STEP 13 — Tasleem (Ending Salah)
-          السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → right  
-          السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ → left  
-          Meaning: Peace and mercy of Allah be upon you.
-          ''',
-                      style: textStyle,
-                      textAlign: TextAlign.start,
+                child: ExpansionTile(
+                  title: Text(
+                    step["title"] ?? "",
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                  children: [
+                    if (step["arabic"] != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: ArabicText(
+                          step["arabic"]!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 12,
+                      ),
+                      child: Text(
+                        step["content"] ?? "",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
+          const SizedBox(height: 20),
         ],
       ),
-
-      // Bottom custom audio control panel
     );
   }
-
-  String _formatDuration(Duration duration) {
-    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
-}
-
-class PositionData {
-  final Duration position;
-  final Duration duration;
-
-  PositionData(this.position, this.duration);
 }
