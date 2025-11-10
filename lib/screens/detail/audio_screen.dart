@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/model/surrah_model.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _AudioScreenState extends State<AudioScreen> {
     setState(() {
       currentIndex = widget.index - 1;
       dataIndex = widget.index - 1;
+      AnalyticsHelper.logScreenView("AudioScreen");
     });
 
     // Surah is from 1 to 114 so

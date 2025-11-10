@@ -3,6 +3,7 @@ import 'package:quran/quran.dart' as quran;
 import 'package:quran_al_kareem/screens/detail/surah_detail_page.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/screens/widget/my_drawer.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/surah_names_utils.dart';
 import 'package:quran_al_kareem/utils/urdu_json.dart';
@@ -24,6 +25,7 @@ class _QuranScreenState extends State<QuranScreen> {
     super.initState();
     filteredSurah = allSurah;
     _searchController.addListener(_filterSurahs);
+    AnalyticsHelper.logScreenView("QuranScreen");
   }
 
   void _filterSurahs() {

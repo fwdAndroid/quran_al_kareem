@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/api/api_calls.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
@@ -23,6 +24,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
   void initState() {
     super.initState();
     _loadQaris();
+    AnalyticsHelper.logScreenView("AudioQuranScreen");
   }
 
   Future<void> _loadQaris() async {

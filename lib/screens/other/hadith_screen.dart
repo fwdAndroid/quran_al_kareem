@@ -3,10 +3,23 @@ import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/other/hadith_detail_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
-class HadithScreen extends StatelessWidget {
+class HadithScreen extends StatefulWidget {
   const HadithScreen({super.key});
+
+  @override
+  State<HadithScreen> createState() => _HadithScreenState();
+}
+
+class _HadithScreenState extends State<HadithScreen> {
+  @override
+  void initState() {
+    AnalyticsHelper.logScreenView("HadithScreen");
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

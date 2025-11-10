@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
@@ -39,6 +40,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
       });
     });
     loadPrayerTimes();
+    AnalyticsHelper.logScreenView("PrayerScreen");
   }
 
   Future<void> loadPrayerTimes() async {

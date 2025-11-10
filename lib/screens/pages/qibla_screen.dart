@@ -5,6 +5,7 @@ import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -33,6 +34,8 @@ class _QiblaScreenState extends State<QiblaScreen> {
   @override
   void initState() {
     _checkLocationStatus();
+    AnalyticsHelper.logScreenView("QiblaScreen");
+
     super.initState();
   }
 

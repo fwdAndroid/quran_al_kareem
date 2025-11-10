@@ -13,6 +13,7 @@ import 'package:quran_al_kareem/screens/pages/setting_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/banner_util.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class MainDashboard extends StatefulWidget {
   final int initialPageIndex;
@@ -28,6 +29,8 @@ class _MainDashboardState extends State<MainDashboard> {
   BannerAd? _bannerAd;
   bool _isBannerAdLoaded = false;
 
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+
   final List<Widget> _screens = [
     const QuranScreen(),
     const AudioQuranScreen(),
@@ -36,12 +39,21 @@ class _MainDashboardState extends State<MainDashboard> {
     const SettingScreen(),
   ];
 
+  final List<String> _screenNames = [
+    "QuranScreen",
+    "AudioQuranScreen",
+    "PrayerScreen",
+    "QiblaScreen",
+    "SettingScreen",
+  ];
+
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialPageIndex;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadBannerAd();
+      _logScreenView(_selectedIndex);
     });
   }
 
@@ -69,6 +81,21 @@ class _MainDashboardState extends State<MainDashboard> {
         },
       ),
     )..load();
+  }
+
+  Future<void> _logScreenView(int index) async {
+    try {
+      await _analytics.logEvent(
+        name: 'screen_view',
+        parameters: {
+          'screen_name': _screenNames[index],
+          'screen_class': _screenNames[index],
+        },
+      );
+      debugPrint("Screen logged: ${_screenNames[index]}");
+    } catch (e) {
+      debugPrint("Failed to log screen view: $e");
+    }
   }
 
   @override
@@ -104,7 +131,10 @@ class _MainDashboardState extends State<MainDashboard> {
               selectedFontSize: 12,
               unselectedFontSize: 12,
               onTap: (index) {
-                setState(() => _selectedIndex = index);
+                setState(() {
+                  _selectedIndex = index;
+                  _logScreenView(index); // Log screen view on tab change
+                });
               },
               items: [
                 BottomNavigationBarItem(

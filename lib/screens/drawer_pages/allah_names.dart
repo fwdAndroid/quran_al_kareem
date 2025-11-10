@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/allah_names_utils.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -15,6 +16,11 @@ class AllahNames extends StatefulWidget {
 class _AllahNamesState extends State<AllahNames>
     with SingleTickerProviderStateMixin {
   int currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsHelper.logScreenView("AllahNames");
+  }
 
   @override
   Widget build(BuildContext context) {
