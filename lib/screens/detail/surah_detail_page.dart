@@ -23,11 +23,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         backgroundColor: mainColor,
         title: ArabicText(
           surahName,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
       ),
       body: Stack(
@@ -75,7 +75,8 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                           style: TextStyle(
                             fontSize: fontSize.toDouble() + 4,
                             fontFamily: 'Uthmanic',
-                            color: Colors.white,
+                            color: primaryText,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 8),

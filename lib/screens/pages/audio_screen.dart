@@ -69,9 +69,10 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const ArabicText(
+        automaticallyImplyLeading: false,
+        title: ArabicText(
           "Audio Quran",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
         centerTitle: true,
@@ -89,11 +90,11 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   onChanged: _filterQaris,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Search Qari...",
-                    hintStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                    hintStyle: TextStyle(color: Colors.white),
+                    prefixIcon: Icon(Icons.search, color: Colors.white),
                     filled: true,
                     fillColor: Colors.black26,
                     border: OutlineInputBorder(
@@ -109,10 +110,10 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                 child: _isLoading
                     ? _buildShimmerList()
                     : _filteredQaris.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: ArabicText(
                           "No Qari found",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: primaryText),
                         ),
                       )
                     : ListView.builder(
@@ -134,7 +135,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                                   );
                                 },
                               ),
-                              const Divider(color: Colors.white30),
+                              Divider(color: Colors.white30.withOpacity(.2)),
                             ],
                           );
                         },

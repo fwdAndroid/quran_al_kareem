@@ -4,6 +4,7 @@ import 'package:quran_al_kareem/model/qari_model.dart';
 import 'package:quran_al_kareem/model/surrah_model.dart' as surah;
 import 'package:quran_al_kareem/screens/detail/audio_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/utils/constant.dart';
 
 class AudioSurahScreen extends StatefulWidget {
@@ -32,11 +33,11 @@ class _AudioSurahScreenState extends State<AudioSurahScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const ArabicText(
+          iconTheme: IconThemeData(color: primaryText),
+          title: ArabicText(
             'Surah List',
             style: TextStyle(
-              color: Colors.white,
+              color: primaryText,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -86,7 +87,7 @@ class _AudioSurahScreenState extends State<AudioSurahScreen> {
                       return Center(
                         child: ArabicText(
                           "Error loading Surah",
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: primaryText),
                         ),
                       );
                     } else {
@@ -146,8 +147,8 @@ Widget AudioTile({
                 ArabicText(
                   surahName ?? "",
                   textAlign: TextAlign.end,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: primaryText,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -155,12 +156,12 @@ Widget AudioTile({
                 const SizedBox(height: 3),
                 ArabicText(
                   "Total Aya : $totalAya",
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: primaryText, fontSize: 16),
                 ),
               ],
             ),
             const Spacer(),
-            const Icon(Icons.play_circle_fill, color: Constants.kPrimary),
+            Icon(Icons.play_circle_fill, color: buttonColor),
           ],
         ),
       ),

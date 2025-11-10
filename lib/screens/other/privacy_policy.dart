@@ -10,12 +10,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
-        title: const ArabicText(
+        title: ArabicText(
           "Privacy Policy",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -30,7 +30,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               "3. We do not share or sell your information to third parties.\n"
               "4. Permissions (like storage or audio) are only used to enable app features.\n\n"
               "By using this app, you consent to this Privacy Policy.",
-              style: TextStyle(fontSize: 16, height: 1.5),
+              style: TextStyle(fontSize: 16, height: 1.5, color: Colors.white),
             ),
           ],
         ),

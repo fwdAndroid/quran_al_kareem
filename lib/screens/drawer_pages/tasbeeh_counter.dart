@@ -107,9 +107,12 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
       appBar: AppBar(
         backgroundColor: mainColor,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         centerTitle: true,
-        title: ArabicText("Tasbeeh", style: TextStyle(color: Colors.white)),
+        title: ArabicText(
+          "Tasbeeh",
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
         width: screenWidth,
@@ -140,7 +143,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
               "$counter",
               style: TextStyle(
                 fontSize: counterFontSize,
-                color: Colors.white,
+                color: primaryText,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -152,7 +155,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
               style: _buttonStyle(screenWidth, screenHeight),
               child: ArabicText(
                 "Tap",
-                style: TextStyle(fontSize: buttonFontSize),
+                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
               ),
             ),
 
@@ -164,7 +167,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
               style: _buttonStyle(screenWidth, screenHeight),
               child: ArabicText(
                 "Start",
-                style: TextStyle(fontSize: buttonFontSize),
+                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
               ),
             ),
 
@@ -176,7 +179,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
               style: _buttonStyle(screenWidth, screenHeight),
               child: ArabicText(
                 "Stop",
-                style: TextStyle(fontSize: buttonFontSize),
+                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
               ),
             ),
 
@@ -189,7 +192,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
                 "Reset",
                 style: TextStyle(
                   fontSize: buttonFontSize,
-                  color: Colors.white70,
+                  color: primaryText,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -202,7 +205,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
 
   ButtonStyle _buttonStyle(double width, double height) {
     return ElevatedButton.styleFrom(
-      backgroundColor: Colors.white.withOpacity(0.9),
+      backgroundColor: buttonColor,
       foregroundColor: Colors.black,
       padding: EdgeInsets.symmetric(
         horizontal: width * 0.2,

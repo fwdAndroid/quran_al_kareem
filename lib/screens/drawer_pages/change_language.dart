@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 
 class ChangeLangage extends StatefulWidget {
   const ChangeLangage({super.key});
@@ -20,12 +21,12 @@ class _ChangeLangageState extends State<ChangeLangage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: ArabicText(
           languageProvider.localizedStrings['Language'] ?? "Language",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
@@ -45,6 +46,12 @@ class _ChangeLangageState extends State<ChangeLangage> {
                 child: Align(
                   alignment: AlignmentDirectional.topStart,
                   child: ArabicText(
+                    style: TextStyle(
+                      color: primaryText,
+                      fontWeight: FontWeight.bold,
+
+                      fontSize: 20,
+                    ),
                     languageProvider.localizedStrings['Select Language'] ??
                         'Select Language',
                   ),
@@ -61,7 +68,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   languageProvider.currentLanguage == 'en'
                       ? Icons.radio_button_checked
                       : Icons.radio_button_off,
-                  color: Colors.white,
+                  color: primaryText,
                   size: 20,
                 ),
                 title: ArabicText(
@@ -78,7 +85,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   languageProvider.currentLanguage == 'ar'
                       ? Icons.radio_button_checked
                       : Icons.radio_button_off,
-                  color: Colors.white,
+                  color: primaryText,
                   size: 20,
                 ),
                 title: ArabicText(
@@ -96,7 +103,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   languageProvider.currentLanguage == 'ur'
                       ? Icons.radio_button_checked
                       : Icons.radio_button_off,
-                  color: Colors.white,
+                  color: primaryText,
                   size: 20,
                 ),
                 title: ArabicText(

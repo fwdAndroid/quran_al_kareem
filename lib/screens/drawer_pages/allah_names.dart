@@ -23,9 +23,12 @@ class _AllahNamesState extends State<AllahNames>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         centerTitle: true,
-        title: ArabicText("Allah Names", style: TextStyle(color: Colors.white)),
+        title: ArabicText(
+          "Allah Names",
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Stack(
         children: [
@@ -40,16 +43,16 @@ class _AllahNamesState extends State<AllahNames>
           SafeArea(
             child: Column(
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: ArabicText(
                     'أسماء الله الحسنى',
                     style: TextStyle(
                       fontSize: 32,
                       fontFamily: 'Amiri',
-                      color: Colors.white,
+                      color: primaryText,
                       fontWeight: FontWeight.bold,
-                      shadows: [Shadow(color: Colors.white, blurRadius: 10)],
+                      shadows: [Shadow(color: primaryText, blurRadius: 10)],
                     ),
                   ),
                 ),
@@ -72,18 +75,11 @@ class _AllahNamesState extends State<AllahNames>
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
+                              color: buttonColor,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
+                                color: buttonColor.withOpacity(0.2),
                                 width: 1,
-                              ),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.white.withOpacity(0.1),
-                                  Colors.white.withOpacity(0.05),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
                               ),
                             ),
                             child: Padding(

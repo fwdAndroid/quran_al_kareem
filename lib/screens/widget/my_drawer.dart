@@ -4,14 +4,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
-import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
-import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
-import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 
@@ -117,7 +114,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
             _drawerItem(
               icon: Icons.explore,
               text: languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
-              onTap: () => _showInterstitialAndNavigate(QiblaScreen()),
+              onTap: () => _showInterstitialAndNavigate(
+                MainDashboard(initialPageIndex: 3),
+              ),
             ),
 
             // ✅ Prayer Times
@@ -126,7 +125,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
               text:
                   languageProvider.localizedStrings["Prayer Times"] ??
                   'Prayer Times',
-              onTap: () => _showInterstitialAndNavigate(const PrayerScreen()),
+              onTap: () => _showInterstitialAndNavigate(
+                MainDashboard(initialPageIndex: 2),
+              ),
             ),
 
             // ✅ Namaz Guide
@@ -179,9 +180,9 @@ class _DrawerWidgetState extends State<DrawerWidget>
           leading: Icon(icon, color: Colors.brown),
           title: ArabicText(
             text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w300,
+            style: TextStyle(
+              color: primaryText,
+              fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
             textAlign: TextAlign.left,

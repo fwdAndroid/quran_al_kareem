@@ -23,12 +23,12 @@ class HadithScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         backgroundColor: mainColor,
         title: ArabicText(
           languageProvider.localizedStrings["Hadith Collection"] ??
               "Hadith Collection",
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
       ),
       body: Stack(
@@ -63,7 +63,7 @@ class HadithScreen extends StatelessWidget {
                   );
                 },
                 child: Card(
-                  color: mainColor.withOpacity(0.9),
+                  color: buttonColor.withOpacity(0.9),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -74,7 +74,7 @@ class HadithScreen extends StatelessWidget {
                       child: ArabicText(
                         book['name']!,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

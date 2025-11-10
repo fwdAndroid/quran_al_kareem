@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/font_provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
 
 class FontSettingsScreen extends StatelessWidget {
   final List<String> fonts = ['Tahoma', 'Amiri', 'Scheherazade', 'KFGQPC'];
@@ -15,8 +16,11 @@ class FontSettingsScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: ArabicText('اعدادات الخط'),
+        iconTheme: IconThemeData(color: primaryText),
+        title: ArabicText(
+          'Font Settings',
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

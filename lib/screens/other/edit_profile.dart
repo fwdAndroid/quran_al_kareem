@@ -19,6 +19,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   final _usernameController = TextEditingController();
+  final phoneController = TextEditingController();
 
   File? _pickedImage;
   String? _profileImageUrl;
@@ -39,6 +40,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         setState(() {
           _usernameController.text = data['name'] ?? '';
           _profileImageUrl = data['image'];
+          phoneController.text = data['phone'] ?? "";
         });
       }
     }
@@ -47,9 +49,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _requestPermission() async {
     final status = await Permission.photos.request();
     if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied to access photos')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Permission denied to access photos')),
+      // );
     }
   }
 
@@ -100,6 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     await _firestore.collection('users').doc(user.uid).set({
       'name': _usernameController.text.trim(),
       'image': imageUrl,
+      'phone': phoneController.text.trim(),
     }, SetOptions(merge: true));
 
     setState(() => _isLoading = false);
@@ -117,11 +120,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return Scaffold(
         backgroundColor: mainColor,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          title: const Text(
-            'Edit Profile',
-            style: TextStyle(color: Colors.white),
-          ),
+          iconTheme: IconThemeData(color: primaryText),
+          title: Text('Edit Profile', style: TextStyle(color: primaryText)),
         ),
         body: Center(
           child: Column(
@@ -133,6 +133,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Go Back'),
               ),
@@ -145,11 +146,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(color: Colors.white),
-        ),
+        iconTheme: IconThemeData(color: primaryText),
+        title: Text('Edit Profile', style: TextStyle(color: primaryText)),
         backgroundColor: mainColor,
       ),
       body: _isLoading
@@ -194,13 +192,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  // Username TextField
+                  TextField(
+                    controller: phoneController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Numbber',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                   const SizedBox(height: 30),
 
                   // Save Button
                   ElevatedButton(
                     onPressed: _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: mainColor,
+                      backgroundColor: buttonColor,
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: const ArabicText(

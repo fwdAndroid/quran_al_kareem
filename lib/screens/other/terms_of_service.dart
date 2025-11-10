@@ -11,12 +11,12 @@ class TermsAndServicesScreen extends StatelessWidget {
       backgroundColor: mainColor,
 
       appBar: AppBar(
-        title: const ArabicText(
+        title: ArabicText(
           "Terms & Services",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -30,7 +30,7 @@ class TermsAndServicesScreen extends StatelessWidget {
               "3. You may not copy, modify, or redistribute any part of the app without permission.\n"
               "4. The app developers are not responsible for any misuse or interpretation of the content.\n\n"
               "Continued use of the app means you agree to these terms.",
-              style: TextStyle(fontSize: 16, height: 1.5),
+              style: TextStyle(fontSize: 16, height: 1.5, color: Colors.white),
             ),
           ],
         ),
