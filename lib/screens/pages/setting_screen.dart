@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
-import 'package:quran_al_kareem/screens/auth/login_screen.dart'; // 👈 Add your login screen import
+import 'package:quran_al_kareem/screens/auth/login_screen.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
 import 'package:quran_al_kareem/screens/other/edit_profile.dart';
 import 'package:quran_al_kareem/screens/other/font_setting.dart';
@@ -12,6 +12,7 @@ import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart'; // 👈 Added for "Rate Us"
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -114,7 +115,6 @@ class _SettingScreenState extends State<SettingScreen> {
                         ],
                       ),
                     ),
-
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -179,6 +179,15 @@ class _SettingScreenState extends State<SettingScreen> {
                           "Invite Friends",
                       icon: Icons.share,
                       onTap: shareApp,
+                    ),
+                    Divider(color: primaryText.withOpacity(.1)),
+
+                    // ✅ Rate Us Button (added above logout)
+                    _buildListTile(
+                      context,
+                      title: "Rate Us",
+                      icon: Icons.star_rate_rounded,
+                      onTap: _launchRateUs,
                     ),
                     Divider(color: primaryText.withOpacity(.1)),
 
@@ -260,5 +269,18 @@ class _SettingScreenState extends State<SettingScreen> {
     const appLink =
         "https://play.google.com/store/apps/details?id=com.example.yourapp";
     Share.share("Hey, check out this amazing app: $appLink");
+  }
+
+  // ✅ Open Play Store link
+  Future<void> _launchRateUs() async {
+    const url =
+        'https://play.google.com/store/apps/details?id=com.example.yourapp'; // change to your app ID
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open Play Store')),
+      );
+    }
   }
 }

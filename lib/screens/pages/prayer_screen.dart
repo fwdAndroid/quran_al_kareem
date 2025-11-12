@@ -168,7 +168,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
                 children: [
                   ArabicText(
                     "🗓 Hijri Date: ${hijriDate ?? 'Loading...'}",
-                    style: const TextStyle(color: Colors.white70, fontSize: 16),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
 

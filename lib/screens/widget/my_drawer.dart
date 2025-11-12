@@ -181,7 +181,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
           title: ArabicText(
             text,
             style: TextStyle(
-              color: primaryText,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

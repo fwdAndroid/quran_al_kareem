@@ -23,11 +23,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: primaryText),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: mainColor,
         title: ArabicText(
           surahName,
-          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Stack(

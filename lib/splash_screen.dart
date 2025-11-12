@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:quran_al_kareem/screens/auth/login_screen.dart';
-import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:quran_al_kareem/service/ads_service.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final AppOpenAdManager adManager;
+
+  const SplashScreen({Key? key, required this.adManager}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -13,47 +15,41 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    _checkAuth();
+    // Start splash
+    Timer(const Duration(seconds: 6), _showAppOpenAd);
   }
 
-  void _checkAuth() async {
-    await Future.delayed(const Duration(seconds: 3)); // Simulate splash time
+  void _showAppOpenAd() {
+    if (widget.adManager.isAdAvailable) {
+      // Show the App Open Ad, then navigate when ad is closed
+      widget.adManager.showAdIfAvailable(onAdClosed: _goToLoginScreen);
+    } else {
+      // If ad is not ready, go straight to login
+      _goToLoginScreen();
+    }
+  }
 
-    Navigator.pushReplacement(
+  void _goToLoginScreen() {
+    Navigator.of(
       context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    ).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainColor.withOpacity(.9),
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/bg.png"),
-            filterQuality: FilterQuality.high,
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/logo.png', height: 200),
-              ),
-            ),
-          ],
-        ),
+        child: Center(child: Image.asset('assets/logo.png', height: 200)),
       ),
     );
   }
