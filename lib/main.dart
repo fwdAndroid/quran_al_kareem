@@ -34,18 +34,18 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late AppOpenAdManager _adManager;
-  late AppLifecycleReactor _lifecycleReactor;
+  // late AppLifecycleReactor _lifecycleReactor;
 
   @override
   void initState() {
-    super.initState();
+    // super.initState();
     _adManager = AppOpenAdManager()..loadAd();
-    _lifecycleReactor = AppLifecycleReactor(adManager: _adManager);
+    // _lifecycleReactor = AppLifecycleReactor(adManager: _adManager);
   }
 
   @override
   void dispose() {
-    _lifecycleReactor.dispose();
+    //   _lifecycleReactor.dispose();
     super.dispose();
   }
 
