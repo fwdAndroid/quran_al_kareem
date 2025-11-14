@@ -81,7 +81,7 @@ class _AllahNamesState extends State<AllahNames>
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: buttonColor,
+                              color: mainColor,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                 color: buttonColor.withOpacity(0.2),

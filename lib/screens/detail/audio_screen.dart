@@ -106,11 +106,11 @@ class _AudioScreenState extends State<AudioScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
         ),
         title: ArabicText(
           'Now Playing',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
         ),
       ),
       body: SafeArea(
@@ -131,7 +131,7 @@ class _AudioScreenState extends State<AudioScreen> {
                   backgroundImage: AssetImage(
                     "assets/qari_images/${widget.qari.name}.jpg",
                   ),
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.black,
                 ),
                 const SizedBox(height: 20),
                 Padding(
@@ -159,14 +159,14 @@ class _AudioScreenState extends State<AudioScreen> {
                           widget.list![currentIndex].name!,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         ArabicText(
                           'Total Aya : ${widget.list![currentIndex].numberOfAyahs}',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                       ],
                     ),
@@ -294,7 +294,7 @@ class _AudioScreenState extends State<AudioScreen> {
                                 ),
                                 child: Icon(
                                   Icons.shuffle,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   size:
                                       MediaQuery.of(context).size.width * 0.05,
                                 ),
@@ -330,6 +330,7 @@ class _AudioScreenState extends State<AudioScreen> {
                       ),
                       IconButton(
                         icon: Icon(
+                          color: Colors.white,
                           Icons.volume_up,
                           size: MediaQuery.of(context).size.width * 0.1,
                         ),

@@ -36,27 +36,20 @@ class _HadithListScreenState extends State<HadithListScreen> {
           style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
-        actions: [
-          PopupMenuButton<Language>(
-            onSelected: (Language lang) {
-              setState(() => selectedLanguage = lang);
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: Language.english,
-                child: ArabicText(
-                  "English",
-                  style: TextStyle(color: primaryText),
-                ),
-              ),
-              PopupMenuItem(
-                value: Language.urdu,
-                child: ArabicText("Urdu", style: TextStyle(color: primaryText)),
-              ),
-            ],
-            icon: Icon(Icons.language, color: iconColor),
-          ),
-        ],
+        // actions: [
+        //   PopupMenuButton<Language>(
+        //     onSelected: (Language lang) {
+        //       setState(() => selectedLanguage = lang);
+        //     },
+        //     itemBuilder: (context) => [
+        //       PopupMenuItem(
+        //         value: Language.urdu,
+        //         child: ArabicText("Urdu", style: TextStyle(color: primaryText)),
+        //       ),
+        //     ],
+        //     icon: Icon(Icons.language, color: iconColor),
+        //   ),
+        // ],
       ),
       body: FutureBuilder<List<Hadith>>(
         future: _service.fetchAllHadiths(book: widget.bookKey),
@@ -142,9 +135,7 @@ class _HadithListScreenState extends State<HadithListScreen> {
                       ),
                       const SizedBox(height: 8),
                       ArabicText(
-                        selectedLanguage == Language.english
-                            ? h.english
-                            : h.urdu,
+                        selectedLanguage == Language.urdu ? h.urdu : h.urdu,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,

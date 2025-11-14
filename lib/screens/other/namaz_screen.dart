@@ -160,6 +160,7 @@ class NamazGuideScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: ExpansionTile(
+                  collapsedIconColor: Colors.white,
                   title: Text(
                     step["title"] ?? "",
                     style: const TextStyle(
@@ -178,7 +179,7 @@ class NamazGuideScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                       ),

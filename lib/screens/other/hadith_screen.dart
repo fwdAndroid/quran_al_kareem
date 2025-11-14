@@ -76,7 +76,7 @@ class _HadithScreenState extends State<HadithScreen> {
                   );
                 },
                 child: Card(
-                  color: buttonColor.withOpacity(0.9),
+                  color: mainColor.withOpacity(0.9),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),

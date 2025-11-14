@@ -132,7 +132,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               '﷽',
                               style: TextStyle(
                                 fontSize: 36,
-                                color: Colors.black87,
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -143,7 +143,7 @@ class _DuaScreenState extends State<DuaScreen> {
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'ScheherazadeNew',
-                                color: Colors.black,
+                                color: Colors.white,
                                 shadows: [
                                   Shadow(
                                     color: Colors.amberAccent,
@@ -159,7 +159,7 @@ class _DuaScreenState extends State<DuaScreen> {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black.withOpacity(0.8),
+                                color: Colors.white.withOpacity(0.8),
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
@@ -178,7 +178,7 @@ class _DuaScreenState extends State<DuaScreen> {
                             // 🎵 Play/Pause Button
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: buttonColor,
+                                backgroundColor: mainColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
