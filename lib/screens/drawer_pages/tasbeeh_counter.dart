@@ -1,6 +1,8 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -18,17 +20,54 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
   Duration elapsed = Duration.zero;
   Timer? timer;
 
+  List<Map<String, dynamic>> sessions = [];
+  List<Map<String, dynamic>> currentSessionHistory = [];
+  String chartPeriod = 'Weekly'; // For modal chart
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSessions();
+  }
+
+  Future<void> _loadSessions() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedSessions = prefs.getStringList('tasbeeh_sessions');
+    if (savedSessions != null) {
+      setState(() {
+        sessions = savedSessions
+            .map((s) => Map<String, dynamic>.from(jsonDecode(s)))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> _saveSessions() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> stringSessions = sessions.map((s) => jsonEncode(s)).toList();
+    await prefs.setStringList('tasbeeh_sessions', stringSessions);
+  }
+
   void startTimer() {
     setState(() {
       counter = 0;
       elapsed = Duration.zero;
       timerRunning = true;
       startTime = DateTime.now();
+      currentSessionHistory = [];
     });
 
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         elapsed = DateTime.now().difference(startTime!);
+        // Update live graph every second
+        currentSessionHistory.add({
+          'count': counter,
+          'time': DateTime.now().toIso8601String(),
+        });
+        if (currentSessionHistory.length > 20) {
+          currentSessionHistory.removeAt(0); // keep last 20 points
+        }
       });
     });
   }
@@ -40,6 +79,8 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
     setState(() {
       timerRunning = false;
     });
+
+    _addSession(counter);
 
     showDialog(
       context: context,
@@ -55,9 +96,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
             child: const ArabicText("Close"),
           ),
         ],
@@ -69,16 +108,236 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
     if (!timerRunning) return;
     setState(() {
       counter++;
+      currentSessionHistory.add({
+        'count': counter,
+        'time': DateTime.now().toIso8601String(),
+      });
+      if (currentSessionHistory.length > 20) {
+        currentSessionHistory.removeAt(0);
+      }
     });
   }
 
-  void reset() {
+  void resetCounter() {
     timer?.cancel();
     setState(() {
       counter = 0;
       elapsed = Duration.zero;
       timerRunning = false;
+      currentSessionHistory.clear();
     });
+  }
+
+  void saveSession() {
+    _addSession(counter);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Session saved!")));
+  }
+
+  void _addSession(int count) {
+    final session = {
+      'count': count,
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+    setState(() {
+      sessions.add(session);
+    });
+    _saveSessions();
+  }
+
+  void clearAllSessions() async {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const ArabicText("Confirm Clear"),
+        content: const ArabicText(
+          "Are you sure you want to clear all sessions? This cannot be undone.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const ArabicText("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const ArabicText("Clear"),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('tasbeeh_sessions');
+      setState(() {
+        sessions.clear();
+        counter = 0;
+        elapsed = Duration.zero;
+        timerRunning = false;
+        currentSessionHistory.clear();
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("All sessions cleared!")));
+    }
+  }
+
+  void openGraph() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: ['Weekly', 'Monthly', 'Yearly'].map((period) {
+                return ChoiceChip(
+                  label: Text(period),
+                  selected: chartPeriod == period,
+                  onSelected: (_) {
+                    setState(() {
+                      chartPeriod = period;
+                    });
+                    Navigator.of(context).pop();
+                    openGraph();
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+            Expanded(child: _buildChart()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<FlSpot> _aggregateData() {
+    DateTime now = DateTime.now();
+    List<FlSpot> spots = [];
+
+    if (sessions.isEmpty) return spots;
+
+    List<Map<String, dynamic>> parsedSessions = sessions
+        .map(
+          (s) => {
+            'count': s['count'],
+            'timestamp': DateTime.parse(s['timestamp']),
+          },
+        )
+        .toList();
+
+    if (chartPeriod == 'Weekly') {
+      for (int i = 0; i < 7; i++) {
+        DateTime day = now.subtract(Duration(days: i));
+        int total = parsedSessions
+            .where(
+              (s) =>
+                  s['timestamp'].day == day.day &&
+                  s['timestamp'].month == day.month &&
+                  s['timestamp'].year == day.year,
+            )
+            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
+        spots.add(FlSpot((6 - i).toDouble(), total.toDouble()));
+      }
+    } else if (chartPeriod == 'Monthly') {
+      int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+      for (int i = 1; i <= daysInMonth; i++) {
+        int total = parsedSessions
+            .where(
+              (s) =>
+                  s['timestamp'].day == i &&
+                  s['timestamp'].month == now.month &&
+                  s['timestamp'].year == now.year,
+            )
+            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
+        spots.add(FlSpot(i.toDouble(), total.toDouble()));
+      }
+    } else if (chartPeriod == 'Yearly') {
+      for (int m = 1; m <= 12; m++) {
+        int total = parsedSessions
+            .where(
+              (s) =>
+                  s['timestamp'].month == m && s['timestamp'].year == now.year,
+            )
+            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
+        spots.add(FlSpot(m.toDouble(), total.toDouble()));
+      }
+    }
+
+    return spots;
+  }
+
+  Widget _buildChart() {
+    final spots = _aggregateData();
+    if (spots.isEmpty) return const Center(child: Text("No data available"));
+
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(show: true),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+          ),
+          borderData: FlBorderData(show: true),
+          lineBarsData: [
+            LineChartBarData(
+              spots: spots,
+              isCurved: true,
+              barWidth: 3,
+              color: Colors.orange,
+              dotData: FlDotData(show: true),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Mini live graph
+  Widget _buildLiveGraph() {
+    if (currentSessionHistory.isEmpty) {
+      return const SizedBox(
+        height: 80,
+        child: Center(child: Text("Start tapping to see live progress")),
+      );
+    }
+
+    List<FlSpot> spots = [];
+    for (int i = 0; i < currentSessionHistory.length; i++) {
+      spots.add(
+        FlSpot(i.toDouble(), currentSessionHistory[i]['count'].toDouble()),
+      );
+    }
+
+    return SizedBox(
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: LineChart(
+          LineChartData(
+            gridData: FlGridData(show: false),
+            titlesData: FlTitlesData(show: false),
+            borderData: FlBorderData(show: false),
+            lineBarsData: [
+              LineChartBarData(
+                spots: spots,
+                isCurved: true,
+                color: Colors.yellowAccent,
+                barWidth: 3,
+                dotData: FlDotData(show: true),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   String formatDuration(Duration d) {
@@ -96,11 +355,8 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
     final counterFontSize = screenWidth * 0.2;
-    final buttonFontSize = screenWidth * 0.05;
     final timerFontSize = screenWidth * 0.07;
-    // final languageProvider = Provider.of<LanguageProvider>(context); // Access
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -147,57 +403,54 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 30),
-
-            // Tap Button
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: incrementCounter,
               style: _buttonStyle(screenWidth, screenHeight),
-              child: ArabicText(
+              child: const ArabicText(
                 "Tap",
-                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // Start Button
-            ElevatedButton(
-              onPressed: timerRunning ? null : startTimer,
-              style: _buttonStyle(screenWidth, screenHeight),
-              child: ArabicText(
-                "Start",
-                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Stop Button
-            ElevatedButton(
-              onPressed: timerRunning ? stopTimer : null,
-              style: _buttonStyle(screenWidth, screenHeight),
-              child: ArabicText(
-                "Stop",
-                style: TextStyle(fontSize: buttonFontSize, color: Colors.white),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Reset
-            TextButton(
-              onPressed: reset,
-              child: ArabicText(
-                "Reset",
-                style: TextStyle(
-                  fontSize: buttonFontSize,
-                  color: primaryText,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
+            _buildLiveGraph(),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: mainColor.withOpacity(0.9),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                tooltip: 'Reset',
+                onPressed: resetCounter,
+              ),
+              IconButton(
+                icon: const Icon(Icons.play_arrow, color: Colors.white),
+                tooltip: 'Start',
+                onPressed: timerRunning ? null : startTimer,
+              ),
+              IconButton(
+                icon: const Icon(Icons.save, color: Colors.white),
+                tooltip: 'Save',
+                onPressed: saveSession,
+              ),
+              IconButton(
+                icon: const Icon(Icons.show_chart, color: Colors.white),
+                tooltip: 'Graph',
+                onPressed: openGraph,
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_forever, color: Colors.white),
+                tooltip: 'Clear All',
+                onPressed: clearAllSessions,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -205,7 +458,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
 
   ButtonStyle _buttonStyle(double width, double height) {
     return ElevatedButton.styleFrom(
-      backgroundColor: buttonColor,
+      backgroundColor: mainColor,
       foregroundColor: Colors.black,
       padding: EdgeInsets.symmetric(
         horizontal: width * 0.2,
