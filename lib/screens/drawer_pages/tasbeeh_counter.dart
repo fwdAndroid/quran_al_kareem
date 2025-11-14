@@ -105,7 +105,9 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
   }
 
   void incrementCounter() {
-    if (!timerRunning) return;
+    if (!timerRunning) {
+      startTimer(); // Start timer on first tap
+    }
     setState(() {
       counter++;
       currentSessionHistory.add({
@@ -129,10 +131,17 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
   }
 
   void saveSession() {
-    _addSession(counter);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Session saved!")));
+    if (counter > 0) {
+      _addSession(counter);
+      resetCounter(); // Reset after saving
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Session saved! Counter reset.")),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("No taps to save!")));
+    }
   }
 
   void _addSession(int count) {
@@ -150,6 +159,7 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
     bool confirm = await showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: mainColor,
         title: const ArabicText("Confirm Clear"),
         content: const ArabicText(
           "Are you sure you want to clear all sessions? This cannot be undone.",
@@ -449,6 +459,12 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
                 tooltip: 'Clear All',
                 onPressed: clearAllSessions,
               ),
+              // NEW: Show Results button
+              IconButton(
+                icon: const Icon(Icons.list_alt, color: Colors.white),
+                tooltip: 'Saved Sessions',
+                onPressed: _showSavedSessions,
+              ),
             ],
           ),
         ),
@@ -465,6 +481,44 @@ class _TashbeehCounterState extends State<TashbeehCounter> {
         vertical: height * 0.02,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+    );
+  }
+
+  void _showSavedSessions() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => SizedBox(
+        height: MediaQuery.of(context).size.height * 0.6,
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            const Text(
+              "Saved Sessions",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Divider(),
+            Expanded(
+              child: sessions.isEmpty
+                  ? const Center(child: Text("No saved sessions"))
+                  : ListView.builder(
+                      itemCount: sessions.length,
+                      itemBuilder: (context, index) {
+                        final session = sessions[index];
+                        DateTime ts = DateTime.parse(session['timestamp']);
+                        return ListTile(
+                          leading: const Icon(Icons.history),
+                          title: Text("Taps: ${session['count']}"),
+                          subtitle: Text(
+                            "${ts.day}-${ts.month}-${ts.year} ${ts.hour}:${ts.minute.toString().padLeft(2, '0')}",
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
