@@ -6,4 +6,4 @@ final buttonColor = Colors.white;
 final primaryText = Colors.black;
 final secondaryTextColor = Colors.white;
 final alertColor = Colors.red;
-final iconColor = Colors.brown;
+final iconColor = Colors.white;

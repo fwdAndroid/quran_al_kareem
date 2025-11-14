@@ -154,7 +154,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainColor,
+      //  backgroundColor: mainColor,
       body: Stack(
         children: [
           Positioned.fill(
@@ -263,7 +263,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                               final entry = timings!.entries.elementAt(index);
                               final icon = getPrayerIcon(entry.key);
                               return Card(
-                                color: Colors.black26.withOpacity(0.9),
+                                color: Color(0xff326c6d),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),

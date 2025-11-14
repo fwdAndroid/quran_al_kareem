@@ -92,10 +92,10 @@ class _QuranScreenState extends State<QuranScreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: mainColor,
       ),
       drawer: DrawerWidget(),
-      backgroundColor: mainColor,
+      //backgroundColor: mainColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -137,7 +137,9 @@ class _QuranScreenState extends State<QuranScreen> {
 
   Widget buildSurahCard(BuildContext context, int surahNumber) {
     return Card(
-      color: Colors.white.withOpacity(0.15), // <-- semi-transparent background
+      color: Color(
+        0xff326c6d,
+      ).withOpacity(0.15), // <-- semi-transparent background
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -145,7 +147,7 @@ class _QuranScreenState extends State<QuranScreen> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.brown,
+            color: iconColor,
             borderRadius: BorderRadius.circular(8),
           ),
           alignment: Alignment.center,

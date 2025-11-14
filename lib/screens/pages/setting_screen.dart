@@ -63,7 +63,7 @@ class _SettingScreenState extends State<SettingScreen> {
     final languageProvider = Provider.of<LanguageProvider>(context);
 
     return Scaffold(
-      backgroundColor: mainColor,
+      //    backgroundColor: mainColor,
       body: Stack(
         children: [
           Positioned.fill(
