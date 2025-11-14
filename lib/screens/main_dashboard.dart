@@ -8,7 +8,7 @@ import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/pages/audio_screen.dart';
 import 'package:quran_al_kareem/screens/pages/prayer_screen.dart';
 import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
-import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
+import 'package:quran_al_kareem/screens/pages/home_screen.dart';
 import 'package:quran_al_kareem/screens/pages/setting_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -32,7 +32,7 @@ class _MainDashboardState extends State<MainDashboard> {
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   final List<Widget> _screens = [
-    const QuranScreen(),
+    const HomeScreen(),
     const AudioQuranScreen(),
     PrayerScreen(),
     QiblaScreen(),
@@ -160,7 +160,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ];
 
                       final labels = [
-                        languageProvider.localizedStrings["Quran"] ?? "Quran",
+                        languageProvider.localizedStrings["Home"] ?? "Home",
                         languageProvider.localizedStrings["Audio Quran"] ??
                             "Audio Quran",
                         languageProvider.localizedStrings["Prayer"] ?? "Prayer",
@@ -228,7 +228,7 @@ class _MainDashboardState extends State<MainDashboard> {
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         title: ArabicText('Exit App', style: TextStyle(color: primaryText)),
         content: ArabicText(
           'Do you want to exit the app',
