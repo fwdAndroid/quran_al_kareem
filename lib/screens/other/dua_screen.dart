@@ -116,13 +116,6 @@ class _DuaScreenState extends State<DuaScreen> {
                       decoration: BoxDecoration(
                         color: mainColor.withOpacity(0.85),
                         borderRadius: BorderRadius.circular(15),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -163,22 +156,13 @@ class _DuaScreenState extends State<DuaScreen> {
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            const SizedBox(height: 6),
-                            ArabicText(
-                              dua.reference ?? "",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+
                             const SizedBox(height: 10),
 
                             // 🎵 Play/Pause Button
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: mainColor,
+                                backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
@@ -192,6 +176,7 @@ class _DuaScreenState extends State<DuaScreen> {
                                 size: 24,
                               ),
                               label: ArabicText(
+                                style: TextStyle(color: Colors.black),
                                 isPlaying ? "Pause" : "Play Audio",
                               ),
                             ),
@@ -232,7 +217,7 @@ class _DuaScreenState extends State<DuaScreen> {
                                             }
                                           : null,
                                       activeColor: isCurrentDua
-                                          ? mainColor
+                                          ? Colors.black
                                           : Colors.grey[400],
                                       inactiveColor: Colors.grey[300],
                                     ),
@@ -247,13 +232,13 @@ class _DuaScreenState extends State<DuaScreen> {
                                                 : Duration.zero,
                                           ),
                                           style: const TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.white,
                                           ),
                                         ),
                                         ArabicText(
                                           _formatDuration(duration),
                                           style: const TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ],
