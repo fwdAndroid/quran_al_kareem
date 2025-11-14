@@ -177,7 +177,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
     return Column(
       children: [
         ListTile(
-          leading: Icon(icon, color: Colors.brown),
+          leading: Icon(icon, color: Colors.white),
           title: ArabicText(
             text,
             style: TextStyle(
