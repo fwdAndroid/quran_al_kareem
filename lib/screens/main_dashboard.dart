@@ -112,7 +112,6 @@ class _MainDashboardState extends State<MainDashboard> {
         bottomNavigationBar: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Banner Ad on top of nav bar
             if (_isBannerAdLoaded && _bannerAd != null)
               Container(
                 width: _bannerAd!.size.width.toDouble(),
@@ -120,55 +119,105 @@ class _MainDashboardState extends State<MainDashboard> {
                 alignment: Alignment.center,
                 child: AdWidget(ad: _bannerAd!),
               ),
-            // Bottom Navigation Bar
-            BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: mainColor,
-              currentIndex: _selectedIndex,
-              selectedItemColor: iconColor,
-              unselectedItemColor: Colors.white,
-              showUnselectedLabels: true,
-              selectedFontSize: 12,
-              unselectedFontSize: 12,
-              onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                  _logScreenView(index); // Log screen view on tab change
-                });
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Ionicons.book_outline),
-                  activeIcon: Icon(Ionicons.book),
-                  label: languageProvider.localizedStrings["Quran"] ?? "Quran",
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6, left: 6, right: 6),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                        offset: Offset(0, 4), // Floating shadow
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: List.generate(5, (index) {
+                      final bool isSelected = _selectedIndex == index;
+
+                      final icons = [
+                        Ionicons.book_outline,
+                        Ionicons.book,
+                        Ionicons.time_outline,
+                        Ionicons.compass_outline,
+                        Ionicons.settings_outline,
+                      ];
+
+                      final activeIcons = [
+                        Ionicons.book,
+                        Ionicons.hand_left,
+                        Ionicons.time,
+                        Ionicons.compass,
+                        Ionicons.settings,
+                      ];
+
+                      final labels = [
+                        languageProvider.localizedStrings["Quran"] ?? "Quran",
+                        languageProvider.localizedStrings["Audio Quran"] ??
+                            "Audio Quran",
+                        languageProvider.localizedStrings["Prayer"] ?? "Prayer",
+                        languageProvider.localizedStrings["Qibla"] ?? "Qibla",
+                        languageProvider.localizedStrings["Settings"] ??
+                            "Settings",
+                      ];
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedIndex = index;
+                            _logScreenView(index);
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 250),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 6,
+                          ),
+                          decoration: isSelected
+                              ? BoxDecoration(
+                                  color: Colors.amber.withOpacity(0.25),
+                                  borderRadius: BorderRadius.circular(
+                                    12,
+                                  ), // BORDER RADIUS ONLY
+                                )
+                              : null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isSelected ? activeIcons[index] : icons[index],
+                                color: isSelected
+                                    ? Colors.amber
+                                    : Colors.black54,
+                              ),
+                              Text(
+                                labels[index],
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isSelected
+                                      ? Colors.amber
+                                      : Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Ionicons.book),
-                  activeIcon: Icon(Ionicons.hand_left),
-                  label:
-                      languageProvider.localizedStrings["Audio Quran"] ??
-                      "Audio Quran",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Ionicons.time_outline),
-                  activeIcon: Icon(Ionicons.time),
-                  label:
-                      languageProvider.localizedStrings["Prayer"] ?? "Prayer",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Ionicons.compass_outline),
-                  activeIcon: Icon(Ionicons.compass),
-                  label: languageProvider.localizedStrings["Qibla"] ?? "Qibla",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Ionicons.settings_outline),
-                  activeIcon: Icon(Ionicons.settings),
-                  label:
-                      languageProvider.localizedStrings["Settings"] ??
-                      "Settings",
-                ),
-              ],
+              ),
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),

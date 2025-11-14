@@ -45,6 +45,7 @@ dependencies:
   geolocator: ^13.0.2
   google_fonts: ^6.3.2
   google_mobile_ads: ^6.0.0
+  google_nav_bar: ^5.0.7
   google_sign_in: ^6.2.1
   http: ^1.5.0
   image_picker: ^1.2.0
