@@ -29,14 +29,14 @@ class _PrayerScreenState extends State<PrayerScreen> {
   Duration? timeRemaining;
   Timer? countdownTimer;
   final ScrollController _scrollController = ScrollController();
-  double _scrollOffset = 0.0;
+  double scrollOffset = 0.0;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(() {
       setState(() {
-        _scrollOffset = _scrollController.offset;
+        scrollOffset = _scrollController.offset;
       });
     });
     loadPrayerTimes();
