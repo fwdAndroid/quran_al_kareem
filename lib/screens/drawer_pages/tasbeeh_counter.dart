@@ -1,523 +1,308 @@
+// tasbeeh_screen.dart
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
-import 'package:quran_al_kareem/utils/colors.dart';
 
-class TashbeehCounter extends StatefulWidget {
-  const TashbeehCounter({super.key});
+import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/tashbeeh_summary_screen.dart';
+import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class TasbeehScreen extends StatefulWidget {
+  const TasbeehScreen({Key? key}) : super(key: key);
 
   @override
-  State<TashbeehCounter> createState() => _TashbeehCounterState();
+  State<TasbeehScreen> createState() => _TasbeehScreenState();
 }
 
-class _TashbeehCounterState extends State<TashbeehCounter> {
-  int counter = 0;
-  bool timerRunning = false;
-  DateTime? startTime;
-  Duration elapsed = Duration.zero;
-  Timer? timer;
+class _TasbeehScreenState extends State<TasbeehScreen> {
+  final TextEditingController _textController = TextEditingController();
+  int _counter = 0;
+  bool _isCounting = false;
 
-  List<Map<String, dynamic>> sessions = [];
-  List<Map<String, dynamic>> currentSessionHistory = [];
-  String chartPeriod = 'Weekly'; // For modal chart
+  // TIMER
+  Timer? _timer;
+  int _seconds = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSessions();
+  // FORMATTED TIME
+  String get formattedTime {
+    final min = (_seconds ~/ 60).toString().padLeft(2, '0');
+    final sec = (_seconds % 60).toString().padLeft(2, '0');
+    return "$min:$sec";
   }
 
-  Future<void> _loadSessions() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? savedSessions = prefs.getStringList('tasbeeh_sessions');
-    if (savedSessions != null) {
-      setState(() {
-        sessions = savedSessions
-            .map((s) => Map<String, dynamic>.from(jsonDecode(s)))
-            .toList();
-      });
-    }
-  }
+  // START TIMER
+  void _startTimer() {
+    _timer?.cancel();
+    _seconds = 0;
 
-  Future<void> _saveSessions() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> stringSessions = sessions.map((s) => jsonEncode(s)).toList();
-    await prefs.setStringList('tasbeeh_sessions', stringSessions);
-  }
-
-  void startTimer() {
-    setState(() {
-      counter = 0;
-      elapsed = Duration.zero;
-      timerRunning = true;
-      startTime = DateTime.now();
-      currentSessionHistory = [];
-    });
-
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        elapsed = DateTime.now().difference(startTime!);
-        // Update live graph every second
-        currentSessionHistory.add({
-          'count': counter,
-          'time': DateTime.now().toIso8601String(),
-        });
-        if (currentSessionHistory.length > 20) {
-          currentSessionHistory.removeAt(0); // keep last 20 points
-        }
-      });
-    });
-  }
-
-  void stopTimer() {
-    if (!timerRunning) return;
-
-    timer?.cancel();
-    setState(() {
-      timerRunning = false;
-    });
-
-    _addSession(counter);
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const ArabicText("Session Summary"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ArabicText("Total Taps: $counter"),
-            const SizedBox(height: 8),
-            ArabicText("Total Time: ${elapsed.inSeconds} seconds"),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const ArabicText("Close"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void incrementCounter() {
-    if (!timerRunning) {
-      startTimer(); // Start timer on first tap
-    }
-    setState(() {
-      counter++;
-      currentSessionHistory.add({
-        'count': counter,
-        'time': DateTime.now().toIso8601String(),
-      });
-      if (currentSessionHistory.length > 20) {
-        currentSessionHistory.removeAt(0);
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!_isCounting) {
+        timer.cancel();
+        return;
       }
+      setState(() => _seconds++);
     });
   }
 
-  void resetCounter() {
-    timer?.cancel();
-    setState(() {
-      counter = 0;
-      elapsed = Duration.zero;
-      timerRunning = false;
-      currentSessionHistory.clear();
-    });
+  // STOP TIMER
+  void _stopTimer() {
+    _timer?.cancel();
   }
 
-  void saveSession() {
-    if (counter > 0) {
-      _addSession(counter);
-      resetCounter(); // Reset after saving
+  // START COUNTING
+  void _startCounting() {
+    if (_textController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Session saved! Counter reset.")),
+        const SnackBar(content: Text("Enter a tasbeeh word first")),
       );
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("No taps to save!")));
+      return;
     }
+
+    setState(() => _isCounting = true);
+    _startTimer();
   }
 
-  void _addSession(int count) {
-    final session = {
-      'count': count,
-      'timestamp': DateTime.now().toIso8601String(),
-    };
+  // RESET
+  void _resetCounter() {
     setState(() {
-      sessions.add(session);
+      _counter = 0;
+      _isCounting = false;
+      _seconds = 0;
     });
-    _saveSessions();
+    _stopTimer();
   }
 
-  void clearAllSessions() async {
-    bool confirm = await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: mainColor,
-        title: const ArabicText("Confirm Clear"),
-        content: const ArabicText(
-          "Are you sure you want to clear all sessions? This cannot be undone.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const ArabicText("Cancel"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const ArabicText("Clear"),
-          ),
-        ],
-      ),
-    );
+  // SAVE
+  Future<void> _saveResult() async {
+    final prefs = await SharedPreferences.getInstance();
 
-    if (confirm) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('tasbeeh_sessions');
-      setState(() {
-        sessions.clear();
-        counter = 0;
-        elapsed = Duration.zero;
-        timerRunning = false;
-        currentSessionHistory.clear();
-      });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("All sessions cleared!")));
-    }
+    // Read existing list of saved tasbeehs
+    final List<String> list = prefs.getStringList('tasbeeh_history') ?? [];
+
+    // Create new entry
+    final Map<String, dynamic> newEntry = {
+      "tasbeeh": _textController.text.trim(),
+      "count": _counter,
+      "time": formattedTime,
+      "timestamp": DateTime.now().toIso8601String(),
+    };
+
+    // Append new entry
+    list.add(jsonEncode(newEntry));
+
+    // Save back to SharedPreferences
+    await prefs.setStringList('tasbeeh_history', list);
+
+    // Show confirmation
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Saved successfully!")));
+
+    // Reset counter for new tasbeeh
+    _resetCounter();
   }
 
-  void openGraph() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.7,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: ['Weekly', 'Monthly', 'Yearly'].map((period) {
-                return ChoiceChip(
-                  label: Text(period),
-                  selected: chartPeriod == period,
-                  onSelected: (_) {
-                    setState(() {
-                      chartPeriod = period;
-                    });
-                    Navigator.of(context).pop();
-                    openGraph();
-                  },
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 10),
-            Expanded(child: _buildChart()),
-          ],
-        ),
-      ),
+  // GRAPH SCREEN NAVIGATION (placeholder)
+  void _openGraph() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const TasbeehGraphScreen()),
     );
   }
 
-  List<FlSpot> _aggregateData() {
-    DateTime now = DateTime.now();
-    List<FlSpot> spots = [];
-
-    if (sessions.isEmpty) return spots;
-
-    List<Map<String, dynamic>> parsedSessions = sessions
-        .map(
-          (s) => {
-            'count': s['count'],
-            'timestamp': DateTime.parse(s['timestamp']),
-          },
-        )
-        .toList();
-
-    if (chartPeriod == 'Weekly') {
-      for (int i = 0; i < 7; i++) {
-        DateTime day = now.subtract(Duration(days: i));
-        int total = parsedSessions
-            .where(
-              (s) =>
-                  s['timestamp'].day == day.day &&
-                  s['timestamp'].month == day.month &&
-                  s['timestamp'].year == day.year,
-            )
-            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
-        spots.add(FlSpot((6 - i).toDouble(), total.toDouble()));
-      }
-    } else if (chartPeriod == 'Monthly') {
-      int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-      for (int i = 1; i <= daysInMonth; i++) {
-        int total = parsedSessions
-            .where(
-              (s) =>
-                  s['timestamp'].day == i &&
-                  s['timestamp'].month == now.month &&
-                  s['timestamp'].year == now.year,
-            )
-            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
-        spots.add(FlSpot(i.toDouble(), total.toDouble()));
-      }
-    } else if (chartPeriod == 'Yearly') {
-      for (int m = 1; m <= 12; m++) {
-        int total = parsedSessions
-            .where(
-              (s) =>
-                  s['timestamp'].month == m && s['timestamp'].year == now.year,
-            )
-            .fold(0, (int sum, s) => sum + (s['count'] as num).toInt());
-        spots.add(FlSpot(m.toDouble(), total.toDouble()));
-      }
-    }
-
-    return spots;
-  }
-
-  Widget _buildChart() {
-    final spots = _aggregateData();
-    if (spots.isEmpty) return const Center(child: Text("No data available"));
-
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: true),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
-            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
-          ),
-          borderData: FlBorderData(show: true),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              barWidth: 3,
-              color: Colors.orange,
-              dotData: FlDotData(show: true),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Mini live graph
-  Widget _buildLiveGraph() {
-    if (currentSessionHistory.isEmpty) {
-      return const SizedBox(
-        height: 80,
-        child: Center(child: Text("Start tapping to see live progress")),
-      );
-    }
-
-    List<FlSpot> spots = [];
-    for (int i = 0; i < currentSessionHistory.length; i++) {
-      spots.add(
-        FlSpot(i.toDouble(), currentSessionHistory[i]['count'].toDouble()),
-      );
-    }
-
-    return SizedBox(
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: LineChart(
-          LineChartData(
-            gridData: FlGridData(show: false),
-            titlesData: FlTitlesData(show: false),
-            borderData: FlBorderData(show: false),
-            lineBarsData: [
-              LineChartBarData(
-                spots: spots,
-                isCurved: true,
-                color: Colors.yellowAccent,
-                barWidth: 3,
-                dotData: FlDotData(show: true),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  String formatDuration(Duration d) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return "${twoDigits(d.inMinutes)}:${twoDigits(d.inSeconds.remainder(60))}";
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
+  // MAIN UI
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final counterFontSize = screenWidth * 0.2;
-    final timerFontSize = screenWidth * 0.07;
-
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: mainColor,
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: primaryText),
+        title: const Text(
+          "Tasbeeh Counter",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
-        title: ArabicText(
-          "Tasbeeh",
-          style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
-        ),
       ),
-      body: Container(
-        width: screenWidth,
-        height: screenHeight,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/bg.png"),
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.high,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (timerRunning)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: ArabicText(
-                  formatDuration(elapsed),
-                  style: TextStyle(
-                    fontSize: timerFontSize,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ArabicText(
-              "$counter",
-              style: TextStyle(
-                fontSize: counterFontSize,
-                color: primaryText,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: incrementCounter,
-              style: _buttonStyle(screenWidth, screenHeight),
-              child: const ArabicText(
-                "Tap",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildLiveGraph(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: mainColor.withOpacity(0.9),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.white),
-                tooltip: 'Reset',
-                onPressed: resetCounter,
-              ),
-              IconButton(
-                icon: const Icon(Icons.play_arrow, color: Colors.white),
-                tooltip: 'Start',
-                onPressed: timerRunning ? null : startTimer,
-              ),
-              IconButton(
-                icon: const Icon(Icons.save, color: Colors.white),
-                tooltip: 'Save',
-                onPressed: saveSession,
-              ),
-              IconButton(
-                icon: const Icon(Icons.show_chart, color: Colors.white),
-                tooltip: 'Graph',
-                onPressed: openGraph,
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_forever, color: Colors.white),
-                tooltip: 'Clear All',
-                onPressed: clearAllSessions,
-              ),
-              // NEW: Show Results button
-              IconButton(
-                icon: const Icon(Icons.list_alt, color: Colors.white),
-                tooltip: 'Saved Sessions',
-                onPressed: _showSavedSessions,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+          Container(color: mainColor.withOpacity(0.3)),
 
-  ButtonStyle _buttonStyle(double width, double height) {
-    return ElevatedButton.styleFrom(
-      backgroundColor: mainColor,
-      foregroundColor: Colors.black,
-      padding: EdgeInsets.symmetric(
-        horizontal: width * 0.2,
-        vertical: height * 0.02,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-    );
-  }
-
-  void _showSavedSessions() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.6,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            const Text(
-              "Saved Sessions",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Divider(),
-            Expanded(
-              child: sessions.isEmpty
-                  ? const Center(child: Text("No saved sessions"))
-                  : ListView.builder(
-                      itemCount: sessions.length,
-                      itemBuilder: (context, index) {
-                        final session = sessions[index];
-                        DateTime ts = DateTime.parse(session['timestamp']);
-                        return ListTile(
-                          leading: const Icon(Icons.history),
-                          title: Text("Taps: ${session['count']}"),
-                          subtitle: Text(
-                            "${ts.day}-${ts.month}-${ts.year} ${ts.hour}:${ts.minute.toString().padLeft(2, '0')}",
-                          ),
-                        );
-                      },
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  // Text field
+                  TextField(
+                    controller: _textController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Tasbeeh Word",
+                      labelStyle: const TextStyle(color: Colors.white),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Colors.white70,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                  ),
+
+                  const SizedBox(height: 30),
+                  Spacer(flex: 1),
+                  // COUNTER CIRCLE
+                  GestureDetector(
+                    onTap: () {
+                      if (_isCounting) {
+                        setState(() => _counter++);
+                      }
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      height: 180,
+                      width: 180,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.25),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.9),
+                          width: 3,
+                        ),
+                      ),
+                      child: Text(
+                        "Tap to Count",
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // SwitchTile
+                  const SizedBox(height: 20),
+                  // TIMER
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Color(0xff284142),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Color(0xff284142).withOpacity(0.9),
+                      ),
+                    ),
+                    child: Text(
+                      "$formattedTime",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    "Tasbeeh Counter",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                  Text(
+                    "$_counter",
+                    style: const TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xffF9AE4C),
+                    ),
+                  ),
+                  Spacer(flex: 3),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Transform.scale(
+                      scale: 2, // Increase size (1.0 = default)
+                      child: Switch(
+                        value: _isCounting,
+                        activeColor: Color(0xffFDC269),
+
+                        onChanged: (value) {
+                          if (!_isCounting) {
+                            _startCounting();
+                          } else {
+                            _stopTimer();
+                            setState(() => _isCounting = false);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+
+                  Spacer(),
+                  // BUTTONS ROW
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: mainColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // SAVE
+                          IconButton(
+                            icon: const Icon(
+                              Icons.save,
+                              color: Colors.white,
+                              size: 34,
+                            ),
+                            onPressed: _saveResult,
+                          ),
+
+                          // GRAPH
+                          IconButton(
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Colors.white,
+                              size: 34,
+                            ),
+                            onPressed: _openGraph,
+                          ),
+
+                          // RESET
+                          IconButton(
+                            icon: const Icon(
+                              Icons.refresh,
+                              color: Colors.white,
+                              size: 34,
+                            ),
+                            onPressed: _resetCounter,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

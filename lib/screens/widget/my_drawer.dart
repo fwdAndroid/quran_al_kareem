@@ -160,8 +160,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               text:
                   languageProvider.localizedStrings["Tasbeeh Counter"] ??
                   'Tasbeeh Counter',
-              onTap: () =>
-                  _showInterstitialAndNavigate(const TashbeehCounter()),
+              onTap: () => _showInterstitialAndNavigate(const TasbeehScreen()),
             ),
           ],
         ),

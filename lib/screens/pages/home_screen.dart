@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
+import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/audio_screen.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -389,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TashbeehCounter(),
+                              builder: (context) => TasbeehScreen(),
                             ),
                           );
                         },
@@ -459,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
         "onTap": () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TashbeehCounter()),
+            MaterialPageRoute(builder: (context) => TasbeehScreen()),
           );
         },
       },
@@ -498,26 +500,24 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Qibla",
+        "label": "Allah Names",
         "icon": Icons.compass_calibration,
         "onTap": () {
           // Navigate to Wallpaper screen
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => MainDashboard(initialPageIndex: 3),
-            ),
+            MaterialPageRoute(builder: (_) => AllahNames()),
           );
         },
       },
       {
-        "label": "Audio Quran",
-        "icon": Icons.audio_file,
+        "label": "Namaz",
+        "icon": Icons.app_blocking,
         "onTap": () {
           // Navigate to Donation screen
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => AudioQuranScreen()),
+            MaterialPageRoute(builder: (_) => NamazGuideScreen()),
           );
         },
       },
@@ -650,6 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: timings.entries.map((entry) {
             return Container(
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white24),
               ),
               child: Padding(
