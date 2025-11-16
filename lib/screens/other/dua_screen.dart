@@ -20,6 +20,22 @@ class _DuaScreenState extends State<DuaScreen> {
   int? _currentIndex;
   DuaModel? _currentDua;
 
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to audio state changes (playing, paused, completed)
+    _player.playerStateStream.listen((state) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest2<Duration, Duration?, PositionData>(
         _player.positionStream,
@@ -28,15 +44,8 @@ class _DuaScreenState extends State<DuaScreen> {
             PositionData(position, duration ?? Duration(seconds: 1)),
       );
 
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
-  }
-
   Future<void> _playAudio(List<String> audios, DuaModel dua, int index) async {
     try {
-      // If same dua pressed again — toggle play/pause
       if (_currentIndex == index) {
         if (_player.playing) {
           await _player.pause();
@@ -44,31 +53,23 @@ class _DuaScreenState extends State<DuaScreen> {
           await _player.play();
         }
       } else {
-        // New dua selected
-        setState(() {
-          _currentIndex = index;
-          _currentDua = dua;
-        });
+        _currentIndex = index;
+        _currentDua = dua;
 
         await _player.stop();
         await _player.setUrl(audios.first);
-        await _player.play(); // ✅ Play immediately after setting URL
+        await _player.play();
       }
 
-      setState(() {}); // Refresh UI immediately
+      setState(() {});
     } catch (e) {
-      debugPrint("Error playing audio: $e");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: ArabicText("Error playing audio")),
-      // );
+      debugPrint("Audio Error: $e");
     }
   }
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$minutes:$seconds";
+    return "${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
   }
 
   @override
@@ -91,16 +92,19 @@ class _DuaScreenState extends State<DuaScreen> {
             child: Image.asset("assets/bg.png", fit: BoxFit.cover),
           ),
           Container(color: mainColor.withOpacity(0.25)),
+
           FutureBuilder<List<DuaModel>>(
             future: ReadJSON().ReadJsonDua(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(child: ArabicText("Error: ${snapshot.error}"));
-              } else if (!snapshot.hasData) {
+              }
+              if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
 
               final duas = snapshot.data!;
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: ListView.builder(
@@ -108,8 +112,8 @@ class _DuaScreenState extends State<DuaScreen> {
                   itemCount: duas.length,
                   itemBuilder: (context, index) {
                     final dua = duas[index];
-                    final isCurrentDua = _currentIndex == index;
-                    final isPlaying = isCurrentDua && _player.playing;
+                    final isCurrent = _currentIndex == index;
+                    final isPlaying = isCurrent && _player.playing;
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),
@@ -117,138 +121,131 @@ class _DuaScreenState extends State<DuaScreen> {
                         color: mainColor.withOpacity(0.85),
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Column(
-                          children: [
-                            const ArabicText(
-                              '﷽',
-                              style: TextStyle(
-                                fontSize: 36,
-                                color: Colors.white,
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        children: [
+                          const ArabicText(
+                            '﷽',
+                            style: TextStyle(fontSize: 36, color: Colors.white),
+                          ),
+                          const SizedBox(height: 8),
+
+                          ArabicText(
+                            dua.dua ?? "",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'ScheherazadeNew',
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.amberAccent,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          ArabicText(
+                            dua.translation ?? "",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white.withOpacity(0.8),
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Play / Pause Button
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            ArabicText(
-                              dua.dua ?? "",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'ScheherazadeNew',
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.amberAccent,
-                                    blurRadius: 6,
+                            onPressed: () =>
+                                _playAudio(dua.audios!, dua, index),
+                            icon: Icon(
+                              isPlaying
+                                  ? Icons.pause_circle
+                                  : Icons.play_circle,
+                              size: 26,
+                              color: Colors.black,
+                            ),
+                            label: ArabicText(
+                              isPlaying ? "Pause" : "Play Audio",
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          StreamBuilder<PositionData>(
+                            stream: _positionDataStream,
+                            builder: (context, snap) {
+                              final data = snap.data;
+                              final position = isCurrent
+                                  ? data?.position ?? Duration.zero
+                                  : Duration.zero;
+                              final duration =
+                                  data?.duration ?? Duration(seconds: 1);
+
+                              final value = isCurrent
+                                  ? position.inMilliseconds
+                                        .clamp(0, duration.inMilliseconds)
+                                        .toDouble()
+                                  : 0.0;
+
+                              return Column(
+                                children: [
+                                  Slider(
+                                    min: 0,
+                                    max: duration.inMilliseconds.toDouble(),
+                                    value: value,
+                                    onChanged: isCurrent
+                                        ? (newValue) {
+                                            _player.seek(
+                                              Duration(
+                                                milliseconds: newValue.toInt(),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    activeColor: isCurrent
+                                        ? Colors.black
+                                        : Colors.grey,
+                                    inactiveColor: Colors.grey[300],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ArabicText(
+                                        _formatDuration(position),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      ArabicText(
+                                        _formatDuration(duration),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            ArabicText(
-                              dua.translation ?? "",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white.withOpacity(0.8),
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            // 🎵 Play/Pause Button
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              onPressed: () =>
-                                  _playAudio(dua.audios!, dua, index),
-                              icon: Icon(
-                                isPlaying
-                                    ? Icons.pause_circle
-                                    : Icons.play_circle,
-                                size: 24,
-                              ),
-                              label: ArabicText(
-                                style: TextStyle(color: Colors.black),
-                                isPlaying ? "Pause" : "Play Audio",
-                              ),
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            // 🎚 Always visible Seekbar
-                            StreamBuilder<PositionData>(
-                              stream: _positionDataStream,
-                              builder: (context, snapshot) {
-                                final positionData = snapshot.data;
-                                final position =
-                                    positionData?.position ?? Duration.zero;
-                                final duration =
-                                    positionData?.duration ??
-                                    Duration(seconds: 1);
-
-                                final value = isCurrentDua
-                                    ? position.inMilliseconds
-                                          .clamp(0, duration.inMilliseconds)
-                                          .toDouble()
-                                    : 0.0;
-
-                                return Column(
-                                  children: [
-                                    Slider(
-                                      min: 0,
-                                      max: duration.inMilliseconds.toDouble(),
-                                      value: value,
-                                      onChanged: isCurrentDua
-                                          ? (newValue) {
-                                              _player.seek(
-                                                Duration(
-                                                  milliseconds: newValue
-                                                      .toInt(),
-                                                ),
-                                              );
-                                            }
-                                          : null,
-                                      activeColor: isCurrentDua
-                                          ? Colors.black
-                                          : Colors.grey[400],
-                                      inactiveColor: Colors.grey[300],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        ArabicText(
-                                          _formatDuration(
-                                            isCurrentDua
-                                                ? position
-                                                : Duration.zero,
-                                          ),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        ArabicText(
-                                          _formatDuration(duration),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -265,5 +262,6 @@ class _DuaScreenState extends State<DuaScreen> {
 class PositionData {
   final Duration position;
   final Duration duration;
+
   PositionData(this.position, this.duration);
 }

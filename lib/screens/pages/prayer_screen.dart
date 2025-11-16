@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
+import 'package:quran_al_kareem/utils/banner_util.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
@@ -35,6 +37,9 @@ class _PrayerScreenState extends State<PrayerScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBannerAd();
+    });
     _scrollController.addListener(() {
       setState(() {
         scrollOffset = _scrollController.offset;
@@ -152,6 +157,29 @@ class _PrayerScreenState extends State<PrayerScreen> {
     }
   }
 
+  BannerAd? _bannerAd;
+  bool _isBannerAdLoaded = false;
+
+  Future<void> _loadBannerAd() async {
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+      MediaQuery.of(context).size.width.truncate(),
+    );
+    final adSize = size ?? AdSize.banner;
+
+    _bannerAd = BannerAd(
+      adUnitId: bannerKey,
+      size: adSize,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isBannerAdLoaded = true),
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          Future.delayed(const Duration(seconds: 5), _loadBannerAd);
+        },
+      ),
+    )..load();
+  }
+
   static const Color lightCard = Color(0xFFE8F6F5);
 
   @override
@@ -166,9 +194,17 @@ class _PrayerScreenState extends State<PrayerScreen> {
           Container(color: mainColor.withOpacity(0.3)),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  if (_isBannerAdLoaded && _bannerAd != null)
+                    Container(
+                      width: _bannerAd!.size.width.toDouble(),
+                      height: _bannerAd!.size.height.toDouble(),
+                      alignment: Alignment.center,
+                      child: AdWidget(ad: _bannerAd!),
+                    ),
+
                   ArabicText(
                     "🗓 Hijri Date: ${hijriDate ?? 'Loading...'}",
                     style: const TextStyle(
@@ -177,7 +213,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
 
                   // ⏳ Next prayer shimmer
                   isLoading
@@ -291,7 +327,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                             },
                           ),
                   ),
-
+                  const SizedBox(height: 10),
                   // 🔹 Bottom buttons (always visible)
                   Container(width: 400, height: 200, child: _featureGrid()),
                 ],

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
@@ -12,7 +11,6 @@ import 'package:quran_al_kareem/screens/pages/home_screen.dart';
 import 'package:quran_al_kareem/screens/pages/setting_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
-import 'package:quran_al_kareem/utils/banner_util.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class MainDashboard extends StatefulWidget {
@@ -26,8 +24,6 @@ class MainDashboard extends StatefulWidget {
 
 class _MainDashboardState extends State<MainDashboard> {
   int _selectedIndex = 0;
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
 
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
@@ -51,36 +47,10 @@ class _MainDashboardState extends State<MainDashboard> {
   void initState() {
     super.initState();
     _selectedIndex = widget.initialPageIndex;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadBannerAd();
       _logScreenView(_selectedIndex);
     });
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
-
-  Future<void> _loadBannerAd() async {
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      MediaQuery.of(context).size.width.truncate(),
-    );
-    final adSize = size ?? AdSize.banner;
-
-    _bannerAd = BannerAd(
-      adUnitId: bannerKey,
-      size: adSize,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          Future.delayed(const Duration(seconds: 5), _loadBannerAd);
-        },
-      ),
-    )..load();
   }
 
   Future<void> _logScreenView(int index) async {
@@ -108,117 +78,103 @@ class _MainDashboardState extends State<MainDashboard> {
         return shouldPop ?? false;
       },
       child: Scaffold(
-        body: _screens[_selectedIndex],
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_isBannerAdLoaded && _bannerAd != null)
-              Container(
-                width: _bannerAd!.size.width.toDouble(),
-                height: _bannerAd!.size.height.toDouble(),
-                alignment: Alignment.center,
-                child: AdWidget(ad: _bannerAd!),
-              ),
+        // -------------------------------
+        // FIX: SafeArea prevents bottom cut
+        // -------------------------------
+        body: SafeArea(
+          top: true,
+          bottom: false,
+          child: _screens[_selectedIndex],
+        ),
 
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6, left: 6, right: 6),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 12,
-                        spreadRadius: 2,
-                        offset: Offset(0, 4), // Floating shadow
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(5, (index) {
-                      final bool isSelected = _selectedIndex == index;
+        // -------------------------------
+        // FIX: Bottom padding so navbar never hides content
+        // -------------------------------
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).padding.bottom,
+          ),
+          child: Container(
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 12,
+                  spreadRadius: 2,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: List.generate(5, (index) {
+                final bool isSelected = _selectedIndex == index;
 
-                      final icons = [
-                        Ionicons.book_outline,
-                        Ionicons.book,
-                        Ionicons.time_outline,
-                        Ionicons.compass_outline,
-                        Ionicons.settings_outline,
-                      ];
+                final icons = [
+                  Ionicons.book_outline,
+                  Ionicons.book,
+                  Ionicons.time_outline,
+                  Ionicons.compass_outline,
+                  Ionicons.settings_outline,
+                ];
 
-                      final activeIcons = [
-                        Ionicons.book,
-                        Ionicons.hand_left,
-                        Ionicons.time,
-                        Ionicons.compass,
-                        Ionicons.settings,
-                      ];
+                final activeIcons = [
+                  Ionicons.book,
+                  Ionicons.hand_left,
+                  Ionicons.time,
+                  Ionicons.compass,
+                  Ionicons.settings,
+                ];
 
-                      final labels = [
-                        languageProvider.localizedStrings["Home"] ?? "Home",
-                        languageProvider.localizedStrings["Audio Quran"] ??
-                            "Audio Quran",
-                        languageProvider.localizedStrings["Prayer"] ?? "Prayer",
-                        languageProvider.localizedStrings["Qibla"] ?? "Qibla",
-                        languageProvider.localizedStrings["Settings"] ??
-                            "Settings",
-                      ];
+                final labels = [
+                  languageProvider.localizedStrings["Home"] ?? "Home",
+                  languageProvider.localizedStrings["Audio Quran"] ??
+                      "Audio Quran",
+                  languageProvider.localizedStrings["Prayer"] ?? "Prayer",
+                  languageProvider.localizedStrings["Qibla"] ?? "Qibla",
+                  languageProvider.localizedStrings["Settings"] ?? "Settings",
+                ];
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedIndex = index;
-                            _logScreenView(index);
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 250),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 6,
-                          ),
-                          decoration: isSelected
-                              ? BoxDecoration(
-                                  color: Colors.amber.withOpacity(0.25),
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ), // BORDER RADIUS ONLY
-                                )
-                              : null,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                isSelected ? activeIcons[index] : icons[index],
-                                color: isSelected
-                                    ? Colors.amber
-                                    : Colors.black54,
-                              ),
-                              Text(
-                                labels[index],
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: isSelected
-                                      ? Colors.amber
-                                      : Colors.black54,
-                                ),
-                              ),
-                            ],
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = index;
+                      _logScreenView(index);
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+                    decoration: isSelected
+                        ? BoxDecoration(
+                            color: Colors.amber.withOpacity(0.25),
+                            borderRadius: BorderRadius.circular(12),
+                          )
+                        : null,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isSelected ? activeIcons[index] : icons[index],
+                          color: isSelected ? Colors.amber : Colors.black54,
+                        ),
+                        Text(
+                          labels[index],
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isSelected ? Colors.amber : Colors.black54,
                           ),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
-            const SizedBox(height: 30),
-          ],
+          ),
         ),
       ),
     );

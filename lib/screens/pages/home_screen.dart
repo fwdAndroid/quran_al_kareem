@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
+import 'package:quran_al_kareem/utils/banner_util.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,12 +49,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadBannerAd();
+    });
     fetchUserData();
     _initPrayerFlow();
   }
 
+  BannerAd? _bannerAd;
+  bool _isBannerAdLoaded = false;
+
+  Future<void> _loadBannerAd() async {
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+      MediaQuery.of(context).size.width.truncate(),
+    );
+    final adSize = size ?? AdSize.banner;
+
+    _bannerAd = BannerAd(
+      adUnitId: bannerKey,
+      size: adSize,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _isBannerAdLoaded = true),
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          Future.delayed(const Duration(seconds: 5), _loadBannerAd);
+        },
+      ),
+    )..load();
+  }
+
   @override
   void dispose() {
+    _bannerAd?.dispose();
     countdownTimer?.cancel();
     super.dispose();
   }
@@ -307,7 +336,13 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: mainColor,
       body: Column(
         children: [
-          const SizedBox(height: 50),
+          if (_isBannerAdLoaded && _bannerAd != null)
+            Container(
+              width: _bannerAd!.size.width.toDouble(),
+              height: _bannerAd!.size.height.toDouble(),
+              alignment: Alignment.center,
+              child: AdWidget(ad: _bannerAd!),
+            ),
 
           // Header user row
           Padding(
@@ -321,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : const AssetImage("assets/logo.png") as ImageProvider,
               ),
               title: const Text(
-                "Assalamu Alaikum!",
+                "السلام عليكم!",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
