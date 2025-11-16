@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
+import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
-import 'package:quran_al_kareem/screens/pages/qibla_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/location_service.dart';
 import 'package:quran_al_kareem/service/prayer_time_service.dart';
@@ -151,6 +152,8 @@ class _PrayerScreenState extends State<PrayerScreen> {
     }
   }
 
+  static const Color lightCard = Color(0xFFE8F6F5);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -290,48 +293,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                   ),
 
                   // 🔹 Bottom buttons (always visible)
-                  Container(
-                    width: 400,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.white12,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _menuButton(
-                                "assets/item 1.png",
-                                const HadithScreen(),
-                              ),
-                              _menuButton(
-                                "assets/item 2-1.png",
-                                const DuaScreen(),
-                              ),
-                              _menuButton(
-                                "assets/item 3.png",
-                                const AllahNames(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _menuButton(
-                              "assets/item 2.png",
-                              const NamazGuideScreen(),
-                            ),
-                            _menuButton("assets/item 1-1.png", QiblaScreen()),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  Container(width: 400, height: 200, child: _featureGrid()),
                 ],
               ),
             ),
@@ -341,11 +303,112 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  Widget _menuButton(String asset, Widget page) {
-    return GestureDetector(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
-      child: Image.asset(asset, height: 90, width: 90),
+  Widget _featureGrid() {
+    final items = [
+      {
+        "label": "Tasbih",
+        "icon": Icons.fingerprint,
+        "onTap": () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TasbeehScreen()),
+          );
+        },
+      },
+      {
+        "label": "Hadith",
+        "icon": Icons.menu_book,
+        "onTap": () {
+          // Navigate to Hadith screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => HadithScreen()),
+          );
+        },
+      },
+      {
+        "label": "Dua",
+        "icon": Icons.favorite,
+        "onTap": () {
+          // Navigate to Dua screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => DuaScreen()),
+          );
+        },
+      },
+      {
+        "label": "Al-Quran",
+        "icon": Icons.book,
+        "onTap": () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => QuranScreen()),
+          );
+
+          // Navigate to Quran screen
+        },
+      },
+      {
+        "label": "Allah Names",
+        "icon": Icons.compass_calibration,
+        "onTap": () {
+          // Navigate to Wallpaper screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => AllahNames()),
+          );
+        },
+      },
+      {
+        "label": "Namaz",
+        "icon": Icons.app_blocking,
+        "onTap": () {
+          // Navigate to Donation screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => NamazGuideScreen()),
+          );
+        },
+      },
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: items.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 16 / 12,
+      ),
+      itemBuilder: (_, i) {
+        final item = items[i];
+        return GestureDetector(
+          onTap: item["onTap"] as void Function(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: lightCard,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(item["icon"] as IconData, color: mainColor, size: 32),
+                const SizedBox(height: 8),
+                Text(
+                  item["label"] as String,
+                  style: TextStyle(
+                    color: mainColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

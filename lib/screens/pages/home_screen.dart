@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
+import 'package:quran_al_kareem/screens/main_dashboard.dart';
 import 'package:quran_al_kareem/screens/other/dua_screen.dart';
 import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
@@ -331,10 +332,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 userName,
                 style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
-              trailing: const Icon(
-                Icons.notifications,
-                color: Colors.white,
-                size: 28,
+              trailing: GestureDetector(
+                onTap: () {
+                  // Navigate to settings screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const MainDashboard(initialPageIndex: 4),
+                    ),
+                  );
+                },
+                child: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ),
           ),
