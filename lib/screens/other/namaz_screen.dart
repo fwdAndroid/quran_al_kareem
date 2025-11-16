@@ -149,13 +149,16 @@ class NamazGuideScreen extends StatelessWidget {
           ),
           Container(color: mainColor.withOpacity(0.25)),
           ListView.builder(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.only(
+              left: 5,
+              right: 5,
+              bottom: 40, // <-- add enough bottom padding
+            ),
             itemCount: namazSteps.length,
             itemBuilder: (context, index) {
               final step = namazSteps[index];
               return Card(
                 color: mainColor.withOpacity(0.85),
-                margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -198,13 +201,11 @@ class NamazGuideScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
                   ],
                 ),
               );
             },
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
