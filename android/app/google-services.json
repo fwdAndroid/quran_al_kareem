@@ -7,18 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:845168107634:android:12be49f060161c6b0862eb",
+        "mobilesdk_app_id": "1:845168107634:android:4151f557843217de0862eb",
         "android_client_info": {
-          "package_name": "com.example.quran_al_kareem"
+          "package_name": "com.islampro.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "845168107634-pb4euf0ji959lbcrju78eh3ocacjvgnp.apps.googleusercontent.com",
+          "client_id": "845168107634-4l88quphqcd8u6kgat8sooik1u5b6nag.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.quran_al_kareem",
+            "package_name": "com.islampro.app",
             "certificate_hash": "4c40a42ed2e9c17ce6cbcce44475ad76199c761e"
+          }
+        },
+        {
+          "client_id": "845168107634-u3bmit1jol8nbl6e5tohm62kbktrqr41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.islampro.app",
+            "certificate_hash": "6262f33cdd94d1afb740e78b4f55daf9b6b7e4c3"
           }
         },
         {
@@ -51,9 +59,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:845168107634:android:4151f557843217de0862eb",
+        "mobilesdk_app_id": "1:845168107634:android:df3830c96f9f1f440862eb",
         "android_client_info": {
-          "package_name": "com.islampro.app"
+          "package_name": "com.islamproquran.app"
         }
       },
       "oauth_client": [

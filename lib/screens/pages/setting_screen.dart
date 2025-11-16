@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart'; // <-- Added
 import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/auth/login_screen.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/change_language.dart';
@@ -24,6 +25,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(); // <-- Added
 
   String? _username;
   String? _profileImageUrl;
@@ -221,7 +223,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  // LOGOUT
+  // LOGOUT WITH GOOGLE SIGN-OUT
   void _confirmLogout() {
     showDialog(
       context: context,
@@ -236,7 +238,19 @@ class _SettingScreenState extends State<SettingScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(ctx);
+
+              // Google Sign-out
+              try {
+                if (await _googleSignIn.isSignedIn()) {
+                  await _googleSignIn.signOut();
+                }
+              } catch (e) {
+                debugPrint("Google sign out failed: $e");
+              }
+
+              // Firebase Auth sign-out
               await _auth.signOut();
+
               if (!mounted) return;
               Navigator.pushAndRemoveUntil(
                 context,
@@ -303,14 +317,14 @@ class _SettingScreenState extends State<SettingScreen> {
   // SHARE APP
   void _shareApp() {
     const link =
-        "https://play.google.com/store/apps/details?id=com.islampro.app";
+        "https://play.google.com/store/apps/details?id=com.islamproquran.app";
     Share.share("Check out this amazing Islamic app: $link");
   }
 
   // RATE US
   Future<void> _rateUs() async {
     const url =
-        "https://play.google.com/store/apps/details?id=com.islampro.app";
+        "https://play.google.com/store/apps/details?id=com.islamproquran.app";
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
