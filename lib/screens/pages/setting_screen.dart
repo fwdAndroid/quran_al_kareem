@@ -12,7 +12,7 @@ import 'package:quran_al_kareem/screens/other/terms_of_service.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart'; // 👈 Added for "Rate Us"
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -37,33 +37,34 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Future<void> _loadUserProfile() async {
     final user = _auth.currentUser;
-    if (user != null) {
-      final doc = await _firestore.collection('users').doc(user.uid).get();
-      if (doc.exists) {
-        final data = doc.data()!;
-        setState(() {
-          _username = data['name'] ?? 'User';
-          _profileImageUrl = data['image'];
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          _username = 'User';
-          _profileImageUrl = null;
-          _isLoading = false;
-        });
-      }
-    } else {
-      setState(() => _isLoading = false);
+
+    // Guest Mode
+    if (user == null) {
+      setState(() {
+        _username = "Guest";
+        _profileImageUrl = null;
+        _isLoading = false;
+      });
+      return;
     }
+
+    // Logged-in user
+    final doc = await _firestore.collection('users').doc(user.uid).get();
+    final data = doc.data();
+
+    setState(() {
+      _username = data?['name'] ?? "User";
+      _profileImageUrl = data?['image'];
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(context);
+    final language = Provider.of<LanguageProvider>(context);
+    final isGuest = _auth.currentUser == null;
 
     return Scaffold(
-      //    backgroundColor: mainColor,
       body: Stack(
         children: [
           Positioned.fill(
@@ -73,38 +74,33 @@ class _SettingScreenState extends State<SettingScreen> {
           Column(
             children: [
               const SizedBox(height: 40),
+
+              // PROFILE SECTION
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : GestureDetector(
-                      onTap: () {
-                        final user = _auth.currentUser;
-                        if (user != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const EditProfileScreen(),
-                            ),
-                          ).then((_) => _loadUserProfile());
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please log in first'),
-                            ),
-                          );
-                        }
-                      },
+                      onTap: isGuest
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const EditProfileScreen(),
+                                ),
+                              ).then((_) => _loadUserProfile());
+                            },
                       child: Column(
                         children: [
                           CircleAvatar(
                             radius: 60,
                             backgroundImage: _profileImageUrl != null
                                 ? NetworkImage(_profileImageUrl!)
-                                : const AssetImage('assets/logo.png')
+                                : const AssetImage("assets/logo.png")
                                       as ImageProvider,
                           ),
                           const SizedBox(height: 10),
                           ArabicText(
-                            _username ?? 'Guest',
+                            _username ?? "Guest",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -115,15 +111,15 @@ class _SettingScreenState extends State<SettingScreen> {
                         ],
                       ),
                     ),
+
+              // LIST ITEMS
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   children: [
-                    _buildListTile(
-                      context,
+                    _buildTile(
                       title:
-                          languageProvider
-                              .localizedStrings["Change Language"] ??
+                          language.localizedStrings["Change Language"] ??
                           "Change Language",
                       icon: Icons.language,
                       onTap: () => Navigator.push(
@@ -131,25 +127,21 @@ class _SettingScreenState extends State<SettingScreen> {
                         MaterialPageRoute(builder: (_) => ChangeLangage()),
                       ),
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
-
-                    _buildListTile(
-                      context,
+                    _divider(),
+                    _buildTile(
                       title:
-                          languageProvider.localizedStrings["Font Setting"] ??
+                          language.localizedStrings["Font Setting"] ??
                           "Font Setting",
-                      icon: Icons.font_download_sharp,
+                      icon: Icons.font_download,
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => FontSettingsScreen()),
                       ),
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
-
-                    _buildListTile(
-                      context,
+                    _divider(),
+                    _buildTile(
                       title: "Privacy Policy",
-                      icon: Icons.privacy_tip_outlined,
+                      icon: Icons.privacy_tip,
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -157,10 +149,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
-
-                    _buildListTile(
-                      context,
+                    _divider(),
+                    _buildTile(
                       title: "Terms & Services",
                       icon: Icons.article_outlined,
                       onTap: () => Navigator.push(
@@ -170,34 +160,36 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
-
-                    _buildListTile(
-                      context,
+                    _divider(),
+                    _buildTile(
                       title:
-                          languageProvider.localizedStrings["Invite Friends"] ??
+                          language.localizedStrings["Invite Friends"] ??
                           "Invite Friends",
                       icon: Icons.share,
-                      onTap: shareApp,
+                      onTap: _shareApp,
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
-
-                    // ✅ Rate Us Button (added above logout)
-                    _buildListTile(
-                      context,
+                    _divider(),
+                    _buildTile(
                       title: "Rate Us",
-                      icon: Icons.star_rate_rounded,
-                      onTap: _launchRateUs,
+                      icon: Icons.star_rate,
+                      onTap: _rateUs,
                     ),
-                    Divider(color: primaryText.withOpacity(.1)),
+                    _divider(),
 
-                    // 👇 Logout Button
-                    _buildListTile(
-                      context,
-                      title: "Logout",
-                      icon: Icons.logout,
-                      onTap: _confirmLogout,
-                    ),
+                    // LOGOUT & DELETE ACCOUNT — ONLY IF LOGGED IN
+                    if (!isGuest)
+                      _buildTile(
+                        title: "Logout",
+                        icon: Icons.logout,
+                        onTap: _confirmLogout,
+                      ),
+                    if (!isGuest) _divider(),
+                    if (!isGuest)
+                      _buildTile(
+                        title: "Delete Account",
+                        icon: Icons.delete_forever,
+                        onTap: _confirmDeleteAccount,
+                      ),
                   ],
                 ),
               ),
@@ -208,8 +200,9 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  ListTile _buildListTile(
-    BuildContext context, {
+  Widget _divider() => Divider(color: primaryText.withOpacity(0.1));
+
+  Widget _buildTile({
     required String title,
     required IconData icon,
     required VoidCallback onTap,
@@ -223,21 +216,17 @@ class _SettingScreenState extends State<SettingScreen> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      trailing: Icon(Icons.arrow_forward_ios, color: iconColor),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
       onTap: onTap,
     );
   }
 
-  // ✅ Confirm Logout Dialog
+  // LOGOUT
   void _confirmLogout() {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Confirm Logout",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Confirm Logout"),
         content: const Text("Are you sure you want to log out?"),
         actions: [
           TextButton(
@@ -248,14 +237,12 @@ class _SettingScreenState extends State<SettingScreen> {
             onPressed: () async {
               Navigator.pop(ctx);
               await _auth.signOut();
-
-              if (mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  (route) => false,
-                );
-              }
+              if (!mounted) return;
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text("Logout", style: TextStyle(color: Colors.white)),
@@ -265,22 +252,67 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  void shareApp() {
-    const appLink =
-        "https://play.google.com/store/apps/details?id=com.example.yourapp";
-    Share.share("Hey, check out this amazing app: $appLink");
+  // DELETE ACCOUNT
+  void _confirmDeleteAccount() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Confirm Delete"),
+        content: const Text(
+          "Are you sure you want to delete your account? This action cannot be undone.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: _deleteAccount,
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text("Delete", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
-  // ✅ Open Play Store link
-  Future<void> _launchRateUs() async {
+  Future<void> _deleteAccount() async {
+    Navigator.pop(context);
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        // Delete Firestore document
+        await _firestore.collection('users').doc(user.uid).delete();
+        // Delete Auth account
+        await user.delete();
+
+        if (!mounted) return;
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Failed to delete account: $e")));
+      }
+    }
+  }
+
+  // SHARE APP
+  void _shareApp() {
+    const link =
+        "https://play.google.com/store/apps/details?id=com.islampro.app";
+    Share.share("Check out this amazing Islamic app: $link");
+  }
+
+  // RATE US
+  Future<void> _rateUs() async {
     const url =
-        'https://play.google.com/store/apps/details?id=com.example.yourapp'; // change to your app ID
+        "https://play.google.com/store/apps/details?id=com.islampro.app";
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open Play Store')),
-      );
     }
   }
 }
