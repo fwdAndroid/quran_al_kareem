@@ -24,6 +24,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
   late AnimationController _controller;
   InterstitialAd? _interstitialAd;
   bool _isAdReady = false;
+  int _actionCounter = 0; // Track user actions for frequency
 
   @override
   void initState() {
@@ -34,7 +35,8 @@ class _DrawerWidgetState extends State<DrawerWidget>
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/1033173712', // ✅ Test Ad ID
+      adUnitId:
+          'ca-app-pub-7677534136736515/6010431655', // Your real interstitial Ad Unit ID
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -50,11 +52,29 @@ class _DrawerWidgetState extends State<DrawerWidget>
   }
 
   void _showInterstitialAndNavigate(Widget page) {
-    if (_isAdReady && _interstitialAd != null) {
+    _actionCounter++;
+
+    // List of pages where we skip ads (sensitive content)
+    final skipAdPages = [
+      MainDashboard,
+      NamazGuideScreen,
+      DuaScreen,
+      AllahNames,
+      TasbeehScreen,
+    ];
+
+    // Skip ad if page is in sensitive screens
+    if (skipAdPages.any((type) => page.runtimeType == type)) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+      return;
+    }
+
+    // Show interstitial every 3 actions if ad is ready
+    if (_isAdReady && _interstitialAd != null && _actionCounter % 3 == 0) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
           ad.dispose();
-          _loadInterstitialAd(); // reload for next time
+          _loadInterstitialAd();
           Navigator.push(context, MaterialPageRoute(builder: (_) => page));
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
@@ -63,7 +83,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
         },
       );
 
-      _interstitialAd!.show();
+      // Optional small delay for better UX
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _interstitialAd!.show();
+      });
     } else {
       Navigator.push(context, MaterialPageRoute(builder: (_) => page));
     }
@@ -92,7 +115,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
             ),
             const Divider(),
 
-            // ✅ Audio Quran
+            // Audio Quran
             _drawerItem(
               icon: Icons.audio_file,
               text:
@@ -103,14 +126,14 @@ class _DrawerWidgetState extends State<DrawerWidget>
               ),
             ),
 
-            // ✅ Hadith
+            // Hadith
             _drawerItem(
               icon: Ionicons.book,
               text: languageProvider.localizedStrings["Hadith"] ?? 'Hadith',
               onTap: () => _showInterstitialAndNavigate(const HadithScreen()),
             ),
 
-            // ✅ Qibla
+            // Qibla
             _drawerItem(
               icon: Icons.explore,
               text: languageProvider.localizedStrings["Qibla"] ?? 'Qibla',
@@ -119,7 +142,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               ),
             ),
 
-            // ✅ Prayer Times
+            // Prayer Times
             _drawerItem(
               icon: Icons.access_time,
               text:
@@ -130,7 +153,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               ),
             ),
 
-            // ✅ Namaz Guide
+            // Namaz Guide
             _drawerItem(
               icon: Ionicons.calendar_number_sharp,
               text: languageProvider.localizedStrings["Namaz"] ?? 'Namaz',
@@ -138,14 +161,14 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   _showInterstitialAndNavigate(const NamazGuideScreen()),
             ),
 
-            // ✅ Dua
+            // Dua
             _drawerItem(
               icon: Ionicons.book_sharp,
               text: languageProvider.localizedStrings["Dua"] ?? 'Dua',
               onTap: () => _showInterstitialAndNavigate(const DuaScreen()),
             ),
 
-            // ✅ Allah Names
+            // Allah Names
             _drawerItem(
               icon: Ionicons.book_outline,
               text:
@@ -154,7 +177,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
               onTap: () => _showInterstitialAndNavigate(const AllahNames()),
             ),
 
-            // ✅ Tasbeeh Counter
+            // Tasbeeh Counter
             _drawerItem(
               icon: Icons.countertops,
               text:
@@ -179,7 +202,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
           leading: Icon(icon, color: Colors.white),
           title: ArabicText(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 16,
