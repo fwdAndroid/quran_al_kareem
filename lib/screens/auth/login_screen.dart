@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           'name': user.displayName,
           'email': user.email,
           'image': user.photoURL,
+          'uid': user.uid,
           'createdAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
       }
