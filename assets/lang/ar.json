@@ -1,99 +1,154 @@
 {
-    "Prayer Times": "مواقيت الصلاة",
+    "Prayer Times": "أوقات الصلاة",
     "Reset to Current": "إعادة التعيين إلى الحالي",
     "Search Location": "البحث عن الموقع",
     "Error": "خطأ",
+    "Home": "الرئيسية",
+    "Confirm Logout": "تأكيد تسجيل الخروج",
     "Oh No, you're leaving": "أوه لا، أنت تغادر",
     "Are you sure you want to log out?": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "No": "لا",
-    "Dua": "دعاء",
+    "Namaz": "الصلاة",
     "Logout Successfully": "تم تسجيل الخروج بنجاح",
-    "Change Language": "تغيير اللغة",
-    "Tasbeeh": "تسبيح",
+    "How to Pray Namaz": "كيفية أداء الصلاة",
+    "Dua's": "أدعية",
+    "Hadith Collection": "مجموعة الأحاديث",
+    "Urdu": "الأردية",
     "Yes ": "نعم",
-    "Azan Notification Settings": "إعدادات إشعارات الأذان",
-    "Enable Notification": "تفعيل الإشعار",
-    "notification_enabled": "تم تفعيل الإشعار",
-    "notification_disabled": "تم تعطيل الإشعار",
-    "Change Location": "تغيير الموقع",
     "Search for a city or location": "ابحث عن مدينة أو موقع",
-    "Ayat al-Kursi": "آية الكرسي",
     "Search for a location ": "ابحث عن موقع",
-    "No results found": "لم يتم العثور على نتائج",
-    "Surah Yasin": "سورة يس",
-    "Retry": "أعد المحاولة",
-    "الصلاة القادمة": "الصلاة القادمة",
+    "No results found": "لا توجد نتائج",
+    "Change Location": "تغيير الموقع",
+    "Next Prayer": "الصلاة التالية",
+    "Font Setting": "إعدادات الخط",
+    "Retry": "إعادة المحاولة",
+    "Choose the type of Arabic font": "اختر نوع الخط العربي",
+    "Azan Notification Settings": "إعدادات إشعارات الأذان",
+    "Enable Notification": "تفعيل الإشعارات",
+    "notification_enabled": "الإشعارات مفعلة",
+    "notification_disabled": "الإشعارات معطلة",
+    "Font Settings": "إعدادات الخط",
+    "Font Size": "حجم الخط",
+    "Font Preview": "معاينة الخط",
+    "God is the Light of the heavens and the earth.": "الله نور السماوات والأرض.",
+    "Default settings have been restored": "تمت استعادة الإعدادات الافتراضية",
+    "Restore default settings": "استعادة الإعدادات الافتراضية",
     "Allah Names": "أسماء الله",
-    "Surah Al-Kahf": "سورة الكهف",
+    "Tasbeeh Word": "كلمة التسبيح",
+    "Tap to Count": "اضغط للعد",
+    "Continue as Guest": "المتابعة كضيف",
     "Tasbeeh Counter": "عداد التسبيح",
+    "Search surah...": "ابحث عن سورة...",
+    "Sign in with Google": "تسجيل الدخول عبر جوجل",
+    "Pause": "إيقاف مؤقت",
+    "Total Aya :": "إجمالي الآيات:",
+    "Saved successfully!": "تم الحفظ بنجاح!",
+    "Play Audio": "تشغيل الصوت",
+    "Total Count": "إجمالي العدد",
+    "Today's Count": "عدد اليوم",
+    "Counter Summary": "ملخص العداد",
+    "Enter a tasbeeh word first": "أدخل كلمة التسبيح أولاً",
+    "Next Prayer:": "الصلاة التالية:",
+    "Search Qari...": "ابحث عن قارئ...",
+    "You are not logged in": "أنت غير مسجل الدخول",
+    "Phone Number": "رقم الهاتف",
+    "Save Profile": "حفظ الملف الشخصي",
+    "Terms of Service": "شروط الخدمة",
+    "Username": "اسم المستخدم",
+    "Complete Salah (Namaz) Guide": "دليل الصلاة الكامل",
+    "Tasbeeh": "تسبيح",
+    "We take your privacy seriously  and are commited to protected your personal information. We collect only the minimal data needed to provide and improve our services.": "نحن نهتم بخصوصيتك ونلتزم بحماية معلوماتك الشخصية. نجمع فقط أقل قدر من البيانات اللازمة لتحسين خدماتنا.",
+    "Terms of Service Overview": "نظرة عامة على شروط الخدمة",
+    "We take your terms of service seriously  and are commited to protected your personal information. We collect only the minimal data needed to provide and improve our services.": "نحن نهتم بشروط الخدمة ونلتزم بحماية معلوماتك. نجمع فقط البيانات الضرورية لتحسين خدماتنا.",
+    "Remember Allah": "اذكر الله",
+    "🗓 Hijri Date:": "🗓 التاريخ الهجري:",
+    "Get Start Now": "ابدأ الآن",
+    "Your Privacy Matters": "خصوصيتك مهمة",
+    "For complete details about our data collection,usage and your rights. please read our full Terms of Service.": "للحصول على تفاصيل كاملة حول جمع البيانات واستخدامها وحقوقك، يرجى قراءة شروط الخدمة الكاملة.",
+    "Tasbih": "تسبيح",
+    "Prayer times unavailable": "أوقات الصلاة غير متوفرة",
+    "View Full Terms of Service": "عرض شروط الخدمة الكاملة",
+    "Read our complete Terms of Service\n on our website.": "اقرأ شروط الخدمة الكاملة\n على موقعنا.",
+    "View on Website": "عرض على الموقع",
+    "Read our complete Privacy Policy\n on our website.": "اقرأ سياسة الخصوصية الكاملة\n على موقعنا.",
+    "View Full Privacy Policy": "عرض سياسة الخصوصية الكاملة",
+    "For complete details about our data collection,usage and your rights. please read our full Privacy Policy.": "لمعلومات كاملة حول جمع البيانات وحقوقك، اقرأ سياسة الخصوصية الكاملة.",
+    "Hadith": "حديث",
+    "Al-Quran": "القرآن",
+    "Start Tasbih\nCounter": "ابدأ عداد\nالتسبيح",
+    "Terms & Services": "الشروط والخدمات",
+    "Location service permission denied": "تم رفض إذن خدمة الموقع",
+    "Location service Denied Forever!": "تم رفض خدمة الموقع دائماً!",
+    "Please enable Location service": "يرجى تفعيل خدمة الموقع",
+    "Distance to Kaaba:": "المسافة إلى الكعبة:",
+    "Guest": "ضيف",
+    "Privacy Policy": "سياسة الخصوصية",
+    "Rate Us": "قيّمنا",
     "Qibla Direction": "اتجاه القبلة",
     "Quran": "القرآن",
+    "Delete Account": "حذف الحساب",
     "Language Setting": "إعدادات اللغة",
+    "Language": "اللغة",
+    "Now Playing": "قيد التشغيل",
+    "Adjust volume": "ضبط الصوت",
+    "Total Aya": "إجمالي الآيات",
+    "Delete": "حذف",
+    "Failed to delete account": "فشل حذف الحساب",
+    "Dua": "دعا",
     "My Profile": "ملفي الشخصي",
-    "Logout": "تسجيل الخروج",
-    "Azkar": "الأذكار",
-    "No Azkar found": "لم يتم العثور على أذكار",
+    "Are you sure you want to delete your account? This action cannot be undone.": "هل أنت متأكد أنك تريد حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه.",
+    "Logout": "تسجيل خروج",
+    "Azkar": "أذكار",
+    "Ayat al-Kursi": "آية الكرسي",
+    "Surah Al-Kahf": "سورة الكهف",
+    "No Azkar found": "لا توجد أذكار",
     "Edit Profile": "تعديل الملف الشخصي",
     "Successfully Updated Profile": "تم تحديث الملف الشخصي بنجاح",
     "Profile could not be updated": "تعذر تحديث الملف الشخصي",
     "Select Language": "اختر اللغة",
+    "Surah Yasin": "سورة يس",
     "English": "الإنجليزية",
     "Arabic": "العربية",
     "Prayer": "الصلاة",
     "Qibla": "القبلة",
     "Settings": "الإعدادات",
-    "Removed from bookmarks": "تمت الإزالة من العلامات المرجعية",
-    "Bookmarked": "تمت الإضافة إلى العلامات المرجعية",
-    "Page": "الصفحة",
+    "Removed from bookmarks": "تمت الإزالة من العلامات",
+    "Bookmarked": "تمت الإضافة للعلامات",
+    "Page": "صفحة",
     "Next": "التالي",
-    "Restore default settings": "استعادة الإعدادات الافتراضية",
-    "Choose the type of Arabic font": "اختر نوع الخط العربي",
-    "Default settings have been restored": "تمت استعادة الإعدادات الافتراضية",
-    "God is the Light of the heavens and the earth.": "ٱللَّهُ نُورُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضِ",
-    "Font Preview": "معاينة الخط",
-    "Font Size": "حجم الخط ",
-    "Font Settings": "اعدادات الخط",
-    "Verses": "الآيات",
-    "Font Setting": "إعداد الخط",
-    "Failed to load Juz data": "فشل في تحميل بيانات الجزء",
-    "Failed to play audio": "فشل في تشغيل الصوت",
-    "No bookmarked Ayahs yet": "لا توجد آيات مضافة إلى العلامات المرجعية بعد",
+    "Verses": "آيات",
+    "Failed to load Juz data": "فشل تحميل بيانات الجزء",
+    "Failed to play audio": "فشل تشغيل الصوت",
+    "No bookmarked Ayahs yet": "لا توجد آيات محفوظة بعد",
     "Surah List": "قائمة السور",
     "UPCOMING SURAH": "السورة القادمة",
-    "Qari's data not found": "لم يتم العثور على بيانات القارئ",
-    "Log out": "تسجيل الخروج",
+    "Qari's data not found": "بيانات القارئ غير موجودة",
+    "Log out": "تسجيل خروج",
     "Invite Friends": "دعوة الأصدقاء",
-    "Notifications": "الإشعارات",
+    "Notifications": "إشعارات",
     "Audio Quran": "القرآن الصوتي",
     "Juz": "جزء",
-    "BookMark": "علامة مرجعية",
+    "BookMark": "علامة",
     "Your Device is Not Supported": "جهازك غير مدعوم",
-    "No duas available": "لا توجد أدعية متاحة",
+    "No duas available": "لا توجد أدعية",
     "Today's Dua": "دعاء اليوم",
     "Start": "ابدأ",
     "Tap": "اضغط",
     "Stop": "إيقاف",
     "Reset": "إعادة تعيين",
-    "Google sign-in failed": "فشل تسجيل الدخول باستخدام Google",
+    "Google sign-in failed": "فشل تسجيل الدخول عبر جوجل",
     "SignUp to Azkar App": "سجّل في تطبيق الأذكار",
-    "Begin each day with guidance from Allah.\n Let prayer shape your path and purpose.": "ابدأ كل يوم بهداية من الله.\n دع الصلاة تشكل طريقك وهدفك.",
+    "Begin each day with guidance from Allah.\n Let prayer shape your path and purpose.": "ابدأ كل يوم بهداية من الله.\n دع الصلاة ترسم طريقك وهدفك.",
     "User Name": "اسم المستخدم",
     "Your Name": "اسمك",
+    "Change Language": "تغيير اللغة",
     "Email address": "البريد الإلكتروني",
     "Your email": "بريدك الإلكتروني",
     "Password": "كلمة المرور",
     "Sign Up": "سجّل",
-    "Other sign in options": "خيارات تسجيل الدخول الأخرى",
-    "Already have an account? Sign In": "هل لديك حساب؟ تسجيل الدخول",
+    "Other sign in options": "خيارات تسجيل دخول أخرى",
+    "Already have an account? Sign In": "لديك حساب بالفعل؟ سجّل دخولك",
     "Login to Azkar App": "تسجيل الدخول إلى تطبيق الأذكار",
     "Sign in": "تسجيل الدخول",
-    "Don't have an account? Sign Up": "ليس لديك حساب؟ سجّل",
-    "Language": "لغة",
-    "Total Aya": "إجمالي آية",
-    "Now Playing": "الآن يعرض",
-    "Adjust volume": "ضبط الصوت",
-      "Hadith Collection": "مجموعة الأحاديث",
-     "How to Pray Namaz": "كَيْفَ تُصَلِّي الصَّلَاةَ",
-     "Urdu":"الأردية",
-    "Dua's": "الأدوية"
+    "Don't have an account? Sign Up": "ليس لديك حساب؟ سجّل الآن"
 }

@@ -1,103 +1,154 @@
 {
-  "Prayer Times": "نماز کے اوقات",
-  "Reset to Current": "موجودہ پر ری سیٹ کریں",
-  "Search Location": "مقام تلاش کریں",
-  "Error": "غلطی",
-  "Oh No, you're leaving": "اوہ نہیں، آپ جا رہے ہیں",
-  "Are you sure you want to log out?": "کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟",
-  "No": "نہیں",
-  "Logout Successfully": "لاگ آؤٹ کامیاب",
-  "Yes ": "ہاں",
-  "Search for a city or location": "شہر یا مقام تلاش کریں",
-  "Search for a location ": "مقام تلاش کریں",
-  "No results found": "کوئی نتیجہ نہیں ملا",
-  "Change Location": "مقام تبدیل کریں",
-  "Next Prayer": "اگلی نماز",
-  "Font Setting": "فونٹ سیٹنگ",
-  "Retry": "دوبارہ کوشش کریں",
-  "Choose the type of Arabic font": "عربی فونٹ کی قسم منتخب کریں",
-  "Azan Notification Settings": "اذان نوٹیفکیشن کی ترتیبات",
-  "Enable Notification": "نوٹیفکیشن فعال کریں",
-  "notification_enabled": "نوٹیفکیشن فعال ہے",
-  "notification_disabled": "نوٹیفکیشن غیر فعال ہے",
-  "Font Settings": "فونٹ سیٹنگز",
-  "Font Size": "فونٹ سائز",
-  "Font Preview": "فونٹ کا پیش نظارہ",
-  "God is the Light of the heavens and the earth.": "اللہ آسمانوں اور زمین کا نور ہے۔",
-  "Default settings have been restored": "ڈیفالٹ سیٹنگز بحال کر دی گئیں",
-  "Restore default settings": "ڈیفالٹ سیٹنگز بحال کریں",
-  "Allah Names": "اللہ کے نام",
-  "Tasbeeh Counter": "تسبیح کاؤنٹر",
-  "Tasbeeh": "تسبیح",
-  "Qibla Direction": "قبلہ سمت",
-  "Quran": "قرآن",
-  "Language Setting": "زبان کی ترتیب",
-  "Language": "زبان",
-  "Now Playing": "اب چل رہا ہے",
-  "Adjust volume": "آواز ایڈجسٹ کریں",
-  "Total Aya": "کل آیات",
-  "Dua": "دعا",
-  "My Profile": "میرا پروفائل",
-  "Logout": "لاگ آؤٹ",
-  "Azkar": "اذکار",
-  "Ayat al-Kursi": "آیت الکرسی",
-  "Surah Al-Kahf": "سورۃ الکہف",
-  "No Azkar found": "کوئی اذکار نہیں ملے",
-  "Edit Profile": "پروفائل میں ترمیم کریں",
-  "Successfully Updated Profile": "پروفائل کامیابی سے اپ ڈیٹ ہوا",
-  "Profile could not be updated": "پروفائل اپ ڈیٹ نہیں ہو سکا",
-  "Select Language": "زبان منتخب کریں",
-  "Surah Yasin": "سورۃ یٰسٓ",
-  "English": "انگلش",
-  "Arabic": "عربی",
-  "Prayer": "نماز",
-  "Qibla": "قبلہ",
-  "Settings": "ترتیبات",
-  "Removed from bookmarks": "بک مارک سے ہٹا دیا گیا",
-  "Bookmarked": "بک مارک کیا گیا",
-  "Page": "صفحہ",
-  "Next": "اگلا",
-  "Verses": "آیات",
-  "Failed to load Juz data": "جزو کا ڈیٹا لوڈ کرنے میں ناکام",
-  "Failed to play audio": "آڈیو چلانے میں ناکام",
-  "No bookmarked Ayahs yet": "ابھی کوئی آیت بک مارک نہیں کی گئی",
-  "Surah List": "سورۃ کی فہرست",
-  "UPCOMING SURAH": "اگلی سورت",
-  "Qari's data not found": "قاری کا ڈیٹا نہیں ملا",
-  "Log out": "لاگ آؤٹ",
-  "Invite Friends": "دوستوں کو مدعو کریں",
-  "Notifications": "نوٹیفکیشنز",
-  "Audio Quran": "آڈیو قرآن",
-  "Juz": "جز",
-  "BookMark": "بک مارک",
-  "Your Device is Not Supported": "آپ کا آلہ معاونت یافتہ نہیں ہے",
-  "No duas available": "کوئی دعائیں دستیاب نہیں",
-  "Today's Dua": "آج کی دعا",
-  "Start": "شروع کریں",
-  "Tap": "ٹیپ کریں",
-  "Stop": "روکیں",
-  "Reset": "ری سیٹ",
-  "Google sign-in failed": "گوگل سائن ان ناکام ہوگیا",
-  "SignUp to Azkar App": "اذکار ایپ میں سائن اپ کریں",
-  "Begin each day with guidance from Allah.\n Let prayer shape your path and purpose.": "ہر دن کا آغاز اللہ کی ہدایت سے کریں۔\n نماز کو اپنی راہ اور مقصد بنائیں۔",
-  "User Name": "صارف کا نام",
-  "Your Name": "آپ کا نام",
-  "Change Language": "زبان تبدیل کریں",
-  "Email address": "ای میل ایڈریس",
-  "Your email": "آپ کا ای میل",
-  "Password": "پاس ورڈ",
-  "Sign Up": "سائن اپ کریں",
-  "Other sign in options": "دیگر سائن ان آپشنز",
-  "Already have an account? Sign In": "کیا پہلے سے اکاؤنٹ ہے؟ سائن ان کریں",
-  "Login to Azkar App": "اذکار ایپ میں لاگ ان کریں",
-  "Sign in": "سائن ان کریں",
-  "Don't have an account? Sign Up": "اکاؤنٹ نہیں ہے؟ سائن اپ کریں",
-  "How to Pray Namaz":  "نماز کیسے پڑھیں",
-  "Hadith Collection": "حدیث کا مجموعہ",
-  "Urdu":"اردو",
-  "Dua's":"الأدوية"
-
-   
-
-
+    "Prayer Times": "نماز کے اوقات",
+    "Reset to Current": "موجودہ پر ری سیٹ کریں",
+    "Search Location": "مقام تلاش کریں",
+    "Error": "خرابی",
+    "Home": "ہوم",
+    "Confirm Logout": "لاگ آؤٹ کی تصدیق",
+    "Oh No, you're leaving": "اوہ نہیں، آپ جا رہے ہیں",
+    "Are you sure you want to log out?": "کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟",
+    "No": "نہیں",
+    "Namaz": "نماز",
+    "Logout Successfully": "کامیابی سے لاگ آؤٹ ہو گیا",
+    "How to Pray Namaz": "نماز کیسے پڑھیں",
+    "Dua's": "دعائیں",
+    "Hadith Collection": "حدیث مجموعہ",
+    "Urdu": "اردو",
+    "Yes ": "ہاں",
+    "Search for a city or location": "کسی شہر یا مقام کی تلاش کریں",
+    "Search for a location ": "مقام تلاش کریں",
+    "No results found": "کوئی نتیجہ نہیں ملا",
+    "Change Location": "مقام تبدیل کریں",
+    "Next Prayer": "اگلی نماز",
+    "Font Setting": "فونٹ سیٹنگ",
+    "Retry": "دوبارہ کوشش کریں",
+    "Choose the type of Arabic font": "عربی فونٹ کا انتخاب کریں",
+    "Azan Notification Settings": "اذان نوٹیفکیشن کی ترتیبات",
+    "Enable Notification": "نوٹیفکیشن فعال کریں",
+    "notification_enabled": "نوٹیفکیشن فعال ہے",
+    "notification_disabled": "نوٹیفکیشن غیر فعال ہے",
+    "Font Settings": "فونٹ کی ترتیبات",
+    "Font Size": "فونٹ سائز",
+    "Font Preview": "فونٹ پری ویو",
+    "God is the Light of the heavens and the earth.": "اللہ آسمانوں اور زمین کا نور ہے۔",
+    "Default settings have been restored": "ڈیفالٹ ترتیبات بحال کر دی گئی ہیں",
+    "Restore default settings": "ڈیفالٹ ترتیبات بحال کریں",
+    "Allah Names": "اللہ کے نام",
+    "Tasbeeh Word": "تسبیح کا لفظ",
+    "Tap to Count": "گننے کے لیے ٹیپ کریں",
+    "Continue as Guest": "مہمان کے طور پر جاری رکھیں",
+    "Tasbeeh Counter": "تسبیح کاؤنٹر",
+    "Search surah...": "سورہ تلاش کریں...",
+    "Sign in with Google": "گوگل کے ساتھ سائن ان کریں",
+    "Pause": "روکیں",
+    "Total Aya :": "کل آیات:",
+    "Saved successfully!": "کامیابی سے محفوظ ہو گیا!",
+    "Play Audio": "آڈیو چلائیں",
+    "Total Count": "کل شمار",
+    "Today's Count": "آج کا شمار",
+    "Counter Summary": "کاؤنٹر کا خلاصہ",
+    "Enter a tasbeeh word first": "پہلے تسبیح کا لفظ درج کریں",
+    "Next Prayer:": "اگلی نماز:",
+    "Search Qari...": "قاری تلاش کریں...",
+    "You are not logged in": "آپ لاگ ان نہیں ہیں",
+    "Phone Number": "فون نمبر",
+    "Save Profile": "پروفائل محفوظ کریں",
+    "Terms of Service": "سروس کی شرائط",
+    "Username": "یوزر نیم",
+    "Complete Salah (Namaz) Guide": "مکمل نماز گائیڈ",
+    "Tasbeeh": "تسبیح",
+    "We take your privacy seriously  and are commited to protected your personal information. We collect only the minimal data needed to provide and improve our services.": "ہم آپ کی پرائیویسی کا خاص خیال رکھتے ہیں اور آپ کی معلومات کے تحفظ کے لیے پرعزم ہیں۔ ہم صرف اتنا ڈیٹا جمع کرتے ہیں جو ہماری خدمات کو بہتر بنانے کے لیے ضروری ہو۔",
+    "Terms of Service Overview": "سروس کی شرائط کا خلاصہ",
+    "We take your terms of service seriously  and are commited to protected your personal information. We collect only the minimal data needed to provide and improve our services.": "ہم آپ کی معلومات کے تحفظ کے لیے سنجیدہ ہیں اور صرف وہ معلومات جمع کرتے ہیں جو خدمات کو بہتر بنانے کے لیے ضروری ہوں۔",
+    "Remember Allah": "اللہ کو یاد کریں",
+    "🗓 Hijri Date:": "🗓 هجری تاریخ:",
+    "Get Start Now": "ابھی شروع کریں",
+    "Your Privacy Matters": "آپ کی پرائیویسی اہم ہے",
+    "For complete details about our data collection,usage and your rights. please read our full Terms of Service.": "ڈیٹا اکٹھا کرنے، استعمال اور آپ کے حقوق کے بارے میں مکمل تفصیل کے لیے ہماری مکمل سروس شرائط پڑھیں۔",
+    "Tasbih": "تسبیح",
+    "Prayer times unavailable": "نماز کے اوقات دستیاب نہیں",
+    "View Full Terms of Service": "سروس کی مکمل شرائط دیکھیں",
+    "Read our complete Terms of Service\n on our website.": "ہماری ویب سائٹ پر ہماری مکمل سروس شرائط پڑھیں۔",
+    "View on Website": "ویب سائٹ پر دیکھیں",
+    "Read our complete Privacy Policy\n on our website.": "ہماری ویب سائٹ پر مکمل پرائیویسی پالیسی پڑھیں۔",
+    "View Full Privacy Policy": "مکمل پرائیویسی پالیسی دیکھیں",
+    "For complete details about our data collection,usage and your rights. please read our full Privacy Policy.": "ڈیٹا کے استعمال اور آپ کے حقوق کی مکمل تفصیل کے لیے مکمل پرائیویسی پالیسی پڑھیں۔",
+    "Hadith": "حدیث",
+    "Al-Quran": "القرآن",
+    "Start Tasbih\nCounter": "تسبیح کاؤنٹر\nشروع کریں",
+    "Terms & Services": "شرائط و خدمات",
+    "Location service permission denied": "مقام کی اجازت مسترد کر دی گئی",
+    "Location service Denied Forever!": "مقام کی اجازت ہمیشہ کے لیے مسترد!",
+    "Please enable Location service": "براہ کرم مقام سروس فعال کریں",
+    "Distance to Kaaba:": "فاصلہ تا کعبہ:",
+    "Guest": "مہمان",
+    "Privacy Policy": "پرائیویسی پالیسی",
+    "Rate Us": "ہمیں ریٹ کریں",
+    "Qibla Direction": "قبلہ کی سمت",
+    "Quran": "قرآن",
+    "Delete Account": "اکاؤنٹ حذف کریں",
+    "Language Setting": "زبان کی ترتیبات",
+    "Language": "زبان",
+    "Now Playing": "چل رہا ہے",
+    "Adjust volume": "آواز ایڈجسٹ کریں",
+    "Total Aya": "کل آیات",
+    "Delete": "حذف کریں",
+    "Failed to delete account": "اکاؤنٹ حذف نہیں ہو سکا",
+    "Dua": "دعا",
+    "My Profile": "میری پروفائل",
+    "Are you sure you want to delete your account? This action cannot be undone.": "کیا آپ واقعی اپنا اکاؤنٹ حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں ہو سکتا۔",
+    "Logout": "لاگ آؤٹ",
+    "Azkar": "اذکار",
+    "Ayat al-Kursi": "آیت الکرسی",
+    "Surah Al-Kahf": "سورہ الکہف",
+    "No Azkar found": "کوئی اذکار نہیں ملے",
+    "Edit Profile": "پروفائل میں ترمیم کریں",
+    "Successfully Updated Profile": "پروفائل کامیابی سے اپڈیٹ ہو گئی",
+    "Profile could not be updated": "پروفائل اپڈیٹ نہیں ہو سکی",
+    "Select Language": "زبان منتخب کریں",
+    "Surah Yasin": "سورہ یٰس",
+    "English": "انگریزی",
+    "Arabic": "عربی",
+    "Prayer": "نماز",
+    "Qibla": "قبلہ",
+    "Settings": "سیٹنگز",
+    "Removed from bookmarks": "بک مارکس سے ہٹا دیا گیا",
+    "Bookmarked": "بک مارک ہو گیا",
+    "Page": "صفحہ",
+    "Next": "اگلا",
+    "Verses": "آیات",
+    "Failed to load Juz data": "جز کی معلومات لوڈ نہیں ہو سکیں",
+    "Failed to play audio": "آڈیو چلانے میں ناکامی",
+    "No bookmarked Ayahs yet": "ابھی تک کوئی آیت بک مارک نہیں",
+    "Surah List": "سورہ فہرست",
+    "UPCOMING SURAH": "آنے والی سورہ",
+    "Qari's data not found": "قاری کا ڈیٹا نہیں ملا",
+    "Log out": "لاگ آؤٹ",
+    "Invite Friends": "دوستوں کو مدعو کریں",
+    "Notifications": "نوٹیفکیشنز",
+    "Audio Quran": "آڈیو قرآن",
+    "Juz": "جز",
+    "BookMark": "بک مارک",
+    "Your Device is Not Supported": "آپ کا ڈیوائس سپورٹڈ نہیں",
+    "No duas available": "کوئی دعا دستیاب نہیں",
+    "Today's Dua": "آج کی دعا",
+    "Start": "شروع",
+    "Tap": "ٹیپ کریں",
+    "Stop": "روکیں",
+    "Reset": "ری سیٹ",
+    "Google sign-in failed": "گوگل سائن ان ناکام ہوا",
+    "SignUp to Azkar App": "اذکار ایپ میں سائن اپ کریں",
+    "Begin each day with guidance from Allah.\n Let prayer shape your path and purpose.": "ہر دن اللہ کی ہدایات سے شروع کریں۔\n نماز کو اپنی راہ اور مقصد بننے دیں۔",
+    "User Name": "یوزر نیم",
+    "Your Name": "آپ کا نام",
+    "Change Language": "زبان تبدیل کریں",
+    "Email address": "ای میل ایڈریس",
+    "Your email": "آپ کا ای میل",
+    "Password": "پاس ورڈ",
+    "Sign Up": "سائن اپ",
+    "Other sign in options": "دیگر سائن ان کے طریقے",
+    "Already have an account? Sign In": "پہلے سے اکاؤنٹ موجود ہے؟ سائن ان کریں",
+    "Login to Azkar App": "اذکار ایپ میں لاگ ان کریں",
+    "Sign in": "سائن ان",
+    "Don't have an account? Sign Up": "اکاؤنٹ نہیں ہے؟ سائن اپ کریں"
 }
