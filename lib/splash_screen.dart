@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:quran_al_kareem/datasource/qari_datasource.dart';
 import 'package:quran_al_kareem/model/prayer_model.dart';
 import 'package:quran_al_kareem/screens/auth/login_screen.dart';
 import 'package:quran_al_kareem/service/ads_service.dart';
@@ -22,15 +23,23 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // 1. Start preloading the data globally
-    PrayerDataStore.preloadData().then((_) {
+    // Create a list of all preloading Futures
+    final preloadFutures = [
+      // 1. Preload Prayer data
+      PrayerDataStore.preloadData(),
+      // 2. Preload Qari list
+      QariDataStore.preloadData(), // 🆕 NEW ADDITION
+    ];
+
+    // Await all necessary data loads
+    Future.wait(preloadFutures).then((_) {
       if (mounted) {
-        // Data is loaded (or failed), now check timer
+        // All data is loaded (or failed), now check timer
         _attemptNavigation();
       }
     });
 
-    // 2. Start the minimum display timer
+    // Start the minimum display timer
     Timer(const Duration(seconds: 5), () {
       if (mounted) {
         _timerElapsed = true;
