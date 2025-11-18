@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -132,10 +134,13 @@ class NamazGuideScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: ArabicText(
-          "Complete Salah (Namaz) Guide",
+          lang.localizedStrings["Complete Salah (Namaz) Guide"] ??
+              "Complete Salah (Namaz) Guide",
           style: TextStyle(color: primaryText),
         ),
         iconTheme: IconThemeData(color: primaryText),

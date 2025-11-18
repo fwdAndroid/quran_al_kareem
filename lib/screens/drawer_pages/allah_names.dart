@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/allah_names_utils.dart';
@@ -24,6 +26,8 @@ class _AllahNamesState extends State<AllahNames>
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -32,7 +36,7 @@ class _AllahNamesState extends State<AllahNames>
         iconTheme: IconThemeData(color: primaryText),
         centerTitle: true,
         title: ArabicText(
-          "Allah Names",
+          lang.localizedStrings["Allah Names"] ?? "Allah Names",
           style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
       ),

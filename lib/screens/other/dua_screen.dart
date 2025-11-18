@@ -18,7 +18,7 @@ class DuaScreen extends StatefulWidget {
 class _DuaScreenState extends State<DuaScreen> {
   final AudioPlayer _player = AudioPlayer();
   int? _currentIndex;
-  DuaModel? _currentDua;
+  DuaModel? currentDua;
 
   @override
   void initState() {
@@ -54,7 +54,7 @@ class _DuaScreenState extends State<DuaScreen> {
         }
       } else {
         _currentIndex = index;
-        _currentDua = dua;
+        currentDua = dua;
 
         await _player.stop();
         await _player.setUrl(audios.first);
@@ -180,7 +180,10 @@ class _DuaScreenState extends State<DuaScreen> {
                               color: Colors.black,
                             ),
                             label: ArabicText(
-                              isPlaying ? "Pause" : "Play Audio",
+                              isPlaying
+                                  ? languageProvider.localizedStrings["Pause"]
+                                  : languageProvider
+                                        .localizedStrings["Play Audio"],
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),

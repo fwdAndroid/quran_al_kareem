@@ -2,12 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/model/prayer_model.dart';
-import 'package:shimmer/shimmer.dart';
-
-// Import the static data store
-
-// Existing Imports
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/pages/quran_screen.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
@@ -17,12 +14,11 @@ import 'package:quran_al_kareem/screens/other/hadith_screen.dart';
 import 'package:quran_al_kareem/screens/other/namaz_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
-// Placeholder/Example global key reference
 const String bannerKey = 'ca-app-pub-3940256099942544/6300978111';
 
 class PrayerScreen extends StatefulWidget {
-  // Constructor remains simple
   const PrayerScreen({super.key});
 
   @override
@@ -32,7 +28,6 @@ class PrayerScreen extends StatefulWidget {
 class _PrayerScreenState extends State<PrayerScreen> {
   Map<String, dynamic>? timings;
   String? hijriDate;
-  // isLoading is now controlled by the static check
   bool isLoading = true;
   String? error;
   String? nextPrayerName;
@@ -41,44 +36,44 @@ class _PrayerScreenState extends State<PrayerScreen> {
   final ScrollController _scrollController = ScrollController();
   double scrollOffset = 0.0;
 
+  BannerAd? _bannerAd;
+  bool _isBannerAdLoaded = false;
+
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadBannerAd();
     });
+
     _scrollController.addListener(() {
       setState(() {
         scrollOffset = _scrollController.offset;
       });
     });
 
-    // 🌟 NEW: Check Static Data Store for instant load 🌟
     if (PrayerDataStore.isPreloaded) {
       timings = PrayerDataStore.timings;
       hijriDate = PrayerDataStore.hijriDate;
       error = PrayerDataStore.error;
 
-      isLoading = timings == null; // Only show loading/error if data is null
+      isLoading = timings == null;
 
       if (timings != null) {
         determineNextPrayer();
       }
     } else {
-      // Fallback: If for any reason the splash screen was skipped, load it now
       loadPrayerTimes();
     }
 
     AnalyticsHelper.logScreenView("PrayerScreen");
   }
 
-  // Fallback and Refresh logic (can be triggered by a pull-to-refresh)
   Future<void> loadPrayerTimes() async {
     try {
-      // Re-run the preload logic to fetch the latest data
       await PrayerDataStore.preloadData();
 
-      // Update local state from the static store
       setState(() {
         timings = PrayerDataStore.timings;
         hijriDate = PrayerDataStore.hijriDate;
@@ -115,6 +110,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
         prayerTime.hour,
         prayerTime.minute,
       );
+
       if (dateTime.isAfter(now)) {
         nextPrayerName = prayer;
         timeRemaining = dateTime.difference(now);
@@ -123,12 +119,12 @@ class _PrayerScreenState extends State<PrayerScreen> {
       }
     }
 
-    // Next Fajr is tomorrow
     nextPrayerName = 'Fajr (Tomorrow)';
     final timeString = timings!['Fajr'];
     final timeParts = timeString.split(' ')[0];
     final fajrTime = DateFormat('HH:mm').parse(timeParts);
     final tomorrow = now.add(const Duration(days: 1));
+
     final nextFajr = DateTime(
       tomorrow.year,
       tomorrow.month,
@@ -136,6 +132,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
       fajrTime.hour,
       fajrTime.minute,
     );
+
     timeRemaining = nextFajr.difference(now);
     startCountdown();
   }
@@ -166,6 +163,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
+
     return "${hours.toString().padLeft(2, '0')}:"
         "${minutes.toString().padLeft(2, '0')}:"
         "${seconds.toString().padLeft(2, '0')}";
@@ -188,13 +186,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
     }
   }
 
-  BannerAd? _bannerAd;
-  bool _isBannerAdLoaded = false;
-
   Future<void> _loadBannerAd() async {
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
       MediaQuery.of(context).size.width.truncate(),
     );
+
     final adSize = size ?? AdSize.banner;
 
     _bannerAd = BannerAd(
@@ -211,11 +207,10 @@ class _PrayerScreenState extends State<PrayerScreen> {
     )..load();
   }
 
-  static const Color lightCard = Color(0xFFE8F6F5);
-  // mainColor is assumed to be defined in utils/colors.dart
-
   @override
   Widget build(BuildContext context) {
+    final language = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -236,7 +231,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
                       child: AdWidget(ad: _bannerAd!),
                     ),
 
-                  // Display Error if it exists
                   if (error != null)
                     Text(
                       'Error: $error',
@@ -244,16 +238,16 @@ class _PrayerScreenState extends State<PrayerScreen> {
                     ),
 
                   ArabicText(
-                    "🗓 Hijri Date: ${hijriDate ?? (isLoading ? 'Loading...' : 'N/A')}",
+                    "${language.localizedStrings["Hijri Date"] ?? "Hijri Date"}: ${hijriDate ?? (isLoading ? 'Loading...' : 'N/A')}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   const SizedBox(height: 5),
 
-                  // ⏳ Next prayer shimmer/widget
                   isLoading
                       ? Shimmer.fromColors(
                           baseColor: Colors.grey[400]!,
@@ -278,7 +272,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                           children: [
                             if (nextPrayerName != null)
                               ArabicText(
-                                "Next Prayer: ${nextPrayerName!.replaceAll(' (Tomorrow)', '')}",
+                                "${language.localizedStrings["Next Prayer"] ?? "Next Prayer"}: ${nextPrayerName!.replaceAll(' (Tomorrow)', '')}",
                                 style: const TextStyle(
                                   fontSize: 22,
                                   color: Colors.white,
@@ -286,6 +280,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
                                 ),
                               ),
                             const SizedBox(height: 6),
+
                             if (timeRemaining != null &&
                                 timeRemaining!.inSeconds > 0)
                               ArabicText(
@@ -296,10 +291,11 @@ class _PrayerScreenState extends State<PrayerScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               )
-                            else if (nextPrayerName != null)
-                              const ArabicText(
-                                "Time for Prayer!",
-                                style: TextStyle(
+                            else
+                              ArabicText(
+                                language.localizedStrings["Time for Prayer!"] ??
+                                    "Time for Prayer!",
+                                style: const TextStyle(
                                   fontSize: 30,
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,
@@ -310,7 +306,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
                   const SizedBox(height: 20),
 
-                  // 📿 Prayer times shimmer or list
                   Expanded(
                     child: isLoading
                         ? ListView.builder(
@@ -363,7 +358,8 @@ class _PrayerScreenState extends State<PrayerScreen> {
                                 child: ListTile(
                                   leading: Icon(icon, color: Colors.amber),
                                   title: ArabicText(
-                                    entry.key,
+                                    language.localizedStrings[entry.key] ??
+                                        entry.key,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -386,12 +382,13 @@ class _PrayerScreenState extends State<PrayerScreen> {
                             },
                           ),
                   ),
+
                   const SizedBox(height: 10),
-                  // 🔹 Bottom buttons
-                  Container(
-                    width: double.infinity,
+
+                  SizedBox(
                     height: 200,
-                    child: _featureGrid(),
+                    width: double.infinity,
+                    child: _featureGrid(language),
                   ),
                 ],
               ),
@@ -402,68 +399,55 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  // Your existing _featureGrid code remains unchanged
-  Widget _featureGrid() {
+  Widget _featureGrid(LanguageProvider language) {
     final items = [
       {
-        "label": "Tasbih",
+        "label": language.localizedStrings["Tasbih"] ?? "Tasbih",
         "icon": Icons.fingerprint,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TasbeehScreen()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TasbeehScreen()),
+        ),
       },
       {
-        "label": "Hadith",
+        "label": language.localizedStrings["Hadith"] ?? "Hadith",
         "icon": Icons.menu_book,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => HadithScreen()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => HadithScreen()),
+        ),
       },
       {
-        "label": "Dua",
+        "label": language.localizedStrings["Dua"] ?? "Dua",
         "icon": Icons.favorite,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => DuaScreen()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DuaScreen()),
+        ),
       },
       {
-        "label": "Al-Quran",
+        "label": language.localizedStrings["Al-Quran"] ?? "Al-Quran",
         "icon": Icons.book,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => QuranScreen()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => QuranScreen()),
+        ),
       },
       {
-        "label": "Allah Names",
+        "label": language.localizedStrings["Allah Names"] ?? "Allah Names",
         "icon": Icons.compass_calibration,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => AllahNames()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => AllahNames()),
+        ),
       },
       {
-        "label": "Namaz",
+        "label": language.localizedStrings["Namaz"] ?? "Namaz",
         "icon": Icons.app_blocking,
-        "onTap": () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => NamazGuideScreen()),
-          );
-        },
+        "onTap": () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => NamazGuideScreen()),
+        ),
       },
     ];
 
@@ -483,7 +467,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
           onTap: item["onTap"] as void Function(),
           child: Container(
             decoration: BoxDecoration(
-              color: lightCard,
+              color: const Color(0xFFE8F6F5),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(

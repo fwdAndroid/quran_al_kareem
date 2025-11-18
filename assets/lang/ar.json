@@ -45,6 +45,10 @@
     "Saved successfully!": "تم الحفظ بنجاح!",
     "Play Audio": "تشغيل الصوت",
     "Total Count": "إجمالي العدد",
+      "Day": "اليوم",
+  "Weekly": "أسبوعي",
+  "Monthly": "شهري",
+  "Yearly": "سنوي",
     "Today's Count": "عدد اليوم",
     "Counter Summary": "ملخص العداد",
     "Enter a tasbeeh word first": "أدخل كلمة التسبيح أولاً",
@@ -150,5 +154,8 @@
     "Already have an account? Sign In": "لديك حساب بالفعل؟ سجّل دخولك",
     "Login to Azkar App": "تسجيل الدخول إلى تطبيق الأذكار",
     "Sign in": "تسجيل الدخول",
+    "Namaz Timings":"مواقيت الصلاة",
+        "Go Back":"عُد",
+
     "Don't have an account? Sign Up": "ليس لديك حساب؟ سجّل الآن"
 }

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tashbeeh_summary_screen.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -113,13 +115,15 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
   // MAIN UI
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          "Tasbeeh Counter",
+        title: Text(
+          lang.localizedStrings["Tasbeeh Counter"] ?? "Tasbeeh Counter",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -140,9 +144,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                   // Text field
                   TextField(
                     controller: _textController,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: "Tasbeeh Word",
+                      labelText:
+                          lang.localizedStrings["Tasbeeh Word"] ??
+                          "Tasbeeh Word",
                       labelStyle: const TextStyle(color: Colors.white),
                       enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
@@ -184,7 +190,7 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                         ),
                       ),
                       child: Text(
-                        "Tap to Count",
+                        lang.localizedStrings["Tap to Count"] ?? "Tap to Count",
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -216,7 +222,8 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                   ),
                   const SizedBox(height: 40),
                   Text(
-                    "Tasbeeh Counter",
+                    lang.localizedStrings["Tasbeeh Counter"] ??
+                        "Tasbeeh Counter",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,

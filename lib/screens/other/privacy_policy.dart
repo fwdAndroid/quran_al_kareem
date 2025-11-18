@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
-import 'package:url_launcher/url_launcher.dart'; // 👈 Added for "Rate Us"
+import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
@@ -12,24 +14,25 @@ class PrivacyPolicyScreen extends StatefulWidget {
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   Future<void> _launchRateUs() async {
-    const url =
-        'https://ashaapp.online/privacy-policy-islampro/'; // change to your app ID
+    const url = 'https://ashaapp.online/privacy-policy-islampro/';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open Play Store')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Could not open website')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       backgroundColor: mainColor,
       appBar: AppBar(
         title: ArabicText(
-          "Privacy Policy",
+          lang.localizedStrings["Privacy Policy"] ?? "Privacy Policy",
           style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
@@ -40,6 +43,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Info Container
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: primaryText, width: .5),
@@ -51,7 +55,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   Icon(Icons.info_outline, size: 80.0, color: primaryText),
                   SizedBox(height: 16.0),
                   Text(
-                    "Your Privacy Matters",
+                    lang.localizedStrings["Your Privacy Matters"] ??
+                        "Your Privacy Matters",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -62,7 +67,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "We take your privacy seriously  and are commited to protected your personal information. We collect only the minimal data needed to provide and improve our services.",
+                      lang.localizedStrings["We take your privacy seriously and are committed to protecting your personal information. We collect only the minimal data needed to provide and improve our services."] ??
+                          "We take your privacy seriously and are committed to protecting your personal information. We collect only the minimal data needed to provide and improve our services.",
                       style: TextStyle(fontSize: 16.0, color: primaryText),
                       textAlign: TextAlign.center,
                     ),
@@ -71,7 +77,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "For complete details about our data collection,usage and your rights. please read our full Privacy Policy.",
+                      lang.localizedStrings["For complete details about our data collection, usage, and your rights, please read our full Privacy Policy."] ??
+                          "For complete details about our data collection, usage, and your rights, please read our full Privacy Policy.",
                       style: TextStyle(fontSize: 16.0, color: primaryText),
                       textAlign: TextAlign.center,
                     ),
@@ -79,6 +86,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                 ],
               ),
             ),
+            // Website Container
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: primaryText, width: .5),
@@ -90,7 +98,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   Icon(Icons.language, size: 80.0, color: primaryText),
                   SizedBox(height: 16.0),
                   Text(
-                    "View Full Privacy Policy",
+                    lang.localizedStrings["View Full Privacy Policy"] ??
+                        "View Full Privacy Policy",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -101,7 +110,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Read our complete Privacy Policy\n on our website.",
+                      lang.localizedStrings["Read our complete Privacy Policy\non our website."] ??
+                          "Read our complete Privacy Policy\non our website.",
                       style: TextStyle(fontSize: 16.0, color: primaryText),
                       textAlign: TextAlign.center,
                     ),
@@ -119,8 +129,9 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                         ),
                       ),
                       onPressed: _launchRateUs,
-                      child: const ArabicText(
-                        "View on Website",
+                      child: ArabicText(
+                        lang.localizedStrings["View on Website"] ??
+                            "View on Website",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

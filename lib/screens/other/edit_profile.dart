@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 
@@ -114,6 +116,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     final user = _auth.currentUser;
 
     if (user == null) {
@@ -121,21 +125,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: mainColor,
         appBar: AppBar(
           iconTheme: IconThemeData(color: primaryText),
-          title: Text('Edit Profile', style: TextStyle(color: primaryText)),
+          title: Text(
+            lang.localizedStrings["Edit Profile"] ?? 'Edit Profile',
+            style: TextStyle(color: primaryText),
+          ),
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const ArabicText(
-                'You are not logged in',
+              ArabicText(
+                lang.localizedStrings["You are not logged in"] ??
+                    'You are not logged in',
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: buttonColor),
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Go Back'),
+                child: Text(lang.localizedStrings["Go Back"] ?? 'Go Back'),
               ),
             ],
           ),
@@ -147,7 +155,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: mainColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: primaryText),
-        title: Text('Edit Profile', style: TextStyle(color: primaryText)),
+        title: Text(
+          lang.localizedStrings["Edit Profile"] ?? 'Edit Profile',
+          style: TextStyle(color: primaryText),
+        ),
         backgroundColor: mainColor,
       ),
       body: _isLoading
@@ -187,8 +198,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Username TextField
                   TextField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
+                    decoration: InputDecoration(
+                      labelText:
+                          lang.localizedStrings["Username"] ?? 'Username',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -197,8 +209,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextField(
                     controller: phoneController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
+                    decoration: InputDecoration(
+                      labelText:
+                          lang.localizedStrings["Phone Number"] ??
+                          'Phone Number',
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -211,8 +225,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       backgroundColor: buttonColor,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    child: const ArabicText(
-                      'Save Profile',
+                    child: ArabicText(
+                      lang.localizedStrings["Save Profile"] ?? 'Save Profile',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),

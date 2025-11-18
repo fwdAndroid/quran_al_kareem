@@ -6,7 +6,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/model/prayer_model.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
@@ -368,6 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       backgroundColor: mainColor,
       body: Column(
@@ -438,9 +442,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   // left texts
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        "Remember Allah",
+                        lang.localizedStrings["Remember Allah"] ??
+                            "Remember Allah",
                         style: TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 19,
@@ -449,7 +454,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "Start Tasbih\nCounter",
+                        lang.localizedStrings["Start Tasbih\nCounter"] ??
+                            "Start Tasbih\nCounter",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -486,8 +492,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: const Color(0xff152e2e),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Text(
-                            "Get Start Now",
+                          child: Text(
+                            lang.localizedStrings["Get Start Now"] ??
+                                "Get Start Now",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -521,9 +528,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _featureGrid(),
+                    _featureGrid(lang),
                     const SizedBox(height: 10),
-                    _prayerTimingCard(),
+                    _prayerTimingCard(lang),
                   ],
                 ),
               ),
@@ -535,10 +542,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Feature grid (unchanged)
-  Widget _featureGrid() {
+  Widget _featureGrid(LanguageProvider language) {
     final items = [
       {
-        "label": "Tasbih",
+        "label": language.localizedStrings["Tasbih"] ?? "Tasbih",
         "icon": Icons.fingerprint,
         "onTap": () {
           Navigator.push(
@@ -548,7 +555,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Hadith",
+        "label": language.localizedStrings["Hadith"] ?? "Hadith",
         "icon": Icons.menu_book,
         "onTap": () {
           // Navigate to Hadith screen
@@ -559,7 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Dua",
+        "label": language.localizedStrings["Dua"] ?? "Dua",
         "icon": Icons.favorite,
         "onTap": () {
           // Navigate to Dua screen
@@ -570,7 +577,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Al-Quran",
+        "label": language.localizedStrings["Al-Quran"] ?? "Al-Quran",
         "icon": Icons.book,
         "onTap": () {
           Navigator.push(
@@ -580,7 +587,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Allah Names",
+        "label": language.localizedStrings["Allah Names"] ?? "Allah Names",
         "icon": Icons.compass_calibration,
         "onTap": () {
           // Navigate to Wallpaper screen
@@ -591,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       },
       {
-        "label": "Namaz",
+        "label": language.localizedStrings["Namaz"] ?? "Namaz",
         "icon": Icons.app_blocking,
         "onTap": () {
           // Navigate to Donation screen
@@ -643,7 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Prayer card: shimmer when loading, dynamic times when ready (Unchanged logic, uses new state)
-  Widget _prayerTimingCard() {
+  Widget _prayerTimingCard(LanguageProvider language) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -652,7 +659,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: isLoadingPrayer
           ? _buildPrayerShimmer()
-          : (errorPrayer != null ? _buildPrayerError() : _buildPrayerContent()),
+          : (errorPrayer != null
+                ? _buildPrayerError()
+                : _buildPrayerContent(language)),
     );
   }
 
@@ -697,13 +706,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPrayerContent() {
+  Widget _buildPrayerContent(LanguageProvider language) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Text(
-            "Namaz Timings",
+            language.localizedStrings["Namaz Timings"] ?? "Namaz Timings",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

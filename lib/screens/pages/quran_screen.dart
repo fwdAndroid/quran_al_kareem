@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quran/quran.dart' as quran;
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/detail/surah_detail_page.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/screens/widget/my_drawer.dart';
@@ -68,11 +70,13 @@ class _QuranScreenState extends State<QuranScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         title: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[200],
@@ -81,8 +85,10 @@ class _QuranScreenState extends State<QuranScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search surah...',
-                prefixIcon: const Icon(Icons.search),
+                hintText:
+                    language.localizedStrings["Search surah..."] ??
+                    'Search surah...',
+                prefixIcon: Icon(Icons.search),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

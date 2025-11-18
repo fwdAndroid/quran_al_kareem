@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -251,6 +253,8 @@ class _TasbeehGraphScreenState extends State<TasbeehGraphScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Provider.of<LanguageProvider>(context);
+
     final weekly = groupWeekly();
     final monthly = groupMonthly();
     final yearly = groupYearly();
@@ -265,8 +269,8 @@ class _TasbeehGraphScreenState extends State<TasbeehGraphScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text(
-          "Counter Summary",
+        title: Text(
+          lang.localizedStrings["Counter Summary"] ?? "Counter Summary",
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -286,10 +290,26 @@ class _TasbeehGraphScreenState extends State<TasbeehGraphScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      buildFilterButton("Day", "daily"),
-                      buildFilterButton("Weekly", "weekly"),
-                      buildFilterButton("Monthly", "monthly"),
-                      buildFilterButton("Yearly", "yearly"),
+                      buildFilterButton(
+                        lang.localizedStrings["Day"] ??
+                            lang.localizedStrings["Day"],
+                        "daily",
+                      ),
+                      buildFilterButton(
+                        lang.localizedStrings["Weekly"] ??
+                            lang.localizedStrings["Weekly"],
+                        "weekly",
+                      ),
+                      buildFilterButton(
+                        lang.localizedStrings["Monthly"] ??
+                            lang.localizedStrings["Monthly"],
+                        "monthly",
+                      ),
+                      buildFilterButton(
+                        lang.localizedStrings["Yearly"] ??
+                            lang.localizedStrings["Yearly"],
+                        "yearly",
+                      ),
                     ],
                   ),
                 ),

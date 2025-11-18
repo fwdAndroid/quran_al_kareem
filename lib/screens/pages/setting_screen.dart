@@ -102,7 +102,8 @@ class _SettingScreenState extends State<SettingScreen> {
                           ),
                           const SizedBox(height: 10),
                           ArabicText(
-                            _username ?? "Guest",
+                            _username ?? language.localizedStrings["Guest"],
+
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -142,7 +143,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     _divider(),
                     _buildTile(
-                      title: "Privacy Policy",
+                      title:
+                          language.localizedStrings["Privacy Policy"] ??
+                          "Privacy Policy",
                       icon: Icons.privacy_tip,
                       onTap: () => Navigator.push(
                         context,
@@ -153,7 +156,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     _divider(),
                     _buildTile(
-                      title: "Terms & Services",
+                      title:
+                          language.localizedStrings["Terms & Services"] ??
+                          "Terms & Services",
                       icon: Icons.article_outlined,
                       onTap: () => Navigator.push(
                         context,
@@ -172,7 +177,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     _divider(),
                     _buildTile(
-                      title: "Rate Us",
+                      title: language.localizedStrings["Rate Us"] ?? "Rate Us",
                       icon: Icons.star_rate,
                       onTap: _rateUs,
                     ),
@@ -181,14 +186,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     // LOGOUT & DELETE ACCOUNT — ONLY IF LOGGED IN
                     if (!isGuest)
                       _buildTile(
-                        title: "Logout",
+                        title: language.localizedStrings["Logout"] ?? "Logout",
                         icon: Icons.logout,
                         onTap: _confirmLogout,
                       ),
                     if (!isGuest) _divider(),
                     if (!isGuest)
                       _buildTile(
-                        title: "Delete Account",
+                        title:
+                            language.localizedStrings["Delete Account"] ??
+                            "Delete Account",
                         icon: Icons.delete_forever,
                         onTap: _confirmDeleteAccount,
                       ),

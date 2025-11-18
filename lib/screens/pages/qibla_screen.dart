@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
+import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
@@ -48,6 +50,8 @@ class _QiblaScreenState extends State<QiblaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final language = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -71,12 +75,18 @@ class _QiblaScreenState extends State<QiblaScreen> {
                       return QiblaScreenWidget();
                     case LocationPermission.denied:
                       return LocationErrorWidget(
-                        error: "Location service permission denied",
+                        error:
+                            language
+                                .localizedStrings["Location service permission denied."] ??
+                            "Location service permission denied",
                         callback: _checkLocationStatus,
                       );
                     case LocationPermission.deniedForever:
                       return LocationErrorWidget(
-                        error: "Location service Denied Forever!",
+                        error:
+                            language
+                                .localizedStrings["Location service Denied Forever!"] ??
+                            "Location service Denied Forever!",
                         callback: _checkLocationStatus,
                       );
                     default:
@@ -84,7 +94,10 @@ class _QiblaScreenState extends State<QiblaScreen> {
                   }
                 } else {
                   return LocationErrorWidget(
-                    error: "Please enable Location service",
+                    error:
+                        language
+                            .localizedStrings["Please enable Location service"] ??
+                        "Please enable Location service",
                     callback: _checkLocationStatus,
                   );
                 }
