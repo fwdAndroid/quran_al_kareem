@@ -198,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
-                      labelText: 'Phone Numbber',
+                      labelText: 'Phone Number',
                       border: OutlineInputBorder(),
                     ),
                   ),
