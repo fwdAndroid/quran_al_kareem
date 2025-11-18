@@ -1,4 +1,3 @@
-// home_screen.dart
 import 'dart:async';
 import 'dart:convert';
 
@@ -7,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:quran_al_kareem/model/prayer_model.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/allah_names.dart';
 import 'package:quran_al_kareem/screens/drawer_pages/tasbeeh_counter.dart';
 import 'package:quran_al_kareem/screens/main_dashboard.dart';
@@ -19,6 +19,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+// 🆕 Import the PrayerDataStore service
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? profileImage;
 
   // --- Prayer data state
+  // 🆕 Initial loading state is determined by the store
   bool isLoadingPrayer = true;
   String? errorPrayer;
   Map<String, String> timings = {}; // Fajr, Dhuhr, Asr, Maghrib, Isha
@@ -43,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Timer? countdownTimer;
 
   // UI constants
-  static const Color cardColor = Color(0xFFf2A5A5C);
+  // Note: cardColor definition uses incorrect hex, assuming 0xffA5A5C as intended
+  static const Color cardColor = Color(0xff2A5A5C);
   static const Color lightCard = Color(0xFFE8F6F5);
 
   @override
@@ -53,6 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _loadBannerAd();
     });
     fetchUserData();
+
+    // 🆕 Initialize the prayer flow using the preloaded data
     _initPrayerFlow();
   }
 
@@ -88,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // --------------------------
   // User data from Firestore
+  // (Unchanged)
   // --------------------------
   Future<void> fetchUserData() async {
     try {
@@ -115,11 +121,36 @@ class _HomeScreenState extends State<HomeScreen> {
   // Init prayer loading flow
   // --------------------------
   Future<void> _initPrayerFlow() async {
-    await _fetchPrayerTimesAndStart();
+    // 1. Check for preloaded data (instant load)
+    if (PrayerDataStore.isPreloaded) {
+      if (PrayerDataStore.timings != null) {
+        setState(() {
+          timings = PrayerDataStore.timings!.map(
+            (k, v) => MapEntry(k, v as String),
+          );
+          hijriDate = PrayerDataStore.hijriDate;
+          errorPrayer = PrayerDataStore.error;
+          isLoadingPrayer = false;
+        });
+        determineNextPrayer();
+      } else if (PrayerDataStore.error != null) {
+        // Data loaded but failed (error present)
+        setState(() {
+          errorPrayer = PrayerDataStore.error;
+          isLoadingPrayer = false;
+        });
+      }
+    }
+
+    // 2. If not preloaded or timings are null (failed), fetch now (fallback)
+    if (timings.isEmpty && isLoadingPrayer) {
+      await _fetchPrayerTimesAndStart();
+    }
   }
 
   // --------------------------
   // Main fetch: get location -> call AlAdhan API
+  // NOTE: This logic is largely redundant now but kept as a fallback/refresh
   // --------------------------
   Future<void> _fetchPrayerTimesAndStart() async {
     setState(() {
@@ -131,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final pos = await _determinePosition();
       final data = await _fetchTimingsFromAlAdhan(pos.latitude, pos.longitude);
 
-      // parse timings (take only HH:mm)
+      // --- Use data structure from PrayerDataStore's fetch logic ---
       final apiTimings = data['data']['timings'] as Map<String, dynamic>;
       timings = {
         'Fajr': _normalizeTime(apiTimings['Fajr'] as String),
@@ -144,18 +175,15 @@ class _HomeScreenState extends State<HomeScreen> {
       // location / date
       final meta = data['data']['meta'] as Map<String, dynamic>?;
       if (meta != null) {
-        // city is part of meta? AlAdhan returns timezone & method; fallback to reverse geocode if needed.
         cityName = meta['timezone'] as String? ?? 'Your Location';
       } else {
         cityName = 'Your Location';
       }
 
-      // hijri date - AlAdhan returns date.hijri.date
       final date = data['data']['date'] as Map<String, dynamic>?;
       if (date != null && date['hijri'] != null) {
         hijriDate = (date['hijri']['date'] as String?) ?? "";
       } else {
-        // fallback to gregorian formatted string
         hijriDate = DateFormat('dd MMM, yyyy').format(DateTime.now());
       }
 
@@ -174,9 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // --------------------------
-  // AlAdhan API call
-  // docs: https://aladhan.com/prayer-times-api
-  // Example: https://api.aladhan.com/v1/timings?latitude=...&longitude=...&method=2
+  // AlAdhan API call (kept for refresh/fallback)
   // --------------------------
   Future<Map<String, dynamic>> _fetchTimingsFromAlAdhan(
     double lat,
@@ -193,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // --------------------------
-  // Geolocator wrapper (permission & position)
+  // Geolocator wrapper (kept for refresh/fallback)
   // --------------------------
   Future<Position> _determinePosition() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -221,10 +247,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // --------------------------
-  // normalize "05:12 (PKT)" -> "05:12"
+  // normalize "05:12 (PKT)" -> "05:12" (Unchanged)
   // --------------------------
   String _normalizeTime(String s) {
-    // keep first 5 chars if looks like HH:mm, else attempt to extract digits
     if (s.length >= 5 && RegExp(r'\d{1,2}:\d{2}').hasMatch(s)) {
       final match = RegExp(r'\d{1,2}:\d{2}').firstMatch(s);
       if (match != null) return match.group(0)!;
@@ -233,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // --------------------------
-  // Next prayer logic & countdown
+  // Next prayer logic & countdown (Unchanged)
   // --------------------------
   void determineNextPrayer() {
     if (timings.isEmpty) return;
@@ -291,13 +316,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchPrayerRefresh() async {
-    // small delay to avoid multiple rapid calls
-    await Future.delayed(const Duration(seconds: 1));
-    await _fetchPrayerTimesAndStart();
+    // Use the global store refresh for consistency
+    await PrayerDataStore.preloadData();
+
+    // Update state from the global store after refresh
+    if (mounted) {
+      setState(() {
+        timings =
+            PrayerDataStore.timings?.map((k, v) => MapEntry(k, v as String)) ??
+            {};
+        hijriDate = PrayerDataStore.hijriDate;
+        errorPrayer = PrayerDataStore.error;
+        isLoadingPrayer = timings.isEmpty;
+      });
+      if (timings.isNotEmpty) {
+        determineNextPrayer();
+      }
+    }
   }
 
   // --------------------------
-  // Utils
+  // Utils & UI (Unchanged)
   // --------------------------
   String formatDuration(Duration d) {
     final hours = d.inHours;
@@ -327,9 +366,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // --------------------------
-  // UI
-  // --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -498,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Feature grid (unchanged, reduced distance already applied via padding)
+  // Feature grid (unchanged)
   Widget _featureGrid() {
     final items = [
       {
@@ -541,8 +577,6 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(builder: (_) => QuranScreen()),
           );
-
-          // Navigate to Quran screen
         },
       },
       {
@@ -608,7 +642,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Prayer card: shimmer when loading, dynamic times when ready
+  // Prayer card: shimmer when loading, dynamic times when ready (Unchanged logic, uses new state)
   Widget _prayerTimingCard() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -654,7 +688,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: () => _fetchPrayerTimesAndStart(),
+          // 🔄 Use the refresh function which uses the store
+          onPressed: _fetchPrayerRefresh,
           style: ElevatedButton.styleFrom(backgroundColor: Colors.black87),
           child: const Text('Retry'),
         ),
