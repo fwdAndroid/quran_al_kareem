@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/provider/font_provider.dart';
 import 'package:quran_al_kareem/provider/language_providrer.dart';
-import 'package:quran_al_kareem/service/ads_helper.dart';
 import 'package:quran_al_kareem/service/ads_service.dart';
 import 'splash_screen.dart';
 import 'firebase_options.dart';
@@ -12,6 +11,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Add your device as a test device
+  // MobileAds.instance.updateRequestConfiguration(
+  //   RequestConfiguration(
+  //     testDeviceIds: ["26ECD52A97D3CC7A35F27F657A063DE0"], // your device ID
+  //   ),
+  // );
   MobileAds.instance.initialize();
 
   runApp(
@@ -38,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    // super.initState();
+    super.initState();
     _adManager = AppOpenAdManager()..loadAd();
     // _lifecycleReactor = AppLifecycleReactor(adManager: _adManager);
   }

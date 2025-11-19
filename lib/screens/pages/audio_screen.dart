@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:quran_al_kareem/datasource/qari_datasource.dart';
-import 'package:quran_al_kareem/provider/language_providrer.dart';
 import 'package:quran_al_kareem/service/anayltics_helper.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:quran_al_kareem/model/qari_model.dart';
@@ -9,6 +7,7 @@ import 'package:quran_al_kareem/screens/detail/audio_surah_screen.dart';
 import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/screens/widget/qari_custom_tile_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
+// 🆕 Import the new Qari Data Store
 
 class AudioQuranScreen extends StatefulWidget {
   const AudioQuranScreen({super.key});
@@ -20,27 +19,32 @@ class AudioQuranScreen extends StatefulWidget {
 class _AudioQuranScreenState extends State<AudioQuranScreen> {
   List<Qari> _allQaris = [];
   List<Qari> _filteredQaris = [];
+  // 🆕 Initial loading state is set based on preloaded status
   bool _isLoading = !QariDataStore.isPreloaded;
-  String? _error;
+  String? _error; // To display error if preloading failed
 
   @override
   void initState() {
     super.initState();
+    // 🆕 Use the preloaded data if available, otherwise fetch
     _loadQaris();
     AnalyticsHelper.logScreenView("AudioQuranScreen");
   }
 
   Future<void> _loadQaris() async {
+    // 1. Check Static Store first
     if (QariDataStore.isPreloaded) {
       if (QariDataStore.qariList.isNotEmpty) {
+        // Data is ready and available
         setState(() {
           _allQaris = QariDataStore.qariList;
           _filteredQaris = _allQaris;
           _isLoading = false;
-          _error = QariDataStore.error;
+          _error = QariDataStore.error; // Should be null if list is not empty
         });
         return;
       } else if (QariDataStore.error != null) {
+        // Preload failed, display the error
         setState(() {
           _error = QariDataStore.error;
           _isLoading = false;
@@ -49,12 +53,15 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
       }
     }
 
+    // 2. Fallback: If not preloaded or list is empty/failed, fetch directly
     if (!_isLoading) {
       setState(() => _isLoading = true);
     }
 
     try {
+      // Re-run the global preload logic (it handles the API call and filtering)
       await QariDataStore.preloadData();
+
       setState(() {
         _allQaris = QariDataStore.qariList;
         _filteredQaris = _allQaris;
@@ -66,6 +73,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
         _isLoading = false;
         _error = "Failed to load Qaris: ${e.toString()}";
       });
+      debugPrint("Error loading Qaris: $e");
     }
   }
 
@@ -81,13 +89,11 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final lang = Provider.of<LanguageProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: ArabicText(
-          lang.localizedStrings["Audio Quran"] ?? "Audio Quran",
+          "Audio Quran",
           style: TextStyle(color: primaryText, fontWeight: FontWeight.bold),
         ),
         backgroundColor: mainColor,
@@ -101,16 +107,14 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
           Container(color: mainColor.withOpacity(0.3)),
           Column(
             children: [
-              // SEARCH BAR
+              // 🔍 Search bar
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   onChanged: _filterQaris,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText:
-                        lang.localizedStrings["Search Qari..."] ??
-                        "Search Qari...",
+                    hintText: "Search Qari...",
                     hintStyle: TextStyle(color: Colors.white),
                     prefixIcon: Icon(Icons.search, color: Colors.white),
                     filled: true,
@@ -123,22 +127,21 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
                 ),
               ),
 
-              // LIST CONTENT
+              // 📜 Qari List or Shimmer or Error
               Expanded(
                 child: _isLoading
                     ? _buildShimmerList()
                     : _error != null
                     ? Center(
                         child: ArabicText(
-                          "${lang.localizedStrings["Error loading Qaris:"] ?? "Error loading Qaris:"} $_error",
+                          "Error loading Qaris: $_error",
                           style: TextStyle(color: Colors.redAccent),
                         ),
                       )
                     : _filteredQaris.isEmpty
                     ? Center(
                         child: ArabicText(
-                          lang.localizedStrings["No Qari found"] ??
-                              "No Qari found",
+                          "No Qari found",
                           style: TextStyle(color: primaryText),
                         ),
                       )
@@ -174,6 +177,7 @@ class _AudioQuranScreenState extends State<AudioQuranScreen> {
     );
   }
 
+  // 🔄 Shimmer Placeholder while loading
   Widget _buildShimmerList() {
     return ListView.builder(
       itemCount: 8,

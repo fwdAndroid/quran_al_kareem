@@ -16,8 +16,6 @@ import 'package:quran_al_kareem/screens/widget/arabic_text_widget.dart';
 import 'package:quran_al_kareem/utils/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
-const String bannerKey = 'ca-app-pub-3940256099942544/6300978111';
-
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});
 
@@ -156,6 +154,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
   void dispose() {
     countdownTimer?.cancel();
     _scrollController.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -191,20 +190,29 @@ class _PrayerScreenState extends State<PrayerScreen> {
       MediaQuery.of(context).size.width.truncate(),
     );
 
-    final adSize = size ?? AdSize.banner;
+    if (size == null) return;
 
-    _bannerAd = BannerAd(
-      adUnitId: bannerKey,
-      size: adSize,
+    final banner = BannerAd(
+      adUnitId: "ca-app-pub-3940256099942544/6300978111", // live banner ID
+      size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _isBannerAdLoaded = true),
+        onAdLoaded: (ad) {
+          debugPrint("Banner loaded successfully");
+          setState(() {
+            _bannerAd = ad as BannerAd;
+            _isBannerAdLoaded = true;
+          });
+        },
         onAdFailedToLoad: (ad, error) {
+          debugPrint("Banner failed to load: $error");
           ad.dispose();
           Future.delayed(const Duration(seconds: 5), _loadBannerAd);
         },
       ),
-    )..load();
+    );
+
+    banner.load();
   }
 
   @override
@@ -219,179 +227,186 @@ class _PrayerScreenState extends State<PrayerScreen> {
           ),
           Container(color: mainColor.withOpacity(0.3)),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  if (_isBannerAdLoaded && _bannerAd != null)
-                    Container(
-                      width: _bannerAd!.size.width.toDouble(),
-                      height: _bannerAd!.size.height.toDouble(),
-                      alignment: Alignment.center,
-                      child: AdWidget(ad: _bannerAd!),
-                    ),
-
-                  if (error != null)
-                    Text(
-                      'Error: $error',
-                      style: const TextStyle(color: Colors.redAccent),
-                    ),
-
-                  ArabicText(
-                    "${language.localizedStrings["Hijri Date"] ?? "Hijri Date"}: ${hijriDate ?? (isLoading ? 'Loading...' : 'N/A')}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Column(
+              children: [
+                // Top Banner
+                if (_isBannerAdLoaded && _bannerAd != null)
+                  Container(
+                    width: _bannerAd!.size.width.toDouble(),
+                    height: _bannerAd!.size.height.toDouble(),
+                    alignment: Alignment.center,
+                    child: AdWidget(ad: _bannerAd!),
                   ),
 
-                  const SizedBox(height: 5),
-
-                  isLoading
-                      ? Shimmer.fromColors(
-                          baseColor: Colors.grey[400]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 180,
-                                height: 22,
-                                color: Colors.white,
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                width: 120,
-                                height: 28,
-                                color: Colors.white,
-                              ),
-                            ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        if (error != null)
+                          Text(
+                            'Error: $error',
+                            style: const TextStyle(color: Colors.redAccent),
                           ),
-                        )
-                      : Column(
-                          children: [
-                            if (nextPrayerName != null)
-                              ArabicText(
-                                "${language.localizedStrings["Next Prayer"] ?? "Next Prayer"}: ${nextPrayerName!.replaceAll(' (Tomorrow)', '')}",
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            const SizedBox(height: 6),
-
-                            if (timeRemaining != null &&
-                                timeRemaining!.inSeconds > 0)
-                              ArabicText(
-                                formatDuration(timeRemaining!),
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.bold,
+                        ArabicText(
+                          "${language.localizedStrings["Hijri Date"] ?? "Hijri Date"}: ${hijriDate ?? (isLoading ? 'Loading...' : 'N/A')}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        isLoading
+                            ? Shimmer.fromColors(
+                                baseColor: Colors.grey[400]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 180,
+                                      height: 22,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Container(
+                                      width: 120,
+                                      height: 28,
+                                      color: Colors.white,
+                                    ),
+                                  ],
                                 ),
                               )
-                            else
-                              ArabicText(
-                                language.localizedStrings["Time for Prayer!"] ??
-                                    "Time for Prayer!",
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.amber,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            : Column(
+                                children: [
+                                  if (nextPrayerName != null)
+                                    ArabicText(
+                                      "${language.localizedStrings["Next Prayer"] ?? "Next Prayer"}: ${nextPrayerName!.replaceAll(' (Tomorrow)', '')}",
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  const SizedBox(height: 6),
+                                  if (timeRemaining != null &&
+                                      timeRemaining!.inSeconds > 0)
+                                    ArabicText(
+                                      formatDuration(timeRemaining!),
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.amber,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  else
+                                    ArabicText(
+                                      language.localizedStrings["Time for Prayer!"] ??
+                                          "Time for Prayer!",
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.amber,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
-                        ),
-
-                  const SizedBox(height: 20),
-
-                  Expanded(
-                    child: isLoading
-                        ? ListView.builder(
-                            itemCount: 5,
-                            itemBuilder: (_, __) => Shimmer.fromColors(
-                              baseColor: Colors.grey[400]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Card(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: ListTile(
-                                  leading: Container(
-                                    width: 40,
-                                    height: 40,
-                                    color: Colors.white,
-                                  ),
-                                  title: Container(
-                                    width: 100,
-                                    height: 18,
-                                    color: Colors.white,
-                                  ),
-                                  trailing: Container(
-                                    width: 60,
-                                    height: 18,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : ListView.builder(
-                            controller: _scrollController,
-                            itemCount: timings!.length,
-                            itemBuilder: (context, index) {
-                              final entry = timings!.entries.elementAt(index);
-                              final icon = getPrayerIcon(entry.key);
-                              final isNextPrayer =
-                                  entry.key ==
-                                  nextPrayerName?.replaceAll(' (Tomorrow)', '');
-
-                              return Card(
-                                color: isNextPrayer
-                                    ? mainColor
-                                    : const Color(0xff326c6d),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: ListTile(
-                                  leading: Icon(icon, color: Colors.amber),
-                                  title: ArabicText(
-                                    language.localizedStrings[entry.key] ??
-                                        entry.key,
-                                    style: const TextStyle(
+                        const SizedBox(height: 20),
+                        Expanded(
+                          child: isLoading
+                              ? ListView.builder(
+                                  itemCount: 5,
+                                  itemBuilder: (_, __) => Shimmer.fromColors(
+                                    baseColor: Colors.grey[400]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Card(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: ListTile(
+                                        leading: Container(
+                                          width: 40,
+                                          height: 40,
+                                          color: Colors.white,
+                                        ),
+                                        title: Container(
+                                          width: 100,
+                                          height: 18,
+                                          color: Colors.white,
+                                        ),
+                                        trailing: Container(
+                                          width: 60,
+                                          height: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  trailing: ArabicText(
-                                    entry.value,
-                                    style: TextStyle(
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount: timings!.length,
+                                  itemBuilder: (context, index) {
+                                    final entry = timings!.entries.elementAt(
+                                      index,
+                                    );
+                                    final icon = getPrayerIcon(entry.key);
+                                    final isNextPrayer =
+                                        entry.key ==
+                                        nextPrayerName?.replaceAll(
+                                          ' (Tomorrow)',
+                                          '',
+                                        );
+                                    return Card(
                                       color: isNextPrayer
-                                          ? Colors.white
-                                          : Colors.white70,
-                                      fontSize: 16,
-                                      fontWeight: isNextPrayer
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  ),
+                                          ? mainColor
+                                          : const Color(0xff326c6d),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: ListTile(
+                                        leading: Icon(
+                                          icon,
+                                          color: Colors.amber,
+                                        ),
+                                        title: ArabicText(
+                                          language.localizedStrings[entry
+                                                  .key] ??
+                                              entry.key,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        trailing: ArabicText(
+                                          entry.value,
+                                          style: TextStyle(
+                                            color: isNextPrayer
+                                                ? Colors.white
+                                                : Colors.white70,
+                                            fontSize: 16,
+                                            fontWeight: isNextPrayer
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 200,
+                          width: double.infinity,
+                          child: _featureGrid(language),
+                        ),
+                      ],
+                    ),
                   ),
-
-                  const SizedBox(height: 10),
-
-                  SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: _featureGrid(language),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

@@ -24,7 +24,6 @@ class _DrawerWidgetState extends State<DrawerWidget>
   late AnimationController _controller;
   InterstitialAd? _interstitialAd;
   bool _isAdReady = false;
-  int _actionCounter = 0; // Track user actions for frequency
 
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _DrawerWidgetState extends State<DrawerWidget>
   void _loadInterstitialAd() {
     InterstitialAd.load(
       adUnitId:
-          'ca-app-pub-7677534136736515/6010431655', // Your real interstitial Ad Unit ID
+          'ca-app-pub-3940256099942544/1033173712', // Replace with your real Ad Unit ID
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -52,29 +51,11 @@ class _DrawerWidgetState extends State<DrawerWidget>
   }
 
   void _showInterstitialAndNavigate(Widget page) {
-    _actionCounter++;
-
-    // List of pages where we skip ads (sensitive content)
-    final skipAdPages = [
-      MainDashboard,
-      NamazGuideScreen,
-      DuaScreen,
-      AllahNames,
-      TasbeehScreen,
-    ];
-
-    // Skip ad if page is in sensitive screens
-    if (skipAdPages.any((type) => page.runtimeType == type)) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-      return;
-    }
-
-    // Show interstitial every 3 actions if ad is ready
-    if (_isAdReady && _interstitialAd != null && _actionCounter % 3 == 0) {
+    if (_isAdReady && _interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
           ad.dispose();
-          _loadInterstitialAd();
+          _loadInterstitialAd(); // preload next ad
           Navigator.push(context, MaterialPageRoute(builder: (_) => page));
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
@@ -83,11 +64,10 @@ class _DrawerWidgetState extends State<DrawerWidget>
         },
       );
 
-      // Optional small delay for better UX
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _interstitialAd!.show();
-      });
+      // Show ad immediately
+      _interstitialAd!.show();
     } else {
+      // Navigate if ad not ready
       Navigator.push(context, MaterialPageRoute(builder: (_) => page));
     }
   }
