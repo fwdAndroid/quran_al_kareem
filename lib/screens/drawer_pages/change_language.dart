@@ -71,9 +71,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: primaryText,
                   size: 20,
                 ),
-                title: ArabicText(
-                  languageProvider.localizedStrings['English'] ?? "English",
-                ),
+                title: ArabicText("English"),
               ),
               // ListTile for Arrabic
               ListTile(
@@ -88,9 +86,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: primaryText,
                   size: 20,
                 ),
-                title: ArabicText(
-                  languageProvider.localizedStrings['Arabic'] ?? "Arabic",
-                ),
+                title: ArabicText("عربي"),
               ),
 
               // ListTile for Urdu
@@ -106,9 +102,7 @@ class _ChangeLangageState extends State<ChangeLangage> {
                   color: primaryText,
                   size: 20,
                 ),
-                title: ArabicText(
-                  languageProvider.localizedStrings['Urdu'] ?? "Urdu",
-                ),
+                title: ArabicText("اردو"),
               ),
             ],
           ),

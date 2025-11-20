@@ -83,6 +83,7 @@ flutter:
   assets:
     - assets/
     - assets/qari_images/
+    - assets/namaz/
     - assets/json/
     - assets/lang/
     - assets/fonts/

@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     // Start the minimum display timer
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 6), () {
       if (mounted) {
         _timerElapsed = true;
         _attemptNavigation();

@@ -66,26 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
   BannerAd? _bannerAd;
   bool _isBannerAdLoaded = false;
 
-  Future<void> _loadBannerAd() async {
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      MediaQuery.of(context).size.width.truncate(),
-    );
-    final adSize = size ?? AdSize.banner;
-
-    _bannerAd = BannerAd(
-      adUnitId: bannerKey,
-      size: adSize,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _isBannerAdLoaded = true),
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          Future.delayed(const Duration(seconds: 5), _loadBannerAd);
-        },
-      ),
-    )..load();
-  }
-
   @override
   void dispose() {
     _bannerAd?.dispose();
@@ -201,6 +181,37 @@ class _HomeScreenState extends State<HomeScreen> {
         errorPrayer = e.toString();
       });
     }
+  }
+
+  //Ads
+  Future<void> _loadBannerAd() async {
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+      MediaQuery.of(context).size.width.truncate(),
+    );
+
+    if (size == null) return;
+
+    final banner = BannerAd(
+      adUnitId: "ca-app-pub-3940256099942544/6300978111", // live banner ID
+      size: size,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          debugPrint("Banner loaded successfully");
+          setState(() {
+            _bannerAd = ad as BannerAd;
+            _isBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          debugPrint("Banner failed to load: $error");
+          ad.dispose();
+          Future.delayed(const Duration(seconds: 5), _loadBannerAd);
+        },
+      ),
+    );
+
+    banner.load();
   }
 
   // --------------------------
